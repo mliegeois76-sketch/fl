@@ -520,7 +520,7 @@
 <div class="landing-page" id="splash-screen">
   <canvas id="sculpture-canvas"></canvas>
   <div class="landing-content">
-    <button class="continue-btn" id="continue-btn" onclick="enterSite()" style="z-index: 99999 !important; position: relative; cursor: pointer;">Continuer</button>
+    <button class="continue-btn" id="continue-btn" onclick="enterSite()" style="z-index: 99999 !important; position: relative; cursor: pointer;">Continue</button>
   </div>
 </div>
 
@@ -536,18 +536,8 @@
 <header>
   <button class="menu-toggle">Menu</button>
   <div class="header-actions">
-    <div class="lang-dropdown">
-      <button class="lang-current" onclick="toggleLangDropdown()">FR</button>
-      <div class="lang-menu" id="langMenu">
-        <button onclick="setLanguage('fr')">FR</button>
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">ZH</button>
-        <button onclick="setLanguage('es')">ES</button>
-        <button onclick="setLanguage('pt')">PT</button>
-      </div>
-    </div>
     <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
-      <span class="cart-text">Panier</span>
+      <span class="cart-text">Cart</span>
       <span class="cart-count">(0)</span>
     </button>
   </div>
@@ -558,9 +548,9 @@
   <div class="menu-content">
     <button class="menu-close">×</button>
     <nav class="menu-nav">
-      <a href="#" data-section="home" class="active">Accueil</a>
+      <a href="#" data-section="home" class="active">Home</a>
       <a href="#" data-section="collection">Collection</a>
-      <a href="#" data-section="about">À propos</a>
+      <a href="#" data-section="about">About</a>
       <a href="#" data-section="contact">Contact</a>
     </nav>
   </div>
@@ -568,7 +558,7 @@
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Panier</h3>
+    <h3>Cart</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
@@ -577,7 +567,7 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
   </div>
 </div>
 
@@ -588,14 +578,14 @@
 <div class="section-content" id="section-collection" style="display: none;">
   <div class="page-hero">
     <h1>Collection</h1>
-    <p>Œuvres disponibles.</p>
+    <p>Available Works</p>
   </div>
   <section>
     <div class="collection-filters">
-      <button class="filter-btn active" data-filter="all">Toutes</button>
+      <button class="filter-btn active" data-filter="all">All</button>
       <button class="filter-btn" data-filter="bronze">Bronze</button>
-      <button class="filter-btn" data-filter="pierre">Pierre</button>
-      <button class="filter-btn" data-filter="bois">Bois</button>
+      <button class="filter-btn" data-filter="pierre">Stone</button>
+      <button class="filter-btn" data-filter="bois">Wood</button>
     </div>
     <div class="piece-grid">
       <div class="piece s-l" data-category="bronze">
@@ -604,11 +594,11 @@
             <rect x="20" y="30" width="60" height="50" fill="currentColor" opacity="0.1"/>
           </svg>
         </div>
-        <div class="piece-name">Éclipse Noire</div>
+        <div class="piece-name">Black Eclipse</div>
         <div class="piece-meta">Bronze • 2024</div>
         <div class="piece-price">
           <span>12 500 €</span>
-          <button onclick="window.shoppingCart.addToCart('Éclipse Noire', 12500)">Ajouter</button>
+          <button onclick="window.shoppingCart.addToCart('Black Eclipse', 12500)">Add to Cart</button>
         </div>
       </div>
       <div class="piece s-m" data-category="pierre">
@@ -618,10 +608,10 @@
           </svg>
         </div>
         <div class="piece-name">Silence</div>
-        <div class="piece-meta">Pierre • 2024</div>
+        <div class="piece-meta">Stone • 2024</div>
         <div class="piece-price">
           <span>8 200 €</span>
-          <button onclick="window.shoppingCart.addToCart('Silence', 8200)">Ajouter</button>
+          <button onclick="window.shoppingCart.addToCart('Silence', 8200)">Add to Cart</button>
         </div>
       </div>
       <div class="piece s-m" data-category="bois">
@@ -630,11 +620,11 @@
             <polygon points="50,20 80,80 20,80" fill="currentColor" opacity="0.1"/>
           </svg>
         </div>
-        <div class="piece-name">Équilibre</div>
-        <div class="piece-meta">Bois • 2024</div>
+        <div class="piece-name">Balance</div>
+        <div class="piece-meta">Wood • 2024</div>
         <div class="piece-price">
           <span>5 800 €</span>
-          <button onclick="window.shoppingCart.addToCart('Équilibre', 5800)">Ajouter</button>
+          <button onclick="window.shoppingCart.addToCart('Balance', 5800)">Add to Cart</button>
         </div>
       </div>
     </div>
@@ -644,15 +634,15 @@
 <!-- About Section -->
 <div class="section-content" id="section-about" style="display: none;">
   <div class="page-hero">
-    <h1>À propos</h1>
-    <p>L'artiste et son parcours.</p>
+    <h1>About</h1>
+    <p>The Artist and Their Journey</p>
   </div>
   <section>
     <div class="manifesto-grid">
-      <p class="big">FL est un sculpteur contemporain dont le travail explore les frontières entre abstraction et figuration. Chaque œuvre est le résultat d'une recherche constante sur l'équilibre, la matière et l'espace.</p>
+      <p class="big">FL is a contemporary sculptor whose work explores the boundaries between abstraction and figuration. Each piece is the result of constant research into balance, matter, and space.</p>
       <div class="side">
-        <p>Basé à Paris, l'artiste travaille principalement le bronze, la pierre et le bois, créant des pièces uniques qui interrogent notre rapport à l'espace et au temps.</p>
-        <p>La démarche est minimaliste : chaque forme est essentielle, chaque vide significatif. L'œuvre naît d'un dialogue constant entre la matière et l'intention.</p>
+        <p>Based in Paris, the artist primarily works with bronze, stone, and wood, creating unique pieces that question our relationship with space and time.</p>
+        <p>The approach is minimalist: every form is essential, every void significant. The work emerges from a constant dialogue between material and intention.</p>
       </div>
     </div>
   </section>
@@ -662,15 +652,15 @@
 <div class="section-content" id="section-contact" style="display: none;">
   <div class="page-hero">
     <h1>Contact</h1>
-    <p>Nous écrire.</p>
+    <p>Get in Touch</p>
   </div>
   <section class="contact">
     <div class="contact-grid">
       <form id="contactForm" novalidate>
-        <div class="form-row"><label for="name">Nom</label><input id="name" name="name" type="text" required autocomplete="name"></div>
+        <div class="form-row"><label for="name">Name</label><input id="name" name="name" type="text" required autocomplete="name"></div>
         <div class="form-row"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email"></div>
         <div class="form-row"><label for="message">Message</label><textarea id="message" name="message" rows="5" required></textarea></div>
-        <button type="submit" class="submit-btn">Envoyer</button>
+        <button type="submit" class="submit-btn">Send</button>
         <div id="formStatus" class="form-status"></div>
       </form>
       <div class="contact-info">
@@ -768,12 +758,16 @@ function enterSite() {
     }, 800);
   }
   
-  // Transition canvas to homepage position
+  // Keep canvas visible and active - move it to body level
   if (canvas) {
-    canvas.style.transition = 'all 1.5s cubic-bezier(0.65, 0, 0.35, 1)';
-    canvas.style.transform = 'translate(-50%, -50%) scale(0.5)';
-    canvas.style.opacity = '0.3';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
     canvas.style.zIndex = '0';
+    canvas.style.opacity = '0.4';
+    canvas.style.transition = 'opacity 1.5s ease';
   }
   
   // Show home section

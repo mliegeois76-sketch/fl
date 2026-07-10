@@ -21,18 +21,8 @@
 <header>
   <button class="menu-toggle">Menu</button>
   <div class="header-actions">
-    <div class="lang-dropdown">
-      <button class="lang-current" onclick="toggleLangDropdown()">FR</button>
-      <div class="lang-menu" id="langMenu">
-        <button onclick="setLanguage('fr')">FR</button>
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">ZH</button>
-        <button onclick="setLanguage('es')">ES</button>
-        <button onclick="setLanguage('pt')">PT</button>
-      </div>
-    </div>
     <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
-      <span class="cart-text">Panier</span>
+      <span class="cart-text">Cart</span>
       <span class="cart-count">(0)</span>
     </button>
   </div>
@@ -43,9 +33,9 @@
   <div class="menu-content">
     <button class="menu-close">×</button>
     <nav class="menu-nav">
-      <a href="index.html">Accueil</a>
+      <a href="index.html">Home</a>
       <a href="collection.html">Collection</a>
-      <a href="about.html">À propos</a>
+      <a href="about.html">About</a>
       <a href="contact.html" class="active">Contact</a>
     </nav>
   </div>
@@ -53,7 +43,7 @@
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Panier</h3>
+    <h3>Cart</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
@@ -62,30 +52,30 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
   </div>
 </div>
 
 <div class="page-hero">
   <div class="eyebrow">Contact</div>
-  <h1>Nous écrire</h1>
-  <p class="placeholder">[Texte d'intro contact — à confirmer]</p>
+  <h1>Get in Touch</h1>
+  <p class="placeholder">[Contact intro text — to be confirmed]</p>
 </div>
 
 <section class="contact reveal">
   <div class="contact-grid">
     <form id="contactForm" novalidate>
-      <div class="form-row"><label for="name">Nom</label><input id="name" name="name" type="text" required autocomplete="name"></div>
+      <div class="form-row"><label for="name">Name</label><input id="name" name="name" type="text" required autocomplete="name"></div>
       <div class="form-row"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email"></div>
-      <div class="form-row"><label for="oeuvre">Œuvre concernée (optionnel)</label><input id="oeuvre" name="oeuvre" type="text" placeholder="Titre de l'œuvre"></div>
+      <div class="form-row"><label for="oeuvre">Work of interest (optional)</label><input id="oeuvre" name="oeuvre" type="text" placeholder="Work title"></div>
       <div class="form-row"><label for="message">Message</label><textarea id="message" name="message" required></textarea></div>
       <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-      <button class="submit-btn" type="submit">Envoyer</button>
+      <button class="submit-btn" type="submit">Send</button>
     </form>
     <div class="contact-info">
-      <div class="block"><span class="eyebrow">Atelier</span><p class="placeholder">[Adresse ou "sur rendez-vous uniquement" — à confirmer]</p></div>
-      <div class="block"><span class="eyebrow">Contact direct</span><p class="placeholder">[Email]<br>[Téléphone — optionnel]</p></div>
-      <div class="block"><span class="eyebrow">Réseaux</span><p class="placeholder">[Instagram / autre — à confirmer]</p></div>
+      <div class="block"><span class="eyebrow">Studio</span><p class="placeholder">[Address or "by appointment only" — to be confirmed]</p></div>
+      <div class="block"><span class="eyebrow">Direct contact</span><p class="placeholder">[Email]<br>[Phone — optional]</p></div>
+      <div class="block"><span class="eyebrow">Social</span><p class="placeholder">[Instagram / other — to be confirmed]</p></div>
     </div>
   </div>
 </section>

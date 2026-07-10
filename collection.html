@@ -21,18 +21,8 @@
 <header>
   <button class="menu-toggle">Menu</button>
   <div class="header-actions">
-    <div class="lang-dropdown">
-      <button class="lang-current" onclick="toggleLangDropdown()">FR</button>
-      <div class="lang-menu" id="langMenu">
-        <button onclick="setLanguage('fr')">FR</button>
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">ZH</button>
-        <button onclick="setLanguage('es')">ES</button>
-        <button onclick="setLanguage('pt')">PT</button>
-      </div>
-    </div>
     <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
-      <span class="cart-text">Panier</span>
+      <span class="cart-text">Cart</span>
       <span class="cart-count">(0)</span>
     </button>
   </div>
@@ -43,9 +33,9 @@
   <div class="menu-content">
     <button class="menu-close">×</button>
     <nav class="menu-nav">
-      <a href="index.html">Accueil</a>
+      <a href="index.html">Home</a>
       <a href="collection.html" class="active">Collection</a>
-      <a href="about.html">À propos</a>
+      <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
     </nav>
   </div>
@@ -53,7 +43,7 @@
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Panier</h3>
+    <h3>Cart</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
@@ -62,14 +52,14 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
   </div>
 </div>
 
 <div class="page-hero">
   <div class="eyebrow">Collection</div>
-  <h1>Les œuvres disponibles</h1>
-  <p class="placeholder">[Texte d'intro de la page collection — à confirmer]</p>
+  <h1>Available Works</h1>
+  <p class="placeholder">[Collection page intro text — to be confirmed]</p>
 </div>
 
 <section class="reveal">
@@ -77,51 +67,51 @@
 
     <div class="piece s-xl">
       <div class="piece-visual"><svg viewBox="0 0 200 200"><path d="M60 180 C40 120 55 60 100 20 C145 60 160 120 140 180 Z" fill="#8A6E4F" opacity="0.85"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Titre de l'œuvre 1]</div>
-      <div class="piece-meta placeholder">[Matière] — [H × L × P cm] — [poids]</div></div>
-      <div class="piece-price"><span class="placeholder">[Prix / Sur demande]</span><button class="add-to-cart" data-product-id="1" data-product-name="[Titre de l'œuvre 1]" data-product-price="2500" data-product-image="">Ajouter au panier</button></div>
+      <div><div class="piece-name serif placeholder">[Work Title 1]</div>
+      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
+      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="1" data-product-name="[Work Title 1]" data-product-price="2500" data-product-image="">Add to Cart</button></div>
     </div>
 
     <div class="piece s-s">
       <div class="piece-visual"><svg viewBox="0 0 200 200"><rect x="60" y="30" width="80" height="150" rx="6" fill="#C9C3B6"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Titre de l'œuvre 2]</div>
-      <div class="piece-meta placeholder">[Matière] — [H × L × P cm] — [poids]</div></div>
-      <div class="piece-price"><span class="placeholder">[Prix / Sur demande]</span><button class="add-to-cart" data-product-id="2" data-product-name="[Titre de l'œuvre 2]" data-product-price="1800" data-product-image="">Ajouter au panier</button></div>
+      <div><div class="piece-name serif placeholder">[Work Title 2]</div>
+      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
+      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="2" data-product-name="[Work Title 2]" data-product-price="1800" data-product-image="">Add to Cart</button></div>
     </div>
 
     <div class="piece s-m">
       <div class="piece-visual"><svg viewBox="0 0 200 200"><ellipse cx="100" cy="100" rx="70" ry="60" fill="#B57A4C" opacity="0.8"/><ellipse cx="100" cy="100" rx="40" ry="34" fill="#F3F1EC"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Titre de l'œuvre 3]</div>
-      <div class="piece-meta placeholder">[Matière] — [H × L × P cm] — [poids]</div></div>
-      <div class="piece-price"><span class="placeholder">[Prix / Sur demande]</span><button class="add-to-cart" data-product-id="3" data-product-name="[Titre de l'œuvre 3]" data-product-price="3200" data-product-image="">Ajouter au panier</button></div>
+      <div><div class="piece-name serif placeholder">[Work Title 3]</div>
+      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
+      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="3" data-product-name="[Work Title 3]" data-product-price="3200" data-product-image="">Add to Cart</button></div>
     </div>
 
     <div class="piece s-l">
       <div class="piece-visual"><svg viewBox="0 0 200 200"><path d="M40 170 L100 30 L160 170 Z" fill="#A79E8E"/><path d="M70 170 L100 90 L130 170 Z" fill="#F3F1EC"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Titre de l'œuvre 4]</div>
-      <div class="piece-meta placeholder">[Matière] — [H × L × P cm] — [poids]</div></div>
-      <div class="piece-price"><span class="placeholder">[Prix / Sur demande]</span><button class="add-to-cart" data-product-id="4" data-product-name="[Titre de l'œuvre 4]" data-product-price="4500" data-product-image="">Ajouter au panier</button></div>
+      <div><div class="piece-name serif placeholder">[Work Title 4]</div>
+      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
+      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="4" data-product-name="[Work Title 4]" data-product-price="4500" data-product-image="">Add to Cart</button></div>
     </div>
 
     <div class="piece s-m">
       <div class="piece-visual"><svg viewBox="0 0 200 200"><path d="M100 20 C130 60 130 140 100 180 C70 140 70 60 100 20 Z" fill="#8A6E4F"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Titre de l'œuvre 5]</div>
-      <div class="piece-meta placeholder">[Matière] — [H × L × P cm] — [poids]</div></div>
-      <div class="piece-price"><span class="placeholder">[Prix / Sur demande]</span><button class="add-to-cart" data-product-id="5" data-product-name="[Titre de l'œuvre 5]" data-product-price="2800" data-product-image="">Ajouter au panier</button></div>
+      <div><div class="piece-name serif placeholder">[Work Title 5]</div>
+      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
+      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="5" data-product-name="[Work Title 5]" data-product-price="2800" data-product-image="">Add to Cart</button></div>
     </div>
 
     <div class="piece s-s">
       <div class="piece-visual"><svg viewBox="0 0 200 200"><rect x="50" y="50" width="100" height="100" fill="#DCD5C4"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Titre de l'œuvre 6]</div>
-      <div class="piece-meta placeholder">[Matière] — [H × L × P cm] — [poids]</div></div>
-      <div class="piece-price"><span class="placeholder">[Prix / Sur demande]</span><button class="add-to-cart" data-product-id="6" data-product-name="[Titre de l'œuvre 6]" data-product-price="1500" data-product-image="">Ajouter au panier</button></div>
+      <div><div class="piece-name serif placeholder">[Work Title 6]</div>
+      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
+      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="6" data-product-name="[Work Title 6]" data-product-price="1500" data-product-image="">Add to Cart</button></div>
     </div>
 
     <div class="piece s-xl">
       <div class="piece-visual"><svg viewBox="0 0 200 200"><ellipse cx="100" cy="150" rx="60" ry="18" fill="#191817" opacity="0.08"/><path d="M70 150 C60 100 75 50 100 25 C125 50 140 100 130 150 Z" fill="#C97B4A" opacity="0.75"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Titre de l'œuvre 7]</div>
-      <div class="piece-meta placeholder">[Matière] — [H × L × P cm] — [poids]</div></div>
-      <div class="piece-price"><span class="placeholder">[Prix / Sur demande]</span><button class="add-to-cart" data-product-id="7" data-product-name="[Titre de l'œuvre 7]" data-product-price="5200" data-product-image="">Ajouter au panier</button></div>
+      <div><div class="piece-name serif placeholder">[Work Title 7]</div>
+      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
+      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="7" data-product-name="[Work Title 7]" data-product-price="5200" data-product-image="">Add to Cart</button></div>
     </div>
 
   </div>

@@ -21,18 +21,8 @@
 <header>
   <button class="menu-toggle">Menu</button>
   <div class="header-actions">
-    <div class="lang-dropdown">
-      <button class="lang-current" onclick="toggleLangDropdown()">FR</button>
-      <div class="lang-menu" id="langMenu">
-        <button onclick="setLanguage('fr')">FR</button>
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">ZH</button>
-        <button onclick="setLanguage('es')">ES</button>
-        <button onclick="setLanguage('pt')">PT</button>
-      </div>
-    </div>
     <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
-      <span class="cart-text">Panier</span>
+      <span class="cart-text">Cart</span>
       <span class="cart-count">(0)</span>
     </button>
   </div>
@@ -43,9 +33,9 @@
   <div class="menu-content">
     <button class="menu-close">×</button>
     <nav class="menu-nav">
-      <a href="index.html">Accueil</a>
+      <a href="index.html">Home</a>
       <a href="collection.html">Collection</a>
-      <a href="about.html" class="active">À propos</a>
+      <a href="about.html" class="active">About</a>
       <a href="contact.html">Contact</a>
     </nav>
   </div>
@@ -53,7 +43,7 @@
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Panier</h3>
+    <h3>Cart</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
@@ -62,55 +52,55 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
   </div>
 </div>
 
 <div class="page-hero">
-  <div class="eyebrow">À propos</div>
-  <h1>L'artiste</h1>
-  <p>Une démarche sculpturale entre tradition et contemporanéité.</p>
+  <div class="eyebrow">About</div>
+  <h1>The Artist</h1>
+  <p>A sculptural approach between tradition and contemporaneity.</p>
 </div>
 
 <section class="reveal">
   <div class="manifesto-grid">
     <div class="big">
-      <p>FL est un sculpteur contemporain dont le travail explore les frontières entre abstraction et figuration. Chaque œuvre est le résultat d'une recherche constante sur l'équilibre, la matière et l'espace.</p>
-      <p>Formé aux Beaux-Arts de Paris, FL a développé une technique personnelle mêlant savoir-faire traditionnel et innovation contemporaine. Son travail a été exposé dans plusieurs galeries européennes et fait partie de collections privées internationales.</p>
+      <p>FL is a contemporary sculptor whose work explores the boundaries between abstraction and figuration. Each piece is the result of constant research into balance, matter, and space.</p>
+      <p>Trained at the Beaux-Arts de Paris, FL has developed a personal technique blending traditional craftsmanship with contemporary innovation. Their work has been exhibited in several European galleries and is part of international private collections.</p>
     </div>
     <div class="side">
-      <p><strong>Formation</strong><br>Beaux-Arts de Paris, 2015-2020<br>Atelier de sculpture monumentale, 2020-2022</p>
-      <p><strong>Expositions marquantes</strong><br>Galerie Moderne, Paris, 2024<br>Art Basel, Bâle, 2023<br>Foire de Sculpture, Lyon, 2022</p>
-      <p><strong>Prix et distinctions</strong><br>Prix de la Jeune Sculpture, 2023<br>Bourse de la Fondation d'Art, 2022</p>
+      <p><strong>Education</strong><br>Beaux-Arts de Paris, 2015-2020<br>Monumental Sculpture Studio, 2020-2022</p>
+      <p><strong>Notable Exhibitions</strong><br>Galerie Moderne, Paris, 2024<br>Art Basel, Basel, 2023<br>Sculpture Fair, Lyon, 2022</p>
+      <p><strong>Awards & Distinctions</strong><br>Young Sculpture Prize, 2023<br>Art Foundation Grant, 2022</p>
     </div>
   </div>
 </section>
 
 <section class="reveal">
   <div class="section-head">
-    <h2>Philosophie</h2>
-    <p>Les principes qui guident ma création.</p>
+    <h2>Philosophy</h2>
+    <p>The principles that guide my creation.</p>
   </div>
   <div class="process-list">
     <div class="process-item">
       <div class="num">01</div>
-      <h3>Matière</h3>
-      <p>Le bronze, la pierre et le bois sont mes matériaux de prédilection. Chaque matière dicte son propre langage et impose ses contraintes créatives.</p>
+      <h3>Matter</h3>
+      <p>Bronze, stone, and wood are my preferred materials. Each material dictates its own language and imposes its creative constraints.</p>
     </div>
     <div class="process-item">
       <div class="num">02</div>
-      <h3>Équilibre</h3>
-      <p>La recherche de l'équilibre parfait entre plein et vide, masse et légèreté, est au cœur de chaque sculpture.</p>
+      <h3>Balance</h3>
+      <p>The search for perfect balance between full and empty, mass and lightness, is at the heart of each sculpture.</p>
     </div>
     <div class="process-item">
       <div class="num">03</div>
-      <h3>Temps</h3>
-      <p>Chaque œuvre porte en elle le temps de sa création. Les traces du travail manuel sont visibles, témoins de la patience et de la précision.</p>
+      <h3>Time</h3>
+      <p>Each work carries within it the time of its creation. The traces of manual work are visible, witnesses to patience and precision.</p>
     </div>
     <div class="process-item">
       <div class="num">04</div>
-      <h3>Émotion</h3>
-      <p>L'art doit émouvoir. Mes sculptures cherchent à susciter une réponse émotionnelle, une connexion silencieuse avec le spectateur.</p>
+      <h3>Emotion</h3>
+      <p>Art must move. My sculptures seek to evoke an emotional response, a silent connection with the viewer.</p>
     </div>
   </div>
 </section>
