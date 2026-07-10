@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier — FL Sculptures</title>
+<meta name="description" content="Découvrez l'atelier FL, notre démarche artistique et les techniques de sculpture. Matières, geste et création.">
+<meta name="keywords" content="atelier sculpture, démarche artistique, techniques sculpture, création artistique">
+<meta name="author" content="FL">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Atelier — FL Sculptures">
+<meta property="og:description" content="Découvrez l'atelier FL et notre démarche artistique.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page-transition"></div>
+
+<header>
+  <div class="logo">FL</div>
+  <nav id="mainNav">
+    <a href="index.html">Accueil</a>
+    <a href="collection.html">Collection</a>
+    <a href="atelier.html" class="active">Atelier</a>
+    <a href="about.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <div class="lang-switcher">
+      <button class="active" onclick="setLanguage('fr')">FR</button>
+      <button onclick="setLanguage('en')">EN</button>
+    </div>
+    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+      🛒
+      <span class="cart-count">0</span>
+    </button>
+  </div>
+  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
+</header>
+
+<div class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Panier</h3>
+    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total">0.00 €</span>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="eyebrow">Atelier</div>
+  <h1>La démarche</h1>
+  <p class="placeholder">[Texte d'intro de la page atelier — à confirmer]</p>
+</div>
+
+<section class="reveal">
+  <div class="manifesto-grid">
+    <p class="big placeholder">[Paragraphe principal du manifeste — présentation de la démarche artistique]</p>
+    <div class="side">
+      <p class="placeholder">[Paragraphe secondaire 1 — matières travaillées, technique]</p>
+      <p class="placeholder">[Paragraphe secondaire 2 — parcours, filiation, ce qui rend chaque pièce unique]</p>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="cart.js"></script>
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+<script>
+function setLanguage(lang) {
+  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

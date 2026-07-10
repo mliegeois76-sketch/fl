@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commander — FL Sculptures</title>
+<meta name="description" content="Finalisez votre commande de sculptures FL. Paiement sécurisé via Stripe.">
+<meta name="keywords" content="checkout, commande, paiement sécurisé, stripe">
+<meta name="author" content="FL">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="style.css">
+<script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+
+<div class="page-transition"></div>
+
+<header>
+  <div class="logo">FL</div>
+  <nav id="mainNav">
+    <a href="index.html">Accueil</a>
+    <a href="collection.html">Collection</a>
+    <a href="atelier.html">Atelier</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">À propos</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <button class="search-toggle" onclick="toggleSearch()">🔍</button>
+    <div class="lang-switcher">
+      <button class="active" onclick="setLanguage('fr')">FR</button>
+      <button onclick="setLanguage('en')">EN</button>
+    </div>
+    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+      🛒
+      <span class="cart-count">0</span>
+    </button>
+  </div>
+  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
+</header>
+
+<div class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Panier</h3>
+    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total">0.00 €</span>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="eyebrow">Commande</div>
+  <h1>Finaliser votre achat</h1>
+  <p>Complétez vos informations pour procéder au paiement sécurisé.</p>
+</div>
+
+<section class="reveal">
+  <div class="checkout-grid">
+    <div class="checkout-form-container">
+      <form id="checkoutForm" onsubmit="handleCheckout(event)">
+        <div class="checkout-section">
+          <h3>Informations personnelles</h3>
+          <div class="checkout-form">
+            <div class="form-group">
+              <label>Prénom *</label>
+              <input type="text" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label>Nom *</label>
+              <input type="text" name="lastName" required>
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label>Téléphone *</label>
+              <input type="tel" name="phone" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-section">
+          <h3>Adresse de livraison</h3>
+          <div class="checkout-form">
+            <div class="form-group">
+              <label>Adresse *</label>
+              <input type="text" name="address" required>
+            </div>
+            <div class="form-group">
+              <label>Complément d'adresse</label>
+              <input type="text" name="address2">
+            </div>
+            <div class="form-group">
+              <label>Code postal *</label>
+              <input type="text" name="postalCode" required>
+            </div>
+            <div class="form-group">
+              <label>Ville *</label>
+              <input type="text" name="city" required>
+            </div>
+            <div class="form-group">
+              <label>Pays *</label>
+              <select name="country" required>
+                <option value="FR">France</option>
+                <option value="BE">Belgique</option>
+                <option value="CH">Suisse</option>
+                <option value="LU">Luxembourg</option>
+                <option value="DE">Allemagne</option>
+                <option value="other">Autre</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-section">
+          <h3>Paiement sécurisé</h3>
+          <div class="checkout-form">
+            <div class="form-group">
+              <label>Numéro de carte *</label>
+              <div id="card-element" style="padding: 12px; border: 1px solid var(--line); border-radius: 4px;"></div>
+            </div>
+            <div class="form-group">
+              <label>Nom sur la carte *</label>
+              <input type="text" name="cardName" required>
+            </div>
+          </div>
+          <p style="font-size: 12px; color: var(--stone); margin-top: 12px;">
+            🔒 Paiement sécurisé via Stripe. Vos informations bancaires ne sont jamais stockées sur nos serveurs.
+          </p>
+        </div>
+
+        <div class="checkout-section">
+          <h3>Instructions spéciales</h3>
+          <div class="form-group">
+            <textarea name="instructions" placeholder="Instructions de livraison, demande d'installation, etc." rows="4" style="width: 100%; padding: 12px; border: 1px solid var(--line); background: var(--white); outline:none; resize: none;"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="checkout-btn" id="submitBtn">
+          <span id="btnText">Payer et commander</span>
+          <span id="btnLoader" style="display: none;">Traitement en cours...</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="order-summary">
+      <h3>Récapitulatif</h3>
+      <div id="orderItems"></div>
+      <div class="order-total">
+        <span>Total</span>
+        <span id="orderTotal">0.00 €</span>
+      </div>
+      <div style="margin-top: 16px; font-size: 13px; color: var(--stone);">
+        <p>Livraison estimée : 2-4 semaines</p>
+        <p>Transporteur spécialisé œuvres d'art</p>
+        <p>Assurance incluse</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="cart.js"></script>
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+<script src="config.js"></script>
+<script>
+// Initialize Stripe
+const stripe = Stripe('pk_test_YOUR_STRIPE_PUBLIC_KEY');
+const elements = stripe.elements();
+const cardElement = elements.create('card', {
+  style: {
+    base: {
+      fontSize: '16px',
+      color: '#191817',
+      '::placeholder': { color: '#8B857C' }
+    }
+  }
+});
+cardElement.mount('#card-element');
+
+function toggleSearch() {
+  document.querySelector('.search-overlay').classList.toggle('open');
+}
+
+function setLanguage(lang) {
+  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Update order summary
+function updateOrderSummary() {
+  const cart = window.shoppingCart.cart;
+  const orderItems = document.getElementById('orderItems');
+  const orderTotal = document.getElementById('orderTotal');
+  
+  if (cart.length === 0) {
+    orderItems.innerHTML = '<p style="text-align: center; color: var(--stone); padding: 24px;">Votre panier est vide</p>';
+    orderTotal.textContent = '0.00 €';
+    return;
+  }
+  
+  orderItems.innerHTML = cart.map(item => `
+    <div class="order-item">
+      <div>
+        <strong>${item.name}</strong>
+        <div style="font-size: 13px; color: var(--stone);">Quantité: ${item.quantity}</div>
+      </div>
+      <span>${(item.price * item.quantity).toFixed(2)} €</span>
+    </div>
+  `).join('');
+  
+  const total = window.shoppingCart.getCartTotal();
+  orderTotal.textContent = `${total.toFixed(2)} €`;
+}
+
+// Handle checkout
+async function handleCheckout(e) {
+  e.preventDefault();
+  
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const btnLoader = document.getElementById('btnLoader');
+  
+  if (window.shoppingCart.cart.length === 0) {
+    alert('Votre panier est vide');
+    return;
+  }
+  
+  submitBtn.disabled = true;
+  btnText.style.display = 'none';
+  btnLoader.style.display = 'inline';
+  
+  try {
+    // Create payment intent on your server
+    const response = await fetch('/create-payment-intent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: Math.round(window.shoppingCart.getCartTotal() * 100),
+        currency: 'eur',
+        items: window.shoppingCart.cart
+      })
+    });
+    
+    const { clientSecret } = await response.json();
+    
+    // Confirm payment
+    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
+        billing_details: {
+          name: e.target.cardName.value
+        }
+      }
+    });
+    
+    if (error) {
+      alert(error.message);
+      submitBtn.disabled = false;
+      btnText.style.display = 'inline';
+      btnLoader.style.display = 'none';
+    } else {
+      // Payment successful
+      window.shoppingCart.clearCart();
+      alert('Paiement réussi ! Vous recevrez un email de confirmation.');
+      window.location.href = 'index.html';
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Une erreur est survenue. Veuillez réessayer.');
+    submitBtn.disabled = false;
+    btnText.style.display = 'inline';
+    btnLoader.style.display = 'none';
+  }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  updateOrderSummary();
+});
+</script>
+</body>
+</html>

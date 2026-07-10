@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confidentialité — FL</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page-transition"></div>
+
+<header>
+  <div class="logo">FL</div>
+  <nav id="mainNav">
+    <a href="index.html">Accueil</a>
+    <a href="collection.html">Collection</a>
+    <a href="atelier.html">Atelier</a>
+    <a href="about.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <div class="lang-switcher">
+      <button class="active" onclick="setLanguage('fr')">FR</button>
+      <button onclick="setLanguage('en')">EN</button>
+    </div>
+  </div>
+  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
+</header>
+
+<div class="legal">
+  <h1>Politique de confidentialité</h1>
+  <p class="updated">Dernière mise à jour : [date]</p>
+  <p>Cette politique décrit comment [éditeur du site] collecte, utilise et protège les données personnelles des visiteurs et clients de ce site, conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés.</p>
+
+  <h2>1. Responsable de traitement</h2>
+  <p class="placeholder">[Nom / raison sociale, adresse, email de contact du responsable de traitement]</p>
+
+  <h2>2. Données collectées</h2>
+  <ul>
+    <li>Données transmises via le formulaire de contact : nom, email, message, œuvre concernée</li>
+    <li class="placeholder">[Autres données éventuelles : cookies analytiques, données de commande si vente en ligne]</li>
+  </ul>
+
+  <h2>3. Finalités du traitement</h2>
+  <ul>
+    <li>Répondre aux demandes de contact et de réservation d'œuvres</li>
+    <li class="placeholder">[Gestion de commande, facturation, envoi d'informations sur la collection — à confirmer selon usage réel]</li>
+  </ul>
+
+  <h2>4. Base légale</h2>
+  <p>Le traitement repose sur l'exécution de mesures précontractuelles prises à la demande du Client (article 6.1.b du RGPD) et, le cas échéant, sur le consentement pour les communications facultatives.</p>
+
+  <h2>5. Durée de conservation</h2>
+  <p class="placeholder">[Durée de conservation des données de contact et de commande — à confirmer, en général 3 ans pour la prospection, durée légale pour les données de facturation]</p>
+
+  <h2>6. Destinataires des données</h2>
+  <p class="placeholder">[Préciser si les données sont partagées avec des tiers : transporteur, prestataire de paiement, etc.]</p>
+
+  <h2>7. Droits des personnes</h2>
+  <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité de vos données. Vous pouvez exercer ces droits en écrivant à <span class="placeholder">[email de contact dédié]</span>.</p>
+
+  <h2>8. Réclamation</h2>
+  <p>Vous disposez du droit d'introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés) — www.cnil.fr.</p>
+
+  <h2>9. Cookies</h2>
+  <p>Le détail des cookies utilisés sur ce site est disponible dans notre <a href="cookies.html">Politique de cookies</a>.</p>
+</div>
+
+<footer id="site-footer"></footer>
+
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+<script>
+function setLanguage(lang) {
+  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

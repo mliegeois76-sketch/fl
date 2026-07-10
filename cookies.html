@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookies — FL</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page-transition"></div>
+
+<header>
+  <div class="logo">FL</div>
+  <nav id="mainNav">
+    <a href="index.html">Accueil</a>
+    <a href="collection.html">Collection</a>
+    <a href="atelier.html">Atelier</a>
+    <a href="about.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <div class="lang-switcher">
+      <button class="active" onclick="setLanguage('fr')">FR</button>
+      <button onclick="setLanguage('en')">EN</button>
+    </div>
+  </div>
+  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
+</header>
+
+<div class="legal">
+  <h1>Politique de cookies</h1>
+  <p class="updated">Dernière mise à jour : [date]</p>
+
+  <h2>1. Qu'est-ce qu'un cookie</h2>
+  <p>Un cookie est un petit fichier texte déposé sur votre appareil lors de la visite du site, permettant de conserver certaines informations le temps de votre navigation ou lors de vos visites suivantes.</p>
+
+  <h2>2. Cookies utilisés sur ce site</h2>
+  <ul>
+    <li><strong>Cookies strictement nécessaires</strong> — indispensables au fonctionnement du site (navigation, sécurité), déposés sans consentement requis.</li>
+    <li class="placeholder">[Cookies de mesure d'audience — à préciser si un outil analytique type Matomo/GA est utilisé, avec consentement requis]</li>
+    <li class="placeholder">[Cookies tiers — réseaux sociaux, éventuel module de paiement — à préciser selon les outils réellement intégrés]</li>
+  </ul>
+
+  <h2>3. Consentement</h2>
+  <p class="placeholder">[Décrire le bandeau de consentement affiché aux visiteurs, conforme aux recommandations de la CNIL, si des cookies non essentiels sont utilisés]</p>
+
+  <h2>4. Durée de conservation</h2>
+  <p class="placeholder">[Durée de vie des cookies déposés — 13 mois maximum recommandé par la CNIL pour les cookies non essentiels]</p>
+
+  <h2>5. Gérer vos préférences</h2>
+  <p>Vous pouvez à tout moment configurer votre navigateur pour refuser les cookies, ou utiliser le module de gestion des préférences disponible sur ce site le cas échéant.</p>
+</div>
+
+<footer id="site-footer"></footer>
+
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+<script>
+function setLanguage(lang) {
+  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL</title>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<meta name="description" content="FL — Sculptures d'art contemporain minimaliste.">
+<meta name="keywords" content="sculptures, art contemporain, art minimaliste">
+<meta name="author" content="FL">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="FL">
+<meta property="og:description" content="Sculptures d'art contemporain minimaliste.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 5vw;
+  }
+  
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(80px, 15vw, 200px);
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    margin-bottom: 24px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1.5s ease forwards;
+  }
+  
+  .hero-subtitle {
+    font-size: clamp(14px, 2vw, 18px);
+    color: var(--stone);
+    max-width: 500px;
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1.5s ease 0.3s forwards;
+  }
+  
+  .hero-cta {
+    margin-top: 48px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1.5s ease 0.6s forwards;
+  }
+  
+  .cta-button {
+    display: inline-block;
+    padding: 16px 48px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.4s ease;
+  }
+  
+  .cta-button:hover {
+    background: var(--ink);
+    color: var(--white);
+    transform: scale(1.05);
+  }
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    animation: fadeIn 1s ease 1s forwards;
+  }
+  
+  .scroll-indicator span {
+    display: block;
+    width: 1px;
+    height: 60px;
+    background: var(--stone);
+    margin: 0 auto;
+    animation: scrollDown 2s ease infinite;
+  }
+  
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  
+  @keyframes scrollDown {
+    0%, 100% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform-origin: bottom; }
+  }
+  
+  /* Page transition overlay */
+  .page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--white);
+    z-index: 9999;
+    pointer-events: none;
+    clip-path: circle(0% at 50% 50%);
+    transition: clip-path 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  
+  .page-transition.active {
+    clip-path: circle(150% at 50% 50%);
+  }
+  
+  /* Navigation link hover effect */
+  #mainNav a {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  #mainNav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--ink);
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  
+  #mainNav a:hover::after {
+    transform: translateX(0);
+  }
+  
+  /* Section content styles */
+  .section-content {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    padding: 120px 5vw 60px;
+  }
+  
+  .page-hero {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  
+  .page-hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 8vw, 80px);
+    font-weight: 300;
+    margin-bottom: 16px;
+  }
+  
+  .page-hero p {
+    color: var(--stone);
+    font-size: 16px;
+  }
+  
+  /* Collection styles */
+  .collection-filters {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 40px;
+    justify-content: center;
+  }
+  
+  .filter-btn {
+    padding: 8px 24px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: var(--ink);
+    color: var(--white);
+    border-color: var(--ink);
+  }
+  
+  .piece-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px;
+  }
+  
+  .piece {
+    border: 1px solid var(--line);
+    padding: 24px;
+    transition: all 0.3s ease;
+  }
+  
+  .piece:hover {
+    border-color: var(--ink);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  
+  .piece-visual {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  
+  .piece-visual svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .piece-name {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  
+  .piece-meta {
+    font-size: 12px;
+    color: var(--stone);
+    margin-bottom: 16px;
+  }
+  
+  .piece-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .piece-price button {
+    padding: 8px 16px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .piece-price button:hover {
+    background: var(--ink);
+    color: var(--white);
+  }
+  
+  /* Manifesto styles */
+  .manifesto-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+    max-width: 900px;
+  }
+  
+  .manifesto-grid .big {
+    font-size: 24px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  
+  .manifesto-grid .side p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--stone);
+    margin-bottom: 24px;
+  }
+  
+  /* Contact styles */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    max-width: 900px;
+  }
+  
+  .form-row {
+    margin-bottom: 24px;
+  }
+  
+  .form-row label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--stone);
+  }
+  
+  .form-row input,
+  .form-row textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--line);
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-row input:focus,
+  .form-row textarea:focus {
+    outline: none;
+    border-color: var(--ink);
+  }
+  
+  .submit-btn {
+    padding: 12px 32px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .submit-btn:hover {
+    background: var(--ink);
+    color: var(--white);
+  }
+  
+  .form-status {
+    margin-top: 16px;
+    font-size: 14px;
+  }
+  
+  .form-status.success {
+    color: var(--stone);
+  }
+  
+  .form-status.error {
+    color: #d32f2f;
+  }
+  
+  .contact-info .block {
+    padding: 24px;
+    border: 1px solid var(--line);
+    margin-bottom: 24px;
+  }
+  
+  .contact-info .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 8px;
+  }
+  
+  @media (max-width: 760px) {
+    .manifesto-grid,
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    
+    .piece-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Loading animation */
+  .loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--white);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+  }
+  
+  .loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .loader-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 48px;
+    opacity: 0;
+    animation: loaderFadeIn 1s ease forwards;
+  }
+  
+  .loader-logo img {
+    max-width: 200px;
+    height: auto;
+  }
+  
+  /* Header layout */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+  }
+  
+  .cart-text {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  .cart-count {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  @keyframes loaderFadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Landing Page */
+  .landing-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--white);
+    z-index: 10002;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+  }
+  
+  .landing-page.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .landing-content {
+    text-align: center;
+    position: relative;
+    z-index: 10000;
+  }
+  
+  .landing-content h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(80px, 15vw, 200px);
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+  }
+  
+  .landing-content p {
+    font-size: 16px;
+    color: var(--stone);
+    max-width: 400px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+  }
+  
+  .continue-btn {
+    padding: 16px 48px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 9999;
+  }
+  
+  .continue-btn:hover {
+    background: var(--ink);
+    color: var(--white);
+  }
+  
+  #sculpture-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<!-- Landing Page -->
+<div class="landing-page" id="splash-screen">
+  <canvas id="sculpture-canvas"></canvas>
+  <div class="landing-content">
+    <button class="continue-btn" id="continue-btn" onclick="enterSite()" style="z-index: 99999 !important; position: relative; cursor: pointer;">Continuer</button>
+  </div>
+</div>
+
+<!-- Loader -->
+<div class="loader" id="loader" style="display: none;">
+  <div class="loader-logo">
+    <img src="logo.jpg" alt="FL">
+  </div>
+</div>
+
+<div class="page-transition"></div>
+
+<header>
+  <button class="menu-toggle">Menu</button>
+  <div class="header-actions">
+    <div class="lang-dropdown">
+      <button class="lang-current" onclick="toggleLangDropdown()">FR</button>
+      <div class="lang-menu" id="langMenu">
+        <button onclick="setLanguage('fr')">FR</button>
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">ZH</button>
+        <button onclick="setLanguage('es')">ES</button>
+        <button onclick="setLanguage('pt')">PT</button>
+      </div>
+    </div>
+    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+      <span class="cart-text">Panier</span>
+      <span class="cart-count">(0)</span>
+    </button>
+  </div>
+</header>
+
+<!-- Menu Overlay -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="menu-content">
+    <button class="menu-close">×</button>
+    <nav class="menu-nav">
+      <a href="#" data-section="home" class="active">Accueil</a>
+      <a href="#" data-section="collection">Collection</a>
+      <a href="#" data-section="about">À propos</a>
+      <a href="#" data-section="contact">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<div class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Panier</h3>
+    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total">0.00 €</span>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+  </div>
+</div>
+
+<div class="hero-content" id="section-home" style="display: none;">
+</div>
+
+<!-- Collection Section -->
+<div class="section-content" id="section-collection" style="display: none;">
+  <div class="page-hero">
+    <h1>Collection</h1>
+    <p>Œuvres disponibles.</p>
+  </div>
+  <section>
+    <div class="collection-filters">
+      <button class="filter-btn active" data-filter="all">Toutes</button>
+      <button class="filter-btn" data-filter="bronze">Bronze</button>
+      <button class="filter-btn" data-filter="pierre">Pierre</button>
+      <button class="filter-btn" data-filter="bois">Bois</button>
+    </div>
+    <div class="piece-grid">
+      <div class="piece s-l" data-category="bronze">
+        <div class="piece-visual">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="20" y="30" width="60" height="50" fill="currentColor" opacity="0.1"/>
+          </svg>
+        </div>
+        <div class="piece-name">Éclipse Noire</div>
+        <div class="piece-meta">Bronze • 2024</div>
+        <div class="piece-price">
+          <span>12 500 €</span>
+          <button onclick="window.shoppingCart.addToCart('Éclipse Noire', 12500)">Ajouter</button>
+        </div>
+      </div>
+      <div class="piece s-m" data-category="pierre">
+        <div class="piece-visual">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="50" cy="50" r="30" fill="currentColor" opacity="0.1"/>
+          </svg>
+        </div>
+        <div class="piece-name">Silence</div>
+        <div class="piece-meta">Pierre • 2024</div>
+        <div class="piece-price">
+          <span>8 200 €</span>
+          <button onclick="window.shoppingCart.addToCart('Silence', 8200)">Ajouter</button>
+        </div>
+      </div>
+      <div class="piece s-m" data-category="bois">
+        <div class="piece-visual">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+            <polygon points="50,20 80,80 20,80" fill="currentColor" opacity="0.1"/>
+          </svg>
+        </div>
+        <div class="piece-name">Équilibre</div>
+        <div class="piece-meta">Bois • 2024</div>
+        <div class="piece-price">
+          <span>5 800 €</span>
+          <button onclick="window.shoppingCart.addToCart('Équilibre', 5800)">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- About Section -->
+<div class="section-content" id="section-about" style="display: none;">
+  <div class="page-hero">
+    <h1>À propos</h1>
+    <p>L'artiste et son parcours.</p>
+  </div>
+  <section>
+    <div class="manifesto-grid">
+      <p class="big">FL est un sculpteur contemporain dont le travail explore les frontières entre abstraction et figuration. Chaque œuvre est le résultat d'une recherche constante sur l'équilibre, la matière et l'espace.</p>
+      <div class="side">
+        <p>Basé à Paris, l'artiste travaille principalement le bronze, la pierre et le bois, créant des pièces uniques qui interrogent notre rapport à l'espace et au temps.</p>
+        <p>La démarche est minimaliste : chaque forme est essentielle, chaque vide significatif. L'œuvre naît d'un dialogue constant entre la matière et l'intention.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Contact Section -->
+<div class="section-content" id="section-contact" style="display: none;">
+  <div class="page-hero">
+    <h1>Contact</h1>
+    <p>Nous écrire.</p>
+  </div>
+  <section class="contact">
+    <div class="contact-grid">
+      <form id="contactForm" novalidate>
+        <div class="form-row"><label for="name">Nom</label><input id="name" name="name" type="text" required autocomplete="name"></div>
+        <div class="form-row"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+        <div class="form-row"><label for="message">Message</label><textarea id="message" name="message" rows="5" required></textarea></div>
+        <button type="submit" class="submit-btn">Envoyer</button>
+        <div id="formStatus" class="form-status"></div>
+      </form>
+      <div class="contact-info">
+        <div class="block">
+          <span class="eyebrow">Email</span>
+          <p>contact@fl-art.com</p>
+        </div>
+        <div class="block">
+          <span class="eyebrow">Atelier</span>
+          <p>Paris, France</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer id="site-footer"></footer>
+
+<script src="cart.js"></script>
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+<script>
+// Three.js 3D Animation for Landing Page
+window.addEventListener('load', () => {
+  console.log('Page loaded, initializing 3D...');
+  const canvas = document.getElementById('sculpture-canvas');
+  console.log('Canvas found:', canvas);
+  
+  if (canvas && typeof THREE !== 'undefined') {
+    console.log('THREE.js available, initializing scene...');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Create abstract ceramic form - smooth torus knot for elegant flow
+    const geometry = new THREE.TorusKnotGeometry(1.5, 0.4, 100, 16);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0xcccccc,
+      roughness: 0.2,
+      metalness: 0.1
+    });
+    
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    
+    // Premium studio lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(-5, 5, 5);
+    scene.add(directionalLight);
+    
+    camera.position.z = 7;
+    
+    console.log('3D scene initialized, starting animation...');
+    
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      // Gentle rotation
+      mesh.rotation.y += 0.003;
+      mesh.rotation.x += 0.002;
+      
+      renderer.render(scene, camera);
+    }
+    
+    animate();
+    
+    // Handle resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  } else {
+    console.error('Canvas not found or THREE.js not loaded');
+  }
+});
+
+// Enter site function
+function enterSite() {
+  const splashScreen = document.getElementById('splash-screen');
+  const canvas = document.getElementById('sculpture-canvas');
+  
+  if (splashScreen) {
+    splashScreen.style.opacity = '0';
+    setTimeout(() => {
+      splashScreen.style.display = 'none';
+    }, 800);
+  }
+  
+  // Transition canvas to homepage position
+  if (canvas) {
+    canvas.style.transition = 'all 1.5s cubic-bezier(0.65, 0, 0.35, 1)';
+    canvas.style.transform = 'translate(-50%, -50%) scale(0.5)';
+    canvas.style.opacity = '0.3';
+    canvas.style.zIndex = '0';
+  }
+  
+  // Show home section
+  const homeSection = document.getElementById('section-home');
+  if (homeSection) {
+    homeSection.style.display = 'block';
+  }
+}
+
+// Direct event listener for Continue button
+document.addEventListener('DOMContentLoaded', () => {
+  const continueBtn = document.getElementById('continue-btn');
+  if (continueBtn) {
+    continueBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      enterSite();
+    });
+  }
+});
+
+// Menu toggle function
+function toggleMenu() {
+  const menuOverlay = document.getElementById('menuOverlay');
+  menuOverlay.classList.toggle('active');
+  
+  // Animate menu links when opening
+  if (menuOverlay.classList.contains('active')) {
+    const links = menuOverlay.querySelectorAll('.menu-nav a');
+    links.forEach((link, index) => {
+      setTimeout(() => {
+        link.style.opacity = '1';
+        link.style.transform = 'translateY(0)';
+      }, index * 100);
+    });
+  }
+}
+
+// Single-page navigation with menu
+const navLinks = document.querySelectorAll('.menu-nav a[data-section]');
+const sections = document.querySelectorAll('.section-content, .hero-content');
+
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    const targetSection = link.dataset.section;
+    
+    // Update active state
+    navLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    
+    // Close menu
+    const menuOverlay = document.getElementById('menuOverlay');
+    menuOverlay.classList.remove('active');
+    
+    // Hide all sections
+    sections.forEach(section => {
+      section.style.display = 'none';
+    });
+    
+    // Show target section
+    const targetElement = document.getElementById(`section-${targetSection}`);
+    if (targetElement) {
+      targetElement.style.display = 'block';
+    }
+  });
+});
+
+// Collection filters
+const filterBtns = document.querySelectorAll('.filter-btn');
+const pieces = document.querySelectorAll('.piece');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const filter = btn.dataset.filter;
+    
+    pieces.forEach(piece => {
+      if (filter === 'all' || piece.dataset.category === filter) {
+        piece.style.display = '';
+      } else {
+        piece.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Loading animation
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  setTimeout(() => {
+    loader.classList.add('hidden');
+  }, 1500);
+});
+
+// Language dropdown toggle
+function toggleLangDropdown() {
+  const langMenu = document.getElementById('langMenu');
+  langMenu.classList.toggle('active');
+}
+
+// Connect dropdown to existing i18n system
+document.addEventListener('DOMContentLoaded', () => {
+  const langButtons = document.querySelectorAll('#langMenu button');
+  langButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const lang = e.target.textContent.toLowerCase();
+      if (window.i18n) {
+        window.i18n.setLanguage(lang);
+        const langCurrent = document.querySelector('.lang-current');
+        langCurrent.textContent = lang.toUpperCase();
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

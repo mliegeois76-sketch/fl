@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentions légales — FL</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page-transition"></div>
+
+<header>
+  <div class="logo">FL</div>
+  <nav id="mainNav">
+    <a href="index.html">Accueil</a>
+    <a href="collection.html">Collection</a>
+    <a href="atelier.html">Atelier</a>
+    <a href="about.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <div class="lang-switcher">
+      <button class="active" onclick="setLanguage('fr')">FR</button>
+      <button onclick="setLanguage('en')">EN</button>
+    </div>
+  </div>
+  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
+</header>
+
+<div class="legal">
+  <h1>Mentions légales</h1>
+  <p class="updated">Dernière mise à jour : [date]</p>
+
+  <p class="placeholder">Conformément aux dispositions des articles 6-III et 19 de la Loi n° 2004-575 du 21 juin 2004 pour la Confiance dans l'économie numérique (LCEN), il est porté à la connaissance des utilisateurs et visiteurs du site les présentes mentions légales. Le contenu ci-dessous est un gabarit à faire valider par un professionnel du droit avant mise en ligne.</p>
+
+  <h2>1. Éditeur du site</h2>
+  <p class="placeholder">
+    [Nom / raison sociale]<br>
+    [Statut juridique — auto-entrepreneur, EI, SASU, etc.]<br>
+    [Adresse du siège / de l'atelier]<br>
+    [Numéro SIRET]<br>
+    [Numéro de TVA intracommunautaire, si applicable]<br>
+    [Email de contact]<br>
+    [Téléphone, si affiché]
+  </p>
+
+  <h2>2. Directeur de la publication</h2>
+  <p class="placeholder">[Nom du directeur de la publication — en général le dirigeant]</p>
+
+  <h2>3. Hébergement du site</h2>
+  <p class="placeholder">
+    [Nom de l'hébergeur]<br>
+    [Adresse de l'hébergeur]<br>
+    [Contact de l'hébergeur]
+  </p>
+
+  <h2>4. Propriété intellectuelle</h2>
+  <p>L'ensemble des contenus présents sur ce site (textes, photographies des œuvres, illustrations, logo, charte graphique) est protégé par le droit d'auteur et le droit des marques. Toute reproduction, représentation, modification ou diffusion, totale ou partielle, sans autorisation écrite préalable, est interdite et constitue une contrefaçon.</p>
+  <p class="placeholder">[Préciser : les œuvres sculptées elles-mêmes restent la propriété de l'auteur jusqu'à cession contractuelle, même après vente de l'exemplaire physique, sauf mention contraire — à faire valider juridiquement.]</p>
+
+  <h2>5. Données personnelles</h2>
+  <p>Le traitement des données personnelles collectées via ce site est décrit dans la <a href="confidentialite.html">Politique de confidentialité</a>.</p>
+
+  <h2>6. Crédits</h2>
+  <p class="placeholder">[Conception du site, crédits photo si photographe tiers, etc.]</p>
+</div>
+
+<footer id="site-footer"></footer>
+
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+<script>
+function setLanguage(lang) {
+  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

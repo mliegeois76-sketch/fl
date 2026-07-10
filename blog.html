@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — FL Sculptures</title>
+<meta name="description" content="Blog FL - Actualités, coulisses d'atelier et réflexions sur la sculpture contemporaine.">
+<meta name="keywords" content="blog sculpture, art contemporain, actualités artistiques">
+<meta name="author" content="FL">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Blog — FL Sculptures">
+<meta property="og:description" content="Actualités et réflexions sur la sculpture contemporaine.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page-transition"></div>
+
+<header>
+  <div class="logo">FL</div>
+  <nav id="mainNav">
+    <a href="index.html">Accueil</a>
+    <a href="collection.html">Collection</a>
+    <a href="atelier.html">Atelier</a>
+    <a href="blog.html" class="active">Blog</a>
+    <a href="about.html">À propos</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <button class="search-toggle" onclick="toggleSearch()">🔍</button>
+    <div class="lang-switcher">
+      <button class="active" onclick="setLanguage('fr')">FR</button>
+      <button onclick="setLanguage('en')">EN</button>
+    </div>
+    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+      🛒
+      <span class="cart-count">0</span>
+    </button>
+  </div>
+  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
+</header>
+
+<div class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Panier</h3>
+    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total">0.00 €</span>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+  </div>
+</div>
+
+<div class="search-overlay">
+  <div class="search-header">
+    <button class="search-close" onclick="toggleSearch()">×</button>
+  </div>
+  <div class="search-container">
+    <input type="text" class="search-input" placeholder="Rechercher..." oninput="handleSearch(this.value)">
+    <div class="search-results"></div>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="eyebrow">Blog</div>
+  <h1>Journal de l'atelier</h1>
+  <p>Coulisses de création, réflexions sur l'art et actualités de la galerie.</p>
+</div>
+
+<section class="reveal">
+  <div class="section-head">
+    <h2>Derniers articles</h2>
+    <p>Explorez notre univers sculptural à travers nos écrits.</p>
+  </div>
+  
+  <div class="blog-grid">
+    <article class="blog-card">
+      <div class="blog-image">
+        <div class="placeholder">[Image article 1]</div>
+      </div>
+      <div class="blog-content">
+        <div class="blog-meta">
+          <span class="blog-date">15 Juin 2026</span>
+          <span class="blog-category">Atelier</span>
+        </div>
+        <h3 class="blog-title">La genèse d'une sculpture</h3>
+        <p class="blog-excerpt">De l'idée initiale à l'œuvre finale, découvrez le processus créatif derrière nos sculptures.</p>
+        <a href="#" class="blog-link">Lire l'article →</a>
+      </div>
+    </article>
+
+    <article class="blog-card">
+      <div class="blog-image">
+        <div class="placeholder">[Image article 2]</div>
+      </div>
+      <div class="blog-content">
+        <div class="blog-meta">
+          <span class="blog-date">2 Juin 2026</span>
+          <span class="blog-category">Technique</span>
+        </div>
+        <h3 class="blog-title">Le bronze dans la sculpture contemporaine</h3>
+        <p class="blog-excerpt">Exploration des techniques de moulage et de finition du bronze dans l'art actuel.</p>
+        <a href="#" class="blog-link">Lire l'article →</a>
+      </div>
+    </article>
+
+    <article class="blog-card">
+      <div class="blog-image">
+        <div class="placeholder">[Image article 3]</div>
+      </div>
+      <div class="blog-content">
+        <div class="blog-meta">
+          <span class="blog-date">20 Mai 2026</span>
+          <span class="blog-category">Exposition</span>
+        </div>
+        <h3 class="blog-title">Rétrospective : nos expositions 2025</h3>
+        <p class="blog-excerpt">Un bilan des événements marquants de l'année passée et les perspectives à venir.</p>
+        <a href="#" class="blog-link">Lire l'article →</a>
+      </div>
+    </article>
+
+    <article class="blog-card">
+      <div class="blog-image">
+        <div class="placeholder">[Image article 4]</div>
+      </div>
+      <div class="blog-content">
+        <div class="blog-meta">
+          <span class="blog-date">10 Mai 2026</span>
+          <span class="blog-category">Philosophie</span>
+        </div>
+        <h3 class="blog-title">L'abstraction figurative</h3>
+        <p class="blog-excerpt">Réflexions sur la frontière entre représentation et abstraction dans notre travail.</p>
+        <a href="#" class="blog-link">Lire l'article →</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="newsletter-section reveal">
+  <div class="newsletter-content">
+    <h2>Restez informé</h2>
+    <p>Recevez nos dernières actualités et invitations vernissages.</p>
+    <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+      <input type="email" placeholder="Votre email" required>
+      <button type="submit">S'inscrire</button>
+    </form>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="cart.js"></script>
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+<script>
+function toggleSearch() {
+  document.querySelector('.search-overlay').classList.toggle('open');
+}
+
+function setLanguage(lang) {
+  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  // Implement language switching logic
+}
+
+function handleSearch(query) {
+  // Implement search functionality
+}
+
+function handleNewsletterSubmit(e) {
+  e.preventDefault();
+  // Implement newsletter subscription
+  alert('Merci pour votre inscription !');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ — FL Sculptures</title>
+<meta name="description" content="Questions fréquentes sur FL Sculptures - Achats, livraison, entretien des œuvres.">
+<meta name="keywords" content="FAQ, questions fréquentes, achat sculpture, livraison">
+<meta name="author" content="FL">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="FAQ — FL Sculptures">
+<meta property="og:description" content="Trouvez les réponses à vos questions sur nos sculptures.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page-transition"></div>
+
+<header>
+  <div class="logo">FL</div>
+  <nav id="mainNav">
+    <a href="index.html">Accueil</a>
+    <a href="collection.html">Collection</a>
+    <a href="atelier.html">Atelier</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">À propos</a>
+    <a href="faq.html" class="active">FAQ</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <button class="search-toggle" onclick="toggleSearch()">🔍</button>
+    <div class="lang-switcher">
+      <button class="active" onclick="setLanguage('fr')">FR</button>
+      <button onclick="setLanguage('en')">EN</button>
+    </div>
+    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+      🛒
+      <span class="cart-count">0</span>
+    </button>
+  </div>
+  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
+</header>
+
+<div class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Panier</h3>
+    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total">0.00 €</span>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+  </div>
+</div>
+
+<div class="search-overlay">
+  <div class="search-header">
+    <button class="search-close" onclick="toggleSearch()">×</button>
+  </div>
+  <div class="search-container">
+    <input type="text" class="search-input" placeholder="Rechercher..." oninput="handleSearch(this.value)">
+    <div class="search-results"></div>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="eyebrow">FAQ</div>
+  <h1>Questions fréquentes</h1>
+  <p>Tout ce que vous devez savoir sur nos sculptures et nos services.</p>
+</div>
+
+<section class="reveal">
+  <div class="faq-grid">
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h3>Comment commander une sculpture ?</h3>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Pour commander une sculpture, vous pouvez nous contacter directement via le formulaire de contact ou utiliser le bouton "Demander" sur chaque œuvre de la collection. Nous vous répondrons dans les 48h pour discuter des disponibilités et organiser une visite si nécessaire.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h3>Quels sont les modes de paiement acceptés ?</h3>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Nous acceptons les virements bancaires, les paiements par carte bancaire via Stripe, et les chèques pour les résidents français. Un acompte de 30% est requis à la commande, le solde étant dû avant la livraison.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h3>Comment se passe la livraison ?</h3>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Nous organisons la livraison via des transporteurs spécialisés en œuvres d'art. Les sculptures sont soigneusement emballées et assurées pendant le transport. L'installation sur site peut être organisée sur demande, particulièrement pour les grandes œuvres.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h3>Les sculptures sont-elles uniques ?</h3>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Chaque sculpture est une pièce unique, signée et numérotée. Nous ne produisons pas d'éditions multiples, garantissant l'exclusivité de chaque œuvre. Certains modèles peuvent être réalisés sur commande avec des variations.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h3>Proposez-vous des visites d'atelier ?</h3>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, nous accueillons les visiteurs sur rendez-vous. C'est l'occasion de découvrir notre processus de création, de voir des œuvres en cours de réalisation et d'échanger directement avec l'artiste. Contactez-nous pour organiser votre visite.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h3>Comment entretenir une sculpture ?</h3>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>L'entretien dépend du matériau. Pour le bronze, un dépoussiérage régulier avec un chiffon doux suffit. Pour les autres matériaux, nous fournissons des instructions spécifiques avec chaque œuvre. Nous proposons également un service de restauration.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h3>Quelle est votre politique de retour ?</h3>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Étant donné que chaque œuvre est unique, nous n'acceptons pas les retours. Cependant, nous encourageons les visites et l'envoi de photos détaillées avant achat pour vous assurer que l'œuvre correspond à vos attentes.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h3>Proposez-vous des certificats d'authenticité ?</h3>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, chaque sculpture est accompagnée d'un certificat d'authenticité signé, détaillant l'œuvre, sa date de création, ses dimensions et son numéro dans la série. Ce document garantit l'origine et l'authenticité de la pièce.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact reveal">
+  <div class="section-head">
+    <h2>Une autre question ?</h2>
+    <p>Nous sommes à votre disposition pour toute demande.</p>
+  </div>
+  <div class="contact-grid">
+    <form id="contactForm" novalidate>
+      <div class="form-row"><label for="name">Nom</label><input id="name" name="name" type="text" required autocomplete="name"></div>
+      <div class="form-row"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+      <div class="form-row"><label for="message">Message</label><textarea id="message" name="message" required></textarea></div>
+      <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      <button class="submit-btn" type="submit">Envoyer</button>
+    </form>
+    <div class="contact-info">
+      <div class="block"><span class="eyebrow">Email</span><p>contact@fl-sculptures.com</p></div>
+      <div class="block"><span class="eyebrow">Téléphone</span><p>+33 1 23 45 67 89</p></div>
+      <div class="block"><span class="eyebrow">Atelier</span><p>Sur rendez-vous uniquement<br>Paris, France</p></div>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="cart.js"></script>
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+<script src="config.js"></script>
+<script>
+function toggleSearch() {
+  document.querySelector('.search-overlay').classList.toggle('open');
+}
+
+function setLanguage(lang) {
+  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function handleSearch(query) {
+  // Implement search functionality
+}
+
+function toggleFaq(element) {
+  const item = element.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>

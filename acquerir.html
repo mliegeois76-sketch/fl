@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acquérir — FL Sculptures</title>
+<meta name="description" content="Découvrez le parcours d'acquisition des sculptures FL. Demande, échange, réservation et livraison d'œuvres d'art.">
+<meta name="keywords" content="acquérir sculpture, achat art, parcours acquisition, réservation œuvre">
+<meta name="author" content="FL">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Acquérir — FL Sculptures">
+<meta property="og:description" content="Découvrez le parcours d'acquisition des sculptures FL.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page-transition"></div>
+
+<header>
+  <div class="logo">FL</div>
+  <nav id="mainNav">
+    <a href="index.html">Accueil</a>
+    <a href="collection.html">Collection</a>
+    <a href="atelier.html">Atelier</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">À propos</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <button class="search-toggle" onclick="toggleSearch()">🔍</button>
+    <div class="lang-switcher">
+      <button class="active" onclick="setLanguage('fr')">FR</button>
+      <button onclick="setLanguage('en')">EN</button>
+    </div>
+    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+      🛒
+      <span class="cart-count">0</span>
+    </button>
+  </div>
+  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
+</header>
+
+<div class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Panier</h3>
+    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total">0.00 €</span>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+  </div>
+</div>
+
+<div class="search-overlay">
+  <div class="search-header">
+    <button class="search-close" onclick="toggleSearch()">×</button>
+  </div>
+  <div class="search-container">
+    <input type="text" class="search-input" placeholder="Rechercher..." oninput="handleSearch(this.value)">
+    <div class="search-results"></div>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="eyebrow">Acquérir</div>
+  <h1>Le parcours d'acquisition</h1>
+  <p class="placeholder">[À confirmer : décrire le vrai parcours d'achat souhaité]</p>
+</div>
+
+<section class="reveal">
+  <div class="process-list">
+    <div class="process-item"><div class="num">01</div><h3>Demande</h3><p class="placeholder">[Étape à confirmer]</p></div>
+    <div class="process-item"><div class="num">02</div><h3>Échange</h3><p class="placeholder">[Étape à confirmer]</p></div>
+    <div class="process-item"><div class="num">03</div><h3>Réservation</h3><p class="placeholder">[Étape à confirmer]</p></div>
+    <div class="process-item"><div class="num">04</div><h3>Livraison</h3><p class="placeholder">[Étape à confirmer]</p></div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="cart.js"></script>
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+<script>
+function toggleSearch() {
+  document.querySelector('.search-overlay').classList.toggle('open');
+}
+
+function setLanguage(lang) {
+  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function handleSearch(query) {
+  // Implement search functionality
+}
+</script>
+</body>
+</html>
