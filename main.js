@@ -56,9 +56,9 @@ document.querySelectorAll('#mainNav a').forEach(link => {
 // Footer HTML
 const FOOTER_HTML = `
 <div class="footer-grid">
-  <a href="index.html">Accueil</a>
+  <a href="index.html">Home</a>
   <a href="collection.html">Collection</a>
-  <a href="about.html">À propos</a>
+  <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
   <a href="mentions-legales.html">Mentions Légales</a>
   <a href="confidentialite.html">Politique de Confidentialité</a>
@@ -67,10 +67,60 @@ const FOOTER_HTML = `
   <a href="#">Paiement & Sécurité</a>
 </div>`;
 
+// Cookie Consent Banner
+const COOKIE_BANNER_HTML = `
+<div id="cookie-banner" class="cookie-banner" style="display: none;">
+  <div class="cookie-content">
+    <p>We use cookies to ensure you get the best experience on our website. <a href="cookies.html">Learn more</a></p>
+    <div class="cookie-buttons">
+      <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Accept</button>
+      <button class="cookie-btn cookie-decline" onclick="declineCookies()">Decline</button>
+    </div>
+  </div>
+</div>`;
+
+function initCookieConsent() {
+  // Check if user has already made a choice
+  const cookieChoice = localStorage.getItem('cookieConsent');
+  
+  if (!cookieChoice) {
+    // Show banner after a short delay
+    setTimeout(() => {
+      const banner = document.getElementById('cookie-banner');
+      if (banner) {
+        banner.style.display = 'flex';
+      }
+    }, 1000);
+  }
+}
+
+function acceptCookies() {
+  localStorage.setItem('cookieConsent', 'accepted');
+  const banner = document.getElementById('cookie-banner');
+  if (banner) {
+    banner.style.display = 'none';
+  }
+  // Here you could enable analytics cookies
+}
+
+function declineCookies() {
+  localStorage.setItem('cookieConsent', 'declined');
+  const banner = document.getElementById('cookie-banner');
+  if (banner) {
+    banner.style.display = 'none';
+  }
+  // Ensure only essential cookies are used
+}
+
 document.addEventListener('DOMContentLoaded', ()=>{
   initGlobalMenu();
   const mount = document.getElementById('site-footer');
   if(mount){ mount.innerHTML = FOOTER_HTML; }
+  
+  // Add cookie banner to body
+  document.body.insertAdjacentHTML('beforeend', COOKIE_BANNER_HTML);
+  initCookieConsent();
+  
   initContactForm();
 });
 

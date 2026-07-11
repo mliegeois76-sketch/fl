@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed — FL Sculptures</title>
+<meta name="description" content="Your order has been confirmed. Thank you for your purchase.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page-transition"></div>
+
+<header>
+  <button class="menu-toggle">Menu</button>
+  <div class="header-actions">
+    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+      <span class="cart-text">Cart</span>
+      <span class="cart-count">(0)</span>
+    </button>
+  </div>
+</header>
+
+<div class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Cart</h3>
+    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total">0.00 €</span>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="eyebrow">Order Confirmed</div>
+  <h1>Thank You for Your Purchase</h1>
+  <p>Your order has been successfully processed.</p>
+</div>
+
+<section class="reveal">
+  <div class="success-container">
+    <div class="success-icon">✓</div>
+    
+    <div class="order-details">
+      <h3>Order Details</h3>
+      <div class="detail-row">
+        <span>Order Number:</span>
+        <strong id="orderNumber">FL-</strong>
+      </div>
+      <div class="detail-row">
+        <span>Date:</span>
+        <strong id="orderDate"></strong>
+      </div>
+      <div class="detail-row">
+        <span>Total Paid:</span>
+        <strong id="orderTotal">0.00 €</strong>
+      </div>
+    </div>
+
+    <div class="shipping-details">
+      <h3>Shipping Information</h3>
+      <div id="shippingInfo"></div>
+    </div>
+
+    <div class="order-items-summary">
+      <h3>Items Ordered</h3>
+      <div id="orderItems"></div>
+    </div>
+
+    <div class="next-steps">
+      <h3>What's Next?</h3>
+      <ul>
+        <li>You will receive a confirmation email shortly</li>
+        <li>We will prepare your artwork for specialized shipping</li>
+        <li>Estimated delivery: 2-4 weeks</li>
+        <li>You will receive tracking information once shipped</li>
+      </ul>
+    </div>
+
+    <div class="success-actions">
+      <button class="checkout-btn" onclick="window.location.href='collection.html'">Continue Shopping</button>
+      <button class="secondary-btn" onclick="window.location.href='contact.html'">Contact Us</button>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="cart.js"></script>
+<script src="main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const orderData = JSON.parse(localStorage.getItem('lastOrder'));
+  
+  if (orderData) {
+    document.getElementById('orderNumber').textContent = orderData.orderId;
+    document.getElementById('orderDate').textContent = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    document.getElementById('orderTotal').textContent = orderData.total.toFixed(2) + ' €';
+    
+    // Shipping info
+    document.getElementById('shippingInfo').innerHTML = `
+      <p><strong>${orderData.customer.firstName} ${orderData.customer.lastName}</strong></p>
+      <p>${orderData.customer.address}</p>
+      <p>${orderData.customer.postalCode} ${orderData.customer.city}</p>
+      <p>${orderData.customer.country}</p>
+      <p>Email: ${orderData.customer.email}</p>
+      <p>Phone: ${orderData.customer.phone}</p>
+    `;
+    
+    // Order items
+    document.getElementById('orderItems').innerHTML = orderData.items.map(item => `
+      <div class="order-item">
+        <div>
+          <strong>${item.name}</strong>
+          <div style="font-size: 13px; color: var(--stone);">Quantity: ${item.quantity}</div>
+        </div>
+        <span>${(item.price * item.quantity).toFixed(2)} €</span>
+      </div>
+    `).join('');
+  }
+  
+  // Clear order data after displaying
+  localStorage.removeItem('lastOrder');
+});
+</script>
+</body>
+</html>

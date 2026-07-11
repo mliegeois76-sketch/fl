@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confidentialité — FL</title>
+<title>Politique de confidentialité — FL Sculptures</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,71 +11,113 @@
 <div class="page-transition"></div>
 
 <header>
-  <div class="logo">FL</div>
-  <nav id="mainNav">
-    <a href="index.html">Accueil</a>
-    <a href="collection.html">Collection</a>
-    <a href="atelier.html">Atelier</a>
-    <a href="about.html">À propos</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+  <button class="menu-toggle">Menu</button>
   <div class="header-actions">
-    <div class="lang-switcher">
-      <button class="active" onclick="setLanguage('fr')">FR</button>
-      <button onclick="setLanguage('en')">EN</button>
-    </div>
+    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+      <span class="cart-text">Panier</span>
+      <span class="cart-count">(0)</span>
+    </button>
   </div>
-  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
 </header>
+
+<div class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Panier</h3>
+    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total">0.00 €</span>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+  </div>
+</div>
 
 <div class="legal">
   <h1>Politique de confidentialité</h1>
-  <p class="updated">Dernière mise à jour : [date]</p>
-  <p>Cette politique décrit comment [éditeur du site] collecte, utilise et protège les données personnelles des visiteurs et clients de ce site, conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés.</p>
+  <p class="updated">Dernière mise à jour : Janvier 2026</p>
+  <p>Cette politique décrit comment FL Sculptures collecte, utilise et protège les données personnelles des visiteurs et clients de ce site, conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés.</p>
 
   <h2>1. Responsable de traitement</h2>
-  <p class="placeholder">[Nom / raison sociale, adresse, email de contact du responsable de traitement]</p>
+  <p>
+    <strong>FL Sculptures</strong><br>
+    Adresse : [À compléter - Adresse de l'atelier]<br>
+    Paris, France<br>
+    Email : contact@fl-art.com
+  </p>
 
   <h2>2. Données collectées</h2>
+  <p>Nous collectons les données suivantes :</p>
   <ul>
-    <li>Données transmises via le formulaire de contact : nom, email, message, œuvre concernée</li>
-    <li class="placeholder">[Autres données éventuelles : cookies analytiques, données de commande si vente en ligne]</li>
+    <li>Données de contact : nom, prénom, email, téléphone</li>
+    <li>Données de commande : adresse de livraison, adresse de facturation</li>
+    <li>Données de paiement : informations de paiement traitées via Stripe (non stockées sur nos serveurs)</li>
+    <li>Données de navigation : cookies techniques nécessaires au fonctionnement du site</li>
   </ul>
 
   <h2>3. Finalités du traitement</h2>
   <ul>
-    <li>Répondre aux demandes de contact et de réservation d'œuvres</li>
-    <li class="placeholder">[Gestion de commande, facturation, envoi d'informations sur la collection — à confirmer selon usage réel]</li>
+    <li>Gestion des commandes et livraison des œuvres</li>
+    <li>Traitement des paiements</li>
+    <li>Communication avec les clients (confirmations de commande, informations de livraison)</li>
+    <li>Amélioration du site et de l'expérience utilisateur</li>
   </ul>
 
   <h2>4. Base légale</h2>
-  <p>Le traitement repose sur l'exécution de mesures précontractuelles prises à la demande du Client (article 6.1.b du RGPD) et, le cas échéant, sur le consentement pour les communications facultatives.</p>
+  <p>Le traitement repose sur :</p>
+  <ul>
+    <li>L'exécution du contrat (article 6.1.b du RGPD) pour la gestion des commandes</li>
+    <li>Le consentement (article 6.1.a du RGPD) pour les cookies non nécessaires</li>
+    <li>L'obligation légale (article 6.1.c du RGPD) pour les données comptables</li>
+  </ul>
 
   <h2>5. Durée de conservation</h2>
-  <p class="placeholder">[Durée de conservation des données de contact et de commande — à confirmer, en général 3 ans pour la prospection, durée légale pour les données de facturation]</p>
+  <ul>
+    <li>Données de commande : 5 ans (durée légale)</li>
+    <li>Données de contact : 3 ans après dernier contact</li>
+    <li>Données comptables : 10 ans (durée légale)</li>
+    <li>Cookies : session ou 13 mois selon le type</li>
+  </ul>
 
   <h2>6. Destinataires des données</h2>
-  <p class="placeholder">[Préciser si les données sont partagées avec des tiers : transporteur, prestataire de paiement, etc.]</p>
+  <p>Vos données peuvent être partagées avec :</p>
+  <ul>
+    <li>Transporteurs pour la livraison des œuvres</li>
+    <li>Prestataires de paiement (Stripe) pour le traitement sécurisé des paiements</li>
+    <li>Hébergeur (GitHub Pages) pour le stockage des données</li>
+  </ul>
+  <p>Tous nos sous-traitants sont soumis à des obligations de confidentialité et de sécurité strictes.</p>
 
-  <h2>7. Droits des personnes</h2>
-  <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité de vos données. Vous pouvez exercer ces droits en écrivant à <span class="placeholder">[email de contact dédié]</span>.</p>
+  <h2>7. Transfert de données</h2>
+  <p>Les données sont hébergées sur des serveurs situés dans l'Union Européenne. Aucun transfert de données en dehors de l'UE n'est effectué sans garanties adéquates.</p>
 
-  <h2>8. Réclamation</h2>
-  <p>Vous disposez du droit d'introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés) — www.cnil.fr.</p>
+  <h2>8. Sécurité des données</h2>
+  <p>Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles appropriées pour protéger vos données contre la destruction, la perte, l'altération, la diffusion ou l'accès non autorisés.</p>
 
-  <h2>9. Cookies</h2>
+  <h2>9. Droits des personnes</h2>
+  <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+  <ul>
+    <li>Droit d'accès à vos données</li>
+    <li>Droit de rectification des données inexactes</li>
+    <li>Droit à l'effacement (droit à l'oubli)</li>
+    <li>Droit à la limitation du traitement</li>
+    <li>Droit d'opposition au traitement</li>
+    <li>Droit à la portabilité des données</li>
+  </ul>
+  <p>Pour exercer ces droits, contactez-nous à : contact@fl-art.com</p>
+
+  <h2>10. Réclamation</h2>
+  <p>Vous disposez du droit d'introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés) : 3 Place de Fontenoy, 75007 Paris, France - www.cnil.fr</p>
+
+  <h2>11. Cookies</h2>
   <p>Le détail des cookies utilisés sur ce site est disponible dans notre <a href="cookies.html">Politique de cookies</a>.</p>
 </div>
 
 <footer id="site-footer"></footer>
 
-<script src="i18n.js"></script>
+<script src="cart.js"></script>
 <script src="main.js"></script>
-<script>
-function setLanguage(lang) {
-  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-}
-</script>
 </body>
 </html>

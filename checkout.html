@@ -1,48 +1,32 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Commander — FL Sculptures</title>
-<meta name="description" content="Finalisez votre commande de sculptures FL. Paiement sécurisé via Stripe.">
-<meta name="keywords" content="checkout, commande, paiement sécurisé, stripe">
+<title>Checkout — FL Sculptures</title>
+<meta name="description" content="Complete your FL sculpture purchase. Secure payment processing.">
+<meta name="keywords" content="checkout, order, secure payment">
 <meta name="author" content="FL">
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css">
-<script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
 
 <div class="page-transition"></div>
 
 <header>
-  <div class="logo">FL</div>
-  <nav id="mainNav">
-    <a href="index.html">Accueil</a>
-    <a href="collection.html">Collection</a>
-    <a href="atelier.html">Atelier</a>
-    <a href="blog.html">Blog</a>
-    <a href="about.html">À propos</a>
-    <a href="faq.html">FAQ</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+  <button class="menu-toggle">Menu</button>
   <div class="header-actions">
-    <button class="search-toggle" onclick="toggleSearch()">🔍</button>
-    <div class="lang-switcher">
-      <button class="active" onclick="setLanguage('fr')">FR</button>
-      <button onclick="setLanguage('en')">EN</button>
-    </div>
     <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
-      🛒
-      <span class="cart-count">0</span>
+      <span class="cart-text">Cart</span>
+      <span class="cart-count">(0)</span>
     </button>
   </div>
-  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
 </header>
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Panier</h3>
+    <h3>Cart</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
@@ -51,14 +35,14 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
   </div>
 </div>
 
 <div class="page-hero">
-  <div class="eyebrow">Commande</div>
-  <h1>Finaliser votre achat</h1>
-  <p>Complétez vos informations pour procéder au paiement sécurisé.</p>
+  <div class="eyebrow">Checkout</div>
+  <h1>Complete Your Purchase</h1>
+  <p>Fill in your information to proceed with secure payment.</p>
 </div>
 
 <section class="reveal">
@@ -66,14 +50,14 @@
     <div class="checkout-form-container">
       <form id="checkoutForm" onsubmit="handleCheckout(event)">
         <div class="checkout-section">
-          <h3>Informations personnelles</h3>
+          <h3>Customer Information</h3>
           <div class="checkout-form">
             <div class="form-group">
-              <label>Prénom *</label>
+              <label>First Name *</label>
               <input type="text" name="firstName" required>
             </div>
             <div class="form-group">
-              <label>Nom *</label>
+              <label>Last Name *</label>
               <input type="text" name="lastName" required>
             </div>
             <div class="form-group">
@@ -81,87 +65,144 @@
               <input type="email" name="email" required>
             </div>
             <div class="form-group">
-              <label>Téléphone *</label>
+              <label>Phone *</label>
               <input type="tel" name="phone" required>
             </div>
           </div>
         </div>
 
         <div class="checkout-section">
-          <h3>Adresse de livraison</h3>
+          <h3>Shipping Address</h3>
           <div class="checkout-form">
             <div class="form-group">
-              <label>Adresse *</label>
+              <label>Address *</label>
               <input type="text" name="address" required>
             </div>
             <div class="form-group">
-              <label>Complément d'adresse</label>
+              <label>Address Line 2</label>
               <input type="text" name="address2">
             </div>
             <div class="form-group">
-              <label>Code postal *</label>
+              <label>Postal Code *</label>
               <input type="text" name="postalCode" required>
             </div>
             <div class="form-group">
-              <label>Ville *</label>
+              <label>City *</label>
               <input type="text" name="city" required>
             </div>
             <div class="form-group">
-              <label>Pays *</label>
+              <label>Country *</label>
               <select name="country" required>
                 <option value="FR">France</option>
-                <option value="BE">Belgique</option>
-                <option value="CH">Suisse</option>
+                <option value="BE">Belgium</option>
+                <option value="CH">Switzerland</option>
                 <option value="LU">Luxembourg</option>
-                <option value="DE">Allemagne</option>
-                <option value="other">Autre</option>
+                <option value="DE">Germany</option>
+                <option value="other">Other</option>
               </select>
             </div>
           </div>
         </div>
 
         <div class="checkout-section">
-          <h3>Paiement sécurisé</h3>
-          <div class="checkout-form">
+          <h3>Billing Address</h3>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name="sameAsShipping" checked onchange="toggleBillingAddress()">
+              Same as shipping address
+            </label>
+          </div>
+          <div id="billingAddressFields" style="display: none;">
             <div class="form-group">
-              <label>Numéro de carte *</label>
-              <div id="card-element" style="padding: 12px; border: 1px solid var(--line); border-radius: 4px;"></div>
+              <label>Billing Address *</label>
+              <input type="text" name="billingAddress">
             </div>
             <div class="form-group">
-              <label>Nom sur la carte *</label>
-              <input type="text" name="cardName" required>
+              <label>Billing City *</label>
+              <input type="text" name="billingCity">
+            </div>
+            <div class="form-group">
+              <label>Billing Postal Code *</label>
+              <input type="text" name="billingPostalCode">
             </div>
           </div>
-          <p style="font-size: 12px; color: var(--stone); margin-top: 12px;">
-            🔒 Paiement sécurisé via Stripe. Vos informations bancaires ne sont jamais stockées sur nos serveurs.
-          </p>
         </div>
 
         <div class="checkout-section">
-          <h3>Instructions spéciales</h3>
-          <div class="form-group">
-            <textarea name="instructions" placeholder="Instructions de livraison, demande d'installation, etc." rows="4" style="width: 100%; padding: 12px; border: 1px solid var(--line); background: var(--white); outline:none; resize: none;"></textarea>
+          <h3>Secure Payment</h3>
+          <div class="checkout-form">
+            <div class="form-group">
+              <label>Card Number *</label>
+              <input type="text" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry Date *</label>
+                <input type="text" name="cardExpiry" placeholder="MM/YY" maxlength="5" required>
+              </div>
+              <div class="form-group">
+                <label>CVC *</label>
+                <input type="text" name="cardCvc" placeholder="123" maxlength="3" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Name on Card *</label>
+              <input type="text" name="cardName" required>
+            </div>
+          </div>
+          <div class="security-badges">
+            <span>🔒 SSL Encrypted</span>
+            <span>🛡️ 3D Secure</span>
+            <span>💳 PCI Compliant</span>
           </div>
         </div>
 
+        <div class="checkout-section">
+          <h3>Special Instructions</h3>
+          <div class="form-group">
+            <textarea name="instructions" placeholder="Delivery instructions, installation requests, etc." rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="checkout-section">
+          <label class="terms-checkbox">
+            <input type="checkbox" name="acceptTerms" required>
+            <span>I accept the <a href="cgv.html" target="_blank">Terms and Conditions</a> and <a href="confidentialite.html" target="_blank">Privacy Policy</a> *</span>
+          </label>
+        </div>
+
         <button type="submit" class="checkout-btn" id="submitBtn">
-          <span id="btnText">Payer et commander</span>
-          <span id="btnLoader" style="display: none;">Traitement en cours...</span>
+          <span id="btnText">Pay and Complete Order</span>
+          <span id="btnLoader" style="display: none;">Processing...</span>
         </button>
       </form>
     </div>
 
     <div class="order-summary">
-      <h3>Récapitulatif</h3>
+      <h3>Order Summary</h3>
       <div id="orderItems"></div>
+      <div class="order-breakdown">
+        <div class="order-row">
+          <span>Subtotal</span>
+          <span id="subtotal">0.00 €</span>
+        </div>
+        <div class="order-row">
+          <span>Shipping</span>
+          <span id="shipping">150.00 €</span>
+        </div>
+        <div class="order-row">
+          <span>VAT (20%)</span>
+          <span id="vat">0.00 €</span>
+        </div>
+      </div>
       <div class="order-total">
         <span>Total</span>
         <span id="orderTotal">0.00 €</span>
       </div>
-      <div style="margin-top: 16px; font-size: 13px; color: var(--stone);">
-        <p>Livraison estimée : 2-4 semaines</p>
-        <p>Transporteur spécialisé œuvres d'art</p>
-        <p>Assurance incluse</p>
+      <div class="delivery-info">
+        <p>Estimated delivery: 2-4 weeks</p>
+        <p>Specialized art shipping carrier</p>
+        <p>Insurance included</p>
       </div>
     </div>
   </div>
@@ -170,42 +211,29 @@
 <footer id="site-footer"></footer>
 
 <script src="cart.js"></script>
-<script src="i18n.js"></script>
 <script src="main.js"></script>
-<script src="config.js"></script>
 <script>
-// Initialize Stripe
-const stripe = Stripe('pk_test_YOUR_STRIPE_PUBLIC_KEY');
-const elements = stripe.elements();
-const cardElement = elements.create('card', {
-  style: {
-    base: {
-      fontSize: '16px',
-      color: '#191817',
-      '::placeholder': { color: '#8B857C' }
-    }
-  }
-});
-cardElement.mount('#card-element');
-
-function toggleSearch() {
-  document.querySelector('.search-overlay').classList.toggle('open');
+function toggleBillingAddress() {
+  const checkbox = document.querySelector('input[name="sameAsShipping"]');
+  const billingFields = document.getElementById('billingAddressFields');
+  billingFields.style.display = checkbox.checked ? 'none' : 'block';
 }
 
-function setLanguage(lang) {
-  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-}
-
-// Update order summary
+// Update order summary with shipping and VAT
 function updateOrderSummary() {
   const cart = window.shoppingCart.cart;
   const orderItems = document.getElementById('orderItems');
   const orderTotal = document.getElementById('orderTotal');
+  const subtotalEl = document.getElementById('subtotal');
+  const shippingEl = document.getElementById('shipping');
+  const vatEl = document.getElementById('vat');
   
   if (cart.length === 0) {
-    orderItems.innerHTML = '<p style="text-align: center; color: var(--stone); padding: 24px;">Votre panier est vide</p>';
+    orderItems.innerHTML = '<p style="text-align: center; color: var(--stone); padding: 24px;">Your cart is empty</p>';
     orderTotal.textContent = '0.00 €';
+    subtotalEl.textContent = '0.00 €';
+    shippingEl.textContent = '0.00 €';
+    vatEl.textContent = '0.00 €';
     return;
   }
   
@@ -213,18 +241,25 @@ function updateOrderSummary() {
     <div class="order-item">
       <div>
         <strong>${item.name}</strong>
-        <div style="font-size: 13px; color: var(--stone);">Quantité: ${item.quantity}</div>
+        <div style="font-size: 13px; color: var(--stone);">Quantity: ${item.quantity}</div>
       </div>
       <span>${(item.price * item.quantity).toFixed(2)} €</span>
     </div>
   `).join('');
   
-  const total = window.shoppingCart.getCartTotal();
+  const subtotal = window.shoppingCart.getCartTotal();
+  const shipping = cart.length > 0 ? 150.00 : 0;
+  const vat = (subtotal * 0.20);
+  const total = subtotal + shipping + vat;
+  
+  subtotalEl.textContent = `${subtotal.toFixed(2)} €`;
+  shippingEl.textContent = `${shipping.toFixed(2)} €`;
+  vatEl.textContent = `${vat.toFixed(2)} €`;
   orderTotal.textContent = `${total.toFixed(2)} €`;
 }
 
-// Handle checkout
-async function handleCheckout(e) {
+// Handle checkout with simulated payment
+function handleCheckout(e) {
   e.preventDefault();
   
   const submitBtn = document.getElementById('submitBtn');
@@ -232,7 +267,7 @@ async function handleCheckout(e) {
   const btnLoader = document.getElementById('btnLoader');
   
   if (window.shoppingCart.cart.length === 0) {
-    alert('Votre panier est vide');
+    alert('Your cart is empty');
     return;
   }
   
@@ -240,48 +275,34 @@ async function handleCheckout(e) {
   btnText.style.display = 'none';
   btnLoader.style.display = 'inline';
   
-  try {
-    // Create payment intent on your server
-    const response = await fetch('/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        amount: Math.round(window.shoppingCart.getCartTotal() * 100),
-        currency: 'eur',
-        items: window.shoppingCart.cart
-      })
-    });
+  // Simulate payment processing
+  setTimeout(() => {
+    const formData = new FormData(e.target);
+    const orderData = {
+      orderId: 'FL-' + Date.now(),
+      customer: {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        address: formData.get('address'),
+        city: formData.get('city'),
+        postalCode: formData.get('postalCode'),
+        country: formData.get('country')
+      },
+      items: window.shoppingCart.cart,
+      total: window.shoppingCart.getCartTotal() + 150 + (window.shoppingCart.getCartTotal() * 0.20)
+    };
     
-    const { clientSecret } = await response.json();
+    // Store order data for success page
+    localStorage.setItem('lastOrder', JSON.stringify(orderData));
     
-    // Confirm payment
-    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: cardElement,
-        billing_details: {
-          name: e.target.cardName.value
-        }
-      }
-    });
+    // Clear cart
+    window.shoppingCart.clearCart();
     
-    if (error) {
-      alert(error.message);
-      submitBtn.disabled = false;
-      btnText.style.display = 'inline';
-      btnLoader.style.display = 'none';
-    } else {
-      // Payment successful
-      window.shoppingCart.clearCart();
-      alert('Paiement réussi ! Vous recevrez un email de confirmation.');
-      window.location.href = 'index.html';
-    }
-  } catch (err) {
-    console.error(err);
-    alert('Une erreur est survenue. Veuillez réessayer.');
-    submitBtn.disabled = false;
-    btnText.style.display = 'inline';
-    btnLoader.style.display = 'none';
-  }
+    // Redirect to success page
+    window.location.href = 'order-success.html';
+  }, 2000);
 }
 
 // Initialize

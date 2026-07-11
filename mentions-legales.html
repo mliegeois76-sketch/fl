@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mentions légales — FL</title>
+<title>Mentions légales — FL Sculptures</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,70 +11,77 @@
 <div class="page-transition"></div>
 
 <header>
-  <div class="logo">FL</div>
-  <nav id="mainNav">
-    <a href="index.html">Accueil</a>
-    <a href="collection.html">Collection</a>
-    <a href="atelier.html">Atelier</a>
-    <a href="about.html">À propos</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+  <button class="menu-toggle">Menu</button>
   <div class="header-actions">
-    <div class="lang-switcher">
-      <button class="active" onclick="setLanguage('fr')">FR</button>
-      <button onclick="setLanguage('en')">EN</button>
-    </div>
+    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+      <span class="cart-text">Panier</span>
+      <span class="cart-count">(0)</span>
+    </button>
   </div>
-  <button class="nav-toggle" onclick="toggleNav()">Menu</button>
 </header>
+
+<div class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Panier</h3>
+    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+  </div>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total">0.00 €</span>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+  </div>
+</div>
 
 <div class="legal">
   <h1>Mentions légales</h1>
-  <p class="updated">Dernière mise à jour : [date]</p>
+  <p class="updated">Dernière mise à jour : Janvier 2026</p>
 
-  <p class="placeholder">Conformément aux dispositions des articles 6-III et 19 de la Loi n° 2004-575 du 21 juin 2004 pour la Confiance dans l'économie numérique (LCEN), il est porté à la connaissance des utilisateurs et visiteurs du site les présentes mentions légales. Le contenu ci-dessous est un gabarit à faire valider par un professionnel du droit avant mise en ligne.</p>
+  <p>Conformément aux dispositions des articles 6-III et 19 de la Loi n° 2004-575 du 21 juin 2004 pour la Confiance dans l'économie numérique (LCEN), nous vous informons des mentions légales suivantes :</p>
 
   <h2>1. Éditeur du site</h2>
-  <p class="placeholder">
-    [Nom / raison sociale]<br>
-    [Statut juridique — auto-entrepreneur, EI, SASU, etc.]<br>
-    [Adresse du siège / de l'atelier]<br>
-    [Numéro SIRET]<br>
-    [Numéro de TVA intracommunautaire, si applicable]<br>
-    [Email de contact]<br>
-    [Téléphone, si affiché]
+  <p>
+    <strong>FL Sculptures</strong><br>
+    Statut : Auto-entrepreneur<br>
+    Adresse : [À compléter - Adresse de l'atelier]<br>
+    Paris, France<br>
+    Numéro SIRET : [À compléter]<br>
+    Numéro de TVA intracommunautaire : [À compléter, si applicable]<br>
+    Email : contact@fl-art.com<br>
+    Téléphone : [À compléter, si affiché]
   </p>
 
   <h2>2. Directeur de la publication</h2>
-  <p class="placeholder">[Nom du directeur de la publication — en général le dirigeant]</p>
+  <p>FL - Sculpteur contemporain</p>
 
   <h2>3. Hébergement du site</h2>
-  <p class="placeholder">
-    [Nom de l'hébergeur]<br>
-    [Adresse de l'hébergeur]<br>
-    [Contact de l'hébergeur]
+  <p>
+    <strong>GitHub Pages</strong> (GitHub, Inc.)<br>
+    88 Colin P Kelly Jr St<br>
+    San Francisco, CA 94107<br>
+    États-Unis<br>
+    Contact : https://github.com/contact
   </p>
 
   <h2>4. Propriété intellectuelle</h2>
   <p>L'ensemble des contenus présents sur ce site (textes, photographies des œuvres, illustrations, logo, charte graphique) est protégé par le droit d'auteur et le droit des marques. Toute reproduction, représentation, modification ou diffusion, totale ou partielle, sans autorisation écrite préalable, est interdite et constitue une contrefaçon.</p>
-  <p class="placeholder">[Préciser : les œuvres sculptées elles-mêmes restent la propriété de l'auteur jusqu'à cession contractuelle, même après vente de l'exemplaire physique, sauf mention contraire — à faire valider juridiquement.]</p>
+  <p>Les œuvres sculptées présentées sur ce site sont des créations originales protégées par le droit d'auteur. La vente d'un exemplaire physique n'entraîne pas la cession des droits de reproduction ou de représentation de l'œuvre.</p>
 
   <h2>5. Données personnelles</h2>
-  <p>Le traitement des données personnelles collectées via ce site est décrit dans la <a href="confidentialite.html">Politique de confidentialité</a>.</p>
+  <p>Le traitement des données personnelles collectées via ce site est décrit dans notre <a href="confidentialite.html">Politique de confidentialité</a> conformément au Règlement (UE) 2016/679 (RGPD).</p>
 
-  <h2>6. Crédits</h2>
-  <p class="placeholder">[Conception du site, crédits photo si photographe tiers, etc.]</p>
+  <h2>6. Cookies</h2>
+  <p>Ce site utilise des cookies nécessaires au bon fonctionnement du site (panier, préférences). Pour plus d'informations, consultez notre <a href="cookies.html">Politique de cookies</a>.</p>
+
+  <h2>7. Litiges</h2>
+  <p>En cas de litige, et après tentative de résolution amiable, le consommateur dispose du droit de saisir le tribunal compétent de son lieu de résidence ou du lieu du siège social du professionnel.</p>
 </div>
 
 <footer id="site-footer"></footer>
 
-<script src="i18n.js"></script>
+<script src="cart.js"></script>
 <script src="main.js"></script>
-<script>
-function setLanguage(lang) {
-  document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-}
-</script>
 </body>
 </html>
