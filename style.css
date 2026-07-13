@@ -300,6 +300,16 @@ section{padding:140px 5vw;position:relative;}
 .section-head h2{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,64px);font-weight:200;letter-spacing:0.1em;line-height:1.05;color:var(--ink);}
 .section-head p{max-width:350px;font-size:14px;color:var(--stone);line-height:1.8;font-weight:300;}
 
+/* Main content wrapper for homepage */
+.main-content{
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 120px 5vw 60px;
+}
+
 /* PIECE CARDS (collection) */
 .collection-filters{
   display:flex;gap:12px;margin-bottom:32px;flex-wrap:wrap;
