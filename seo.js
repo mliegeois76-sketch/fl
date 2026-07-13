@@ -209,7 +209,6 @@ ${pages.map(page => `  <url>
   generateRobotsTxt() {
     return `User-agent: *
 Allow: /
-Disallow: /admin.html
 Disallow: /account.html
 Disallow: /checkout.html
 

@@ -200,13 +200,13 @@ header .logo{font-family:'Fraunces',serif;font-size:18px;letter-spacing:0.2em;fo
 
 /* PAGE HERO (banner simple pour pages internes) */
 .page-hero{padding:160px 5vw 80px;border-bottom:1px solid var(--line);}
-.page-hero .eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);margin-bottom:12px;}
-.page-hero h1{font-family:'Fraunces',serif;font-size:clamp(32px,5vw,64px);font-weight:300;max-width:800px;letter-spacing:0.05em;}
+.page-hero .eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--stone);margin-bottom:12px;}
+.page-hero h1{font-family:'Fraunces',serif;font-size:clamp(48px,8vw,72px);font-weight:200;max-width:800px;letter-spacing:0.15em;line-height:1.1;}
 .page-hero p{margin-top:16px;font-size:14px;color:var(--stone);max-width:400px;line-height:1.6;}
 
-section{padding:100px 5vw;position:relative;}
-.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:60px;}
-.section-head h2{font-size:clamp(24px,3vw,42px);font-weight:300;letter-spacing:0.05em;}
+section{padding:120px 5vw;position:relative;}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:80px;}
+.section-head h2{font-family:'Fraunces',serif;font-size:clamp(32px,5vw,72px);font-weight:200;letter-spacing:0.15em;line-height:1.1;}
 .section-head p{max-width:300px;font-size:13px;color:var(--stone);line-height:1.6;}
 
 /* PIECE CARDS (collection) */
@@ -246,7 +246,7 @@ section{padding:100px 5vw;position:relative;}
 
 /* MANIFESTO (atelier) */
 .manifesto-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
-.manifesto-grid .big{font-family:'Fraunces',serif;font-size:clamp(24px,3vw,36px);line-height:1.4;font-weight:400;}
+.manifesto-grid .big{font-family:'Fraunces',serif;font-size:clamp(32px,5vw,48px);line-height:1.3;font-weight:200;letter-spacing:0.1em;}
 .manifesto-grid .side p{font-size:15px;line-height:1.8;opacity:.75;margin-bottom:20px;}
 @media (max-width:760px){.manifesto-grid{grid-template-columns:1fr;gap:40px;}}
 
@@ -259,10 +259,10 @@ section{padding:100px 5vw;position:relative;}
 }
 .link-card:hover{background:var(--paper);}
 .link-card span{
-  font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--stone);
+  font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--stone);
 }
 .link-card h3{
-  font-family:'Fraunces',serif;font-size:18px;font-weight:300;margin-top:16px;
+  font-family:'Fraunces',serif;font-size:20px;font-weight:200;margin-top:16px;letter-spacing:0.1em;
 }
 .link-card p{
   font-size:13px;color:var(--stone);margin-top:8px;line-height:1.5;
@@ -280,8 +280,8 @@ section{padding:100px 5vw;position:relative;}
 }
 .process-item:hover::before{opacity:1;}
 .process-item:hover{transform:translateY(-4px);}
-.process-item .num{font-family:'Fraunces',serif;font-size:36px;color:var(--bronze);margin-bottom:16px;position:relative;z-index:1;}
-.process-item h3{font-family:'Fraunces',serif;font-size:16px;margin-bottom:8px;font-weight:400;position:relative;z-index:1;}
+.process-item .num{font-family:'Fraunces',serif;font-size:36px;color:var(--bronze);margin-bottom:16px;position:relative;z-index:1;font-weight:200;}
+.process-item h3{font-family:'Fraunces',serif;font-size:16px;margin-bottom:8px;font-weight:200;position:relative;z-index:1;letter-spacing:0.1em;}
 .process-item p{font-size:13px;color:var(--stone);line-height:1.7;position:relative;z-index:1;}
 @media (max-width:760px){.process-list{grid-template-columns:1fr 1fr;row-gap:40px;}}
 
@@ -290,7 +290,7 @@ section{padding:100px 5vw;position:relative;}
 .contact .section-head h2,.contact .section-head p{color:#fff;}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;}
 .form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:28px;position:relative;}
-.form-row label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9C9891;transition:color 0.3s ease;}
+.form-row label{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#9C9891;transition:color 0.3s ease;}
 .form-row input,.form-row textarea,.form-row select{
   background:transparent;border:none;border-bottom:1px solid #45433F;color:#fff;
   font-family:'Inter';font-size:15px;padding:10px 0;outline:none;
@@ -1815,6 +1815,29 @@ footer {
   margin-top: 8px;
   transform: rotate(-45deg);
   transform-origin: center;
+}
+
+/* Scroll Animations */
+.scroll-fade-up {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.scroll-fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-stagger .item {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.scroll-stagger.visible .item {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .admin-login-container h2 {
