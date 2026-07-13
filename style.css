@@ -305,6 +305,7 @@ section{padding:140px 5vw;position:relative;}
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 /* Main content wrapper for homepage */
@@ -315,6 +316,7 @@ section{padding:140px 5vw;position:relative;}
   justify-content: center;
   align-items: center;
   padding: 120px 5vw 60px;
+  min-height: 0;
 }
 
 /* PIECE CARDS (collection) */
