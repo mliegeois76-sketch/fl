@@ -284,7 +284,7 @@ nav.menu-nav a.active {
 }
 
 /* NAV */
-header{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:20px 5vw;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
+header{position:fixed;top:0;left:0;right:0;z-index:10003;display:flex;justify-content:space-between;align-items:center;padding:20px 5vw;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
 header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;font-weight:300;color:var(--ink);text-decoration:none;}
 #mainNav{display:flex;gap:40px;}
 #mainNav a{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--stone);transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);position:relative;}
