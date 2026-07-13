@@ -12,14 +12,25 @@
 
 <div class="page-transition"></div>
 
-<!-- Admin Login Check -->
-<div id="adminLoginCheck" style="display: none;">
+<!-- Admin Login Form -->
+<div id="adminLoginForm" style="display: flex;">
   <div class="admin-login-container">
-    <h2>Admin Access Required</h2>
-    <p>Please log in with an admin account to access this dashboard.</p>
-    <button class="checkout-btn" onclick="window.location.href='index.html'">Return to Home</button>
+    <h2>Admin Access</h2>
+    <p>Enter password to access the dashboard</p>
+    <form id="adminPasswordForm" onsubmit="checkAdminPassword(event)">
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="adminPassword" required>
+      </div>
+      <button type="submit" class="checkout-btn">Access Dashboard</button>
+      <button type="button" class="secondary-btn" onclick="window.location.href='index.html'">Cancel</button>
+    </form>
+    <p id="loginError" style="color: #E74C3C; margin-top: 16px; display: none;">Incorrect password</p>
   </div>
 </div>
+
+<!-- Admin Dashboard -->
+<div id="adminDashboard" style="display: none;">
 
 <header>
   <div class="logo">FL</div>
@@ -1271,32 +1282,56 @@ function editProduct(productId) {
   alert(`Edit functionality for product ${productId} would open here.\n\nCurrent product: ${product.name}\nPrice: ${product.price} €\nStock: ${product.stock}`);
 }
 
-// Check if user is authenticated and has admin access
-function checkAdminAccess() {
-  const currentUser = localStorage.getItem('fl_currentUser');
-  if (!currentUser) {
-    alert('Access denied. Please sign in first.');
-    window.location.href = 'index.html';
-    return false;
-  }
+// Check admin password
+function checkAdminPassword(event) {
+  event.preventDefault();
   
-  const user = JSON.parse(currentUser);
-  // For simulation, we'll allow any logged-in user to access admin
-  // In production, you'd check for specific admin role
-  return true;
+  const password = document.getElementById('adminPassword').value;
+  const loginError = document.getElementById('loginError');
+  
+  // Simple password check (in production, use server-side authentication)
+  const ADMIN_PASSWORD = 'fl_admin_2024';
+  
+  if (password === ADMIN_PASSWORD) {
+    // Store authentication in session
+    sessionStorage.setItem('adminAuthenticated', 'true');
+    
+    // Show dashboard
+    document.getElementById('adminLoginForm').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'block';
+    
+    // Initialize dashboard
+    loadOverview();
+    loadProducts();
+    loadUsers();
+    loadOrders();
+    loadEmails();
+  } else {
+    loginError.style.display = 'block';
+    document.getElementById('adminPassword').value = '';
+  }
+}
+
+// Check if already authenticated
+function checkAdminSession() {
+  const isAuthenticated = sessionStorage.getItem('adminAuthenticated');
+  
+  if (isAuthenticated === 'true') {
+    document.getElementById('adminLoginForm').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'block';
+    
+    // Initialize dashboard
+    loadOverview();
+    loadProducts();
+    loadUsers();
+    loadOrders();
+    loadEmails();
+  }
 }
 
 // Initialize admin dashboard
 document.addEventListener('DOMContentLoaded', () => {
-  if (!checkAdminAccess()) {
-    return;
-  }
-  
-  loadOverview();
-  loadProducts();
-  loadUsers();
-  loadOrders();
-  loadEmails();
+  checkAdminSession();
 });
 </script>
 </body>
