@@ -129,9 +129,9 @@
 </div>
 
 <div class="page-hero scroll-fade-up">
-  <div class="eyebrow">Product Details</div>
-  <h1 id="productTitle">Loading...</h1>
-  <p id="productCategory">Loading...</p>
+  <div class="eyebrow">Détails du produit</div>
+  <h1 id="productTitle">Chargement...</h1>
+  <p id="productCategory">Chargement...</p>
 </div>
 
 <section class="reveal scroll-fade-up">
@@ -143,42 +143,42 @@
         </svg>
       </div>
     </div>
-    
+
     <div class="product-info">
       <div class="product-price-section">
         <span class="product-price" id="productPrice">0.00 €</span>
-        <span class="stock-badge" id="productStock">Loading...</span>
+        <span class="stock-badge" id="productStock">Chargement...</span>
         <div class="product-rating-display" id="productRating"></div>
       </div>
-      
+
       <div class="product-description">
         <h3>Description</h3>
-        <p id="productDescription">Loading...</p>
+        <p id="productDescription">Chargement...</p>
       </div>
-      
+
       <div class="product-specs">
-        <h3>Specifications</h3>
+        <h3>Spécifications</h3>
         <div class="spec-item">
-          <span class="spec-label">Material</span>
-          <span class="spec-value" id="productMaterial">Loading...</span>
+          <span class="spec-label">Matériau</span>
+          <span class="spec-value" id="productMaterial">Chargement...</span>
         </div>
         <div class="spec-item">
           <span class="spec-label">Dimensions</span>
-          <span class="spec-value" id="productDimensions">Loading...</span>
+          <span class="spec-value" id="productDimensions">Chargement...</span>
         </div>
         <div class="spec-item">
-          <span class="spec-label">Weight</span>
-          <span class="spec-value" id="productWeight">Loading...</span>
+          <span class="spec-label">Poids</span>
+          <span class="spec-value" id="productWeight">Chargement...</span>
         </div>
         <div class="spec-item">
-          <span class="spec-label">Category</span>
-          <span class="spec-value" id="productCategoryValue">Loading...</span>
+          <span class="spec-label">Catégorie</span>
+          <span class="spec-value" id="productCategoryValue">Chargement...</span>
         </div>
       </div>
-      
+
       <div class="product-actions">
-        <button id="addToCartBtn" class="checkout-btn" disabled>Add to Cart</button>
-        <button class="secondary-btn" onclick="window.location.href='collection.html'">Back to Collection</button>
+        <button id="addToCartBtn" class="checkout-btn" disabled>Ajouter au panier</button>
+        <button class="secondary-btn" onclick="window.location.href='collection.html'">Retour à la collection</button>
       </div>
     </div>
   </div>
@@ -186,20 +186,20 @@
 
 <section class="reveal scroll-fade-up">
   <div class="reviews-section">
-    <h2>Customer Reviews</h2>
+    <h2>Avis clients</h2>
     <div id="reviewsList">
-      <p class="empty-state">No reviews yet. Be the first to review this product!</p>
+      <p class="empty-state">Aucun avis pour le moment. Soyez le premier à donner votre avis !</p>
     </div>
-    
+
     <div class="review-form-container">
-      <h3>Write a Review</h3>
+      <h3>Donner votre avis</h3>
       <form id="reviewForm" onsubmit="submitReview(event)">
         <div class="form-group">
-          <label>Your Name *</label>
+          <label>Votre nom *</label>
           <input type="text" name="reviewerName" required>
         </div>
         <div class="form-group">
-          <label>Rating *</label>
+          <label>Note *</label>
           <div class="rating-input">
             <input type="radio" name="rating" value="5" id="rating5" required>
             <label for="rating5" class="rating-star">★</label>
@@ -214,10 +214,10 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Your Review *</label>
-          <textarea name="reviewText" rows="4" required placeholder="Share your experience with this sculpture..."></textarea>
+          <label>Votre avis *</label>
+          <textarea name="reviewText" rows="4" required placeholder="Partagez votre expérience avec cette sculpture..."></textarea>
         </div>
-        <button type="submit" class="checkout-btn">Submit Review</button>
+        <button type="submit" class="checkout-btn">Envoyer l'avis</button>
       </form>
     </div>
   </div>

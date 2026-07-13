@@ -148,7 +148,7 @@
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Cart</h3>
+    <h3>Panier</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
@@ -157,36 +157,36 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
   </div>
 </div>
 
 <div class="page-hero scroll-fade-up">
   <div class="eyebrow">Collection</div>
-  <h1>Available Works</h1>
-  <p class="placeholder">[Collection page intro text — to be confirmed]</p>
+  <h1>Œuvres disponibles</h1>
+  <p class="placeholder">[Texte d'introduction de la page collection — à confirmer]</p>
 </div>
 
 <section class="reveal scroll-fade-up">
   <div class="search-container">
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search sculptures by name, material, or category..." oninput="handleSearch()">
+      <input type="text" id="searchInput" placeholder="Rechercher des sculptures par nom, matériau ou catégorie..." oninput="handleSearch()">
       <button class="search-clear" onclick="clearSearch()" style="display: none;">×</button>
     </div>
     <div class="search-filters">
       <select id="categoryFilter" onchange="handleSearch()">
-        <option value="">All Categories</option>
-        <option value="Abstract">Abstract</option>
-        <option value="Figurative">Figurative</option>
-        <option value="Minimalist">Minimalist</option>
-        <option value="Organic">Organic</option>
+        <option value="">Toutes les catégories</option>
+        <option value="Abstract">Abstrait</option>
+        <option value="Figurative">Figuratif</option>
+        <option value="Minimalist">Minimaliste</option>
+        <option value="Organic">Organique</option>
       </select>
       <select id="materialFilter" onchange="handleSearch()">
-        <option value="">All Materials</option>
+        <option value="">Tous les matériaux</option>
         <option value="Bronze">Bronze</option>
-        <option value="Stone">Stone</option>
-        <option value="Wood">Wood</option>
-        <option value="Ceramic">Ceramic</option>
+        <option value="Stone">Pierre</option>
+        <option value="Wood">Bois</option>
+        <option value="Ceramic">Céramique</option>
       </select>
     </div>
   </div>
@@ -198,14 +198,14 @@
 <!-- Customer Reviews Section -->
 <section class="reveal scroll-fade-up">
   <div class="section-head">
-    <h2>Customer Reviews</h2>
-    <p>What collectors say about FL sculptures</p>
+    <h2>Avis clients</h2>
+    <p>Ce que les collectionneurs disent des sculptures FL</p>
   </div>
   <div class="reviews-grid" id="collectionReviews">
-    <p class="placeholder">Loading reviews...</p>
+    <p class="placeholder">Chargement des avis...</p>
   </div>
   <div class="add-review">
-    <button class="secondary-btn" onclick="window.location.href='collection.html'">Browse Products to Review</button>
+    <button class="secondary-btn" onclick="window.location.href='collection.html'">Parcourir les produits pour donner un avis</button>
   </div>
 </section>
 

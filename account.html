@@ -49,71 +49,71 @@
 </div>
 
 <div class="page-hero">
-  <div class="eyebrow">My Account</div>
-  <h1>Customer Dashboard</h1>
-  <p>Manage your orders and personal information.</p>
+  <div class="eyebrow">Mon compte</div>
+  <h1>Tableau bord client</h1>
+  <p>Gérez vos commandes et vos informations personnelles.</p>
 </div>
 
 <section class="reveal">
   <div class="account-grid">
     <div class="account-sidebar">
       <nav class="account-nav">
-        <a href="#" class="active" onclick="showAccountSection('dashboard')">Dashboard</a>
-        <a href="#" onclick="showAccountSection('orders')">My Orders</a>
-        <a href="#" onclick="showAccountSection('wishlist')">Wishlist</a>
-        <a href="#" onclick="showAccountSection('profile')">Profile</a>
-        <a href="#" onclick="showAccountSection('addresses')">Addresses</a>
+        <a href="#" class="active" onclick="showAccountSection('dashboard')">Tableau de bord</a>
+        <a href="#" onclick="showAccountSection('orders')">Mes commandes</a>
+        <a href="#" onclick="showAccountSection('wishlist')">Liste de souhaits</a>
+        <a href="#" onclick="showAccountSection('profile')">Profil</a>
+        <a href="#" onclick="showAccountSection('addresses')">Adresses</a>
         <a href="#" onclick="showAccountSection('notifications')">Notifications</a>
-        <a href="#" onclick="window.authSystem.signOut()">Sign Out</a>
+        <a href="#" onclick="window.authSystem.signOut()">Déconnexion</a>
       </nav>
     </div>
 
     <div class="account-content">
       <!-- Dashboard -->
       <div id="dashboard-section" class="account-section">
-        <h2>Welcome back</h2>
+        <h2>Bienvenue</h2>
         <div class="account-stats">
           <div class="stat-card">
             <span class="stat-number" id="orderCount">0</span>
-            <span class="stat-label">Orders</span>
+            <span class="stat-label">Commandes</span>
           </div>
           <div class="stat-card">
             <span class="stat-number" id="addressCount">0</span>
-            <span class="stat-label">Addresses</span>
+            <span class="stat-label">Adresses</span>
           </div>
         </div>
       </div>
 
       <!-- Orders -->
       <div id="orders-section" class="account-section" style="display: none;">
-        <h2>My Orders</h2>
+        <h2>Mes commandes</h2>
         <div class="orders-list" id="ordersList">
-          <p class="empty-state">You have no orders yet.</p>
+          <p class="empty-state">Vous n'avez pas encore de commandes.</p>
         </div>
       </div>
 
       <!-- Wishlist -->
       <div id="wishlist-section" class="account-section" style="display: none;">
-        <h2>My Wishlist</h2>
+        <h2>Ma liste de souhaits</h2>
         <div class="wishlist-actions">
-          <button class="secondary-btn" onclick="moveAllToCart()">Move All to Cart</button>
-          <button class="secondary-btn cancel-btn" onclick="clearWishlist()">Clear Wishlist</button>
+          <button class="secondary-btn" onclick="moveAllToCart()">Tout ajouter au panier</button>
+          <button class="secondary-btn cancel-btn" onclick="clearWishlist()">Vider la liste</button>
         </div>
         <div class="wishlist-list" id="wishlistList">
-          <p class="empty-state">Your wishlist is empty.</p>
+          <p class="empty-state">Votre liste de souhaits est vide.</p>
         </div>
       </div>
 
       <!-- Profile -->
       <div id="profile-section" class="account-section" style="display: none;">
-        <h2>Personal Information</h2>
+        <h2>Informations personnelles</h2>
         <form class="account-form" id="profileForm" onsubmit="updateProfile(event)">
           <div class="form-group">
-            <label>First Name</label>
+            <label>Prénom</label>
             <input type="text" name="firstName" id="profileFirstName" required>
           </div>
           <div class="form-group">
-            <label>Last Name</label>
+            <label>Nom</label>
             <input type="text" name="lastName" id="profileLastName" required>
           </div>
           <div class="form-group">
@@ -121,78 +121,78 @@
             <input type="email" name="email" id="profileEmail" readonly>
           </div>
           <div class="form-group">
-            <label>Phone</label>
+            <label>Téléphone</label>
             <input type="tel" name="phone" id="profilePhone" placeholder="+33 1 23 45 67 89">
           </div>
-          <button type="submit" class="checkout-btn">Save Changes</button>
+          <button type="submit" class="checkout-btn">Enregistrer les modifications</button>
         </form>
       </div>
 
       <!-- Addresses -->
       <div id="addresses-section" class="account-section" style="display: none;">
-        <h2>Saved Addresses</h2>
+        <h2>Adresses enregistrées</h2>
         <div class="addresses-list" id="addressesList">
-          <p class="empty-state">No saved addresses.</p>
+          <p class="empty-state">Aucune adresse enregistrée.</p>
         </div>
-        <button class="checkout-btn" style="margin-top: 24px;" onclick="showAddAddressForm()">Add New Address</button>
-        
+        <button class="checkout-btn" style="margin-top: 24px;" onclick="showAddAddressForm()">Ajouter une adresse</button>
+
         <div id="addAddressForm" style="display: none; margin-top: 24px; background: var(--paper); padding: 24px;">
-          <h3>Add New Address</h3>
+          <h3>Ajouter une adresse</h3>
           <form class="account-form" onsubmit="addAddress(event)">
             <div class="form-group">
-              <label>Address</label>
+              <label>Adresse</label>
               <input type="text" name="address" required>
             </div>
             <div class="form-group">
-              <label>City</label>
+              <label>Ville</label>
               <input type="text" name="city" required>
             </div>
             <div class="form-group">
-              <label>Postal Code</label>
+              <label>Code postal</label>
               <input type="text" name="postalCode" required>
             </div>
             <div class="form-group">
-              <label>Country</label>
+              <label>Pays</label>
               <input type="text" name="country" required>
             </div>
-            <button type="submit" class="checkout-btn">Save Address</button>
-            <button type="button" class="secondary-btn" onclick="hideAddAddressForm()">Cancel</button>
+            <button type="submit" class="checkout-btn">Enregistrer l'adresse</button>
+            <button type="button" class="secondary-btn" onclick="hideAddAddressForm()">Annuler</button>
           </form>
         </div>
       </div>
 
       <!-- Notifications -->
       <div id="notifications-section" class="account-section" style="display: none;">
-        <h2>Email Preferences</h2>
+        <h2>Préférences email</h2>
         <div class="notifications-settings">
-          <h3>Email Notifications</h3>
+          <h3>Notifications par email</h3>
           <div class="notification-option">
             <label>
               <input type="checkbox" id="emailOrderUpdates" onchange="updateEmailPreferences()">
-              Order updates and shipping notifications
+              Mises à jour de commande et notifications d'expédition
             </label>
           </div>
           <div class="notification-option">
             <label>
               <input type="checkbox" id="emailPromotions" onchange="updateEmailPreferences()">
-              Promotional emails and special offers
+              Emails promotionnels et offres spéciales
             </label>
           </div>
           <div class="notification-option">
             <label>
               <input type="checkbox" id="emailNewsletter" onchange="updateEmailPreferences()">
-              Newsletter and new product announcements
+              Newsletter et annonces de nouveaux produits
             </label>
           </div>
           <div class="notification-option">
             <label>
               <input type="checkbox" id="emailReviews" onchange="updateEmailPreferences()">
-              Review reminders and product recommendations
+              Rappels d'avis et recommandations de produits
             </label>
           </div>
         </div>
         <div class="unsubscribe-section" style="margin-top: 24px;">
-          <button class="secondary-btn cancel-btn" onclick="unsubscribeFromAll()">Unsubscribe from all emails</button>
+          <button class="secondary-btn cancel-btn" onclick="unsubscribeFromAll()">Se désabonner de tous les emails</button>
         </div>
       </div>
     </div>

@@ -68,9 +68,9 @@ document.querySelectorAll('#mainNav a').forEach(link => {
 // Footer HTML
 const FOOTER_HTML = `
 <div class="footer-grid">
-  <a href="index.html">Home</a>
+  <a href="index.html">Accueil</a>
   <a href="collection.html">Collection</a>
-  <a href="about.html">About</a>
+  <a href="about.html">À propos</a>
   <a href="contact.html">Contact</a>
   <a href="mentions-legales.html">Mentions Légales</a>
   <a href="confidentialite.html">Politique de Confidentialité</a>
@@ -83,10 +83,10 @@ const FOOTER_HTML = `
 const COOKIE_BANNER_HTML = `
 <div id="cookie-banner" class="cookie-banner" style="display: none;">
   <div class="cookie-content">
-    <p>We use cookies to ensure you get the best experience on our website. <a href="cookies.html">Learn more</a></p>
+    <p>Nous utilisons des cookies pour vous offrir la meilleure expérience sur notre site. <a href="cookies.html">En savoir plus</a></p>
     <div class="cookie-buttons">
-      <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Accept</button>
-      <button class="cookie-btn cookie-decline" onclick="declineCookies()">Decline</button>
+      <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Accepter</button>
+      <button class="cookie-btn cookie-decline" onclick="declineCookies()">Refuser</button>
     </div>
   </div>
 </div>`;
