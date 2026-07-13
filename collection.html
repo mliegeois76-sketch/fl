@@ -201,34 +201,11 @@
     <h2>Customer Reviews</h2>
     <p>What collectors say about FL sculptures</p>
   </div>
-  <div class="reviews-grid">
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"Exceptional craftsmanship. The bronze piece I purchased exceeded all expectations. The attention to detail is remarkable."</p>
-      <div class="review-author">
-        <strong>Sophie M.</strong>
-        <span class="review-date">Paris, France</span>
-      </div>
-    </div>
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"A stunning addition to my collection. The sculpture arrived perfectly packaged and the communication throughout was excellent."</p>
-      <div class="review-author">
-        <strong>James K.</strong>
-        <span class="review-date">London, UK</span>
-      </div>
-    </div>
-    <div class="review-card">
-      <div class="review-stars">★★★★☆</div>
-      <p class="review-text">"Beautiful work of art. The stone sculpture has a wonderful presence in my gallery space. Highly recommended."</p>
-      <div class="review-author">
-        <strong>Maria L.</strong>
-        <span class="review-date">Milan, Italy</span>
-      </div>
-    </div>
+  <div class="reviews-grid" id="collectionReviews">
+    <p class="placeholder">Loading reviews...</p>
   </div>
   <div class="add-review">
-    <button class="secondary-btn" onclick="window.location.href='contact.html'">Leave a Review</button>
+    <button class="secondary-btn" onclick="window.location.href='collection.html'">Browse Products to Review</button>
   </div>
 </section>
 
@@ -238,6 +215,8 @@
 <script src="auth.js"></script>
 <script src="products.js"></script>
 <script src="wishlist.js"></script>
+<script src="notifications.js"></script>
+<script src="seo.js"></script>
 <script src="main.js"></script>
 <script>
 // Load products dynamically from ProductCatalog
@@ -418,6 +397,84 @@ function goToProduct(productId) {
   toggleSearchOverlay();
   window.location.href = `product.html?id=${productId}`;
 }
+
+// Load dynamic reviews for collection page
+function loadCollectionReviews() {
+  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
+  const approvedReviews = [];
+  
+  // Get all approved reviews from all products
+  Object.keys(allReviews).forEach(productId => {
+    const productReviews = allReviews[productId];
+    productReviews.forEach(review => {
+      if (review.status === 'approved') {
+        approvedReviews.push({
+          ...review,
+          productId
+        });
+      }
+    });
+  });
+  
+  const reviewsGrid = document.getElementById('collectionReviews');
+  
+  if (approvedReviews.length === 0) {
+    reviewsGrid.innerHTML = `
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Exceptional craftsmanship. The bronze piece I purchased exceeded all expectations. The attention to detail is remarkable."</p>
+        <div class="review-author">
+          <strong>Sophie M.</strong>
+          <span class="review-date">Paris, France</span>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"A stunning addition to my collection. The sculpture arrived perfectly packaged and the communication throughout was excellent."</p>
+        <div class="review-author">
+          <strong>James K.</strong>
+          <span class="review-date">London, UK</span>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★☆</div>
+        <p class="review-text">"Beautiful work of art. The stone sculpture has a wonderful presence in my gallery space. Highly recommended."</p>
+        <div class="review-author">
+          <strong>Maria L.</strong>
+          <span class="review-date">Milan, Italy</span>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  // Show up to 3 most recent approved reviews
+  const recentReviews = approvedReviews
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 3);
+  
+  reviewsGrid.innerHTML = recentReviews.map(review => {
+    const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+    const product = ProductCatalog.getAvailable().find(p => p.id === parseInt(review.productId));
+    const productName = product ? product.name : 'Unknown Product';
+    
+    return `
+      <div class="review-card">
+        <div class="review-stars">${stars}</div>
+        <p class="review-text">"${review.text}"</p>
+        <div class="review-author">
+          <strong>${review.name}</strong>
+          <span class="review-date">on ${productName}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Load collection reviews on page load
+document.addEventListener('DOMContentLoaded', () => {
+  loadCollectionReviews();
+});
 
 // Handle search and filter
 function handleSearch() {

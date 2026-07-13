@@ -229,6 +229,7 @@
 <script src="auth.js"></script>
 <script src="products.js"></script>
 <script src="validation.js"></script>
+<script src="seo.js"></script>
 <script src="main.js"></script>
 <script>
 // Load product details from URL parameter
@@ -393,6 +394,11 @@ function submitReview(e) {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   loadProductDetails();
+  
+  // Initialize SEO for product page
+  if (typeof SEOService !== 'undefined') {
+    SEOService.trackPageView('product');
+  }
 });
 </script>
 </body>

@@ -51,7 +51,10 @@ const translations = {
     },
     search: {
       placeholder: "Rechercher...",
-      close: "×"
+      close: "×",
+      placeholderGlobal: "Rechercher des produits...",
+      startTyping: "Commencez à taper pour rechercher des produits...",
+      noResults: "Aucun produit trouvé correspondant à votre recherche."
     },
     filters: {
       all: "Toutes",
@@ -66,6 +69,82 @@ const translations = {
       text: "Recevez nos dernières actualités et invitations vernissages.",
       placeholder: "Votre email",
       submit: "S'inscrire"
+    },
+    auth: {
+      signIn: "Connexion",
+      signUp: "Inscription",
+      signOut: "Déconnexion",
+      myAccount: "Mon compte",
+      email: "Email",
+      password: "Mot de passe",
+      firstName: "Prénom",
+      lastName: "Nom",
+      forgotPassword: "Mot de passe oublié ?",
+      createAccount: "Créer un compte",
+      welcomeBack: "Bon retour",
+      register: "S'inscrire"
+    },
+    wishlist: {
+      title: "Liste de souhaits",
+      empty: "Votre liste de souhaits est vide",
+      addToCart: "Ajouter au panier",
+      remove: "Supprimer",
+      moveAll: "Tout déplacer vers le panier",
+      clear: "Vider la liste",
+      added: "Ajouté aux favoris",
+      removed: "Retiré des favoris"
+    },
+    account: {
+      dashboard: "Tableau de bord",
+      orders: "Mes commandes",
+      wishlist: "Favoris",
+      profile: "Profil",
+      addresses: "Adresses",
+      notifications: "Notifications",
+      noOrders: "Vous n'avez pas encore de commandes.",
+      noAddresses: "Aucune adresse enregistrée.",
+      addAddress: "Ajouter une adresse",
+      emailPreferences: "Préférences email",
+      orderUpdates: "Mises à jour de commande et notifications de livraison",
+      promotions: "Emails promotionnels et offres spéciales",
+      newsletter: "Newsletter et annonces de nouveaux produits",
+      reviews: "Rappels d'avis et recommandations de produits",
+      unsubscribe: "Se désabonner de tous les emails"
+    },
+    admin: {
+      dashboard: "Tableau de bord",
+      products: "Produits",
+      users: "Utilisateurs",
+      orders: "Commandes",
+      messages: "Messages",
+      shipping: "Livraison",
+      analytics: "Analytics",
+      emails: "Journal emails",
+      reviews: "Avis",
+      data: "Gestion des données",
+      overview: "Vue d'ensemble",
+      totalUsers: "Utilisateurs totaux",
+      totalOrders: "Commandes totales",
+      totalProducts: "Produits totaux",
+      emailsSent: "Emails envoyés",
+      revenue: "Revenu total",
+      avgOrderValue: "Valeur moyenne de commande",
+      conversionRate: "Taux de conversion",
+      topProducts: "Produits les plus vendus",
+      salesTrend: "Tendance des ventes"
+    },
+    reviews: {
+      title: "Avis clients",
+      whatCollectorsSay: "Ce que les collectionneurs disent des sculptures FL",
+      leaveReview: "Laisser un avis",
+      noReviews: "Aucun avis pour le moment",
+      onProduct: "sur"
+    },
+    notifications: {
+      success: "Succès",
+      error: "Erreur",
+      warning: "Attention",
+      info: "Information"
     }
   },
   en: {
@@ -119,7 +198,10 @@ const translations = {
     },
     search: {
       placeholder: "Search...",
-      close: "×"
+      close: "×",
+      placeholderGlobal: "Search products...",
+      startTyping: "Start typing to search products...",
+      noResults: "No products found matching your search."
     },
     filters: {
       all: "All",
@@ -134,6 +216,82 @@ const translations = {
       text: "Receive our latest news and vernissage invitations.",
       placeholder: "Your email",
       submit: "Subscribe"
+    },
+    auth: {
+      signIn: "Sign In",
+      signUp: "Sign Up",
+      signOut: "Sign Out",
+      myAccount: "My Account",
+      email: "Email",
+      password: "Password",
+      firstName: "First Name",
+      lastName: "Last Name",
+      forgotPassword: "Forgot password?",
+      createAccount: "Create Account",
+      welcomeBack: "Welcome back",
+      register: "Register"
+    },
+    wishlist: {
+      title: "Wishlist",
+      empty: "Your wishlist is empty",
+      addToCart: "Add to Cart",
+      remove: "Remove",
+      moveAll: "Move All to Cart",
+      clear: "Clear Wishlist",
+      added: "Added to favorites",
+      removed: "Removed from favorites"
+    },
+    account: {
+      dashboard: "Dashboard",
+      orders: "My Orders",
+      wishlist: "Wishlist",
+      profile: "Profile",
+      addresses: "Addresses",
+      notifications: "Notifications",
+      noOrders: "You have no orders yet.",
+      noAddresses: "No saved addresses.",
+      addAddress: "Add New Address",
+      emailPreferences: "Email Preferences",
+      orderUpdates: "Order updates and shipping notifications",
+      promotions: "Promotional emails and special offers",
+      newsletter: "Newsletter and new product announcements",
+      reviews: "Review reminders and product recommendations",
+      unsubscribe: "Unsubscribe from all emails"
+    },
+    admin: {
+      dashboard: "Dashboard",
+      products: "Products",
+      users: "Users",
+      orders: "Orders",
+      messages: "Messages",
+      shipping: "Shipping",
+      analytics: "Analytics",
+      emails: "Email Log",
+      reviews: "Reviews",
+      data: "Data Management",
+      overview: "Store Overview",
+      totalUsers: "Total Users",
+      totalOrders: "Total Orders",
+      totalProducts: "Total Products",
+      emailsSent: "Emails Sent",
+      revenue: "Total Revenue",
+      avgOrderValue: "Average Order Value",
+      conversionRate: "Conversion Rate",
+      topProducts: "Top Selling Products",
+      salesTrend: "Sales Trend"
+    },
+    reviews: {
+      title: "Customer Reviews",
+      whatCollectorsSay: "What collectors say about FL sculptures",
+      leaveReview: "Leave a Review",
+      noReviews: "No reviews yet",
+      onProduct: "on"
+    },
+    notifications: {
+      success: "Success",
+      error: "Error",
+      warning: "Warning",
+      info: "Information"
     }
   }
 };
@@ -201,6 +359,15 @@ class I18n {
     // Update search
     const searchInput = document.querySelector('.search-input');
     if (searchInput) searchInput.placeholder = t.search.placeholder;
+    
+    const globalSearchInput = document.getElementById('globalSearchInput');
+    if (globalSearchInput) globalSearchInput.placeholder = t.search.placeholderGlobal;
+    
+    const searchPlaceholder = document.querySelector('.search-placeholder');
+    if (searchPlaceholder) searchPlaceholder.textContent = t.search.startTyping;
+    
+    const noResults = document.querySelector('.no-results');
+    if (noResults) noResults.textContent = t.search.noResults;
 
     // Update filters
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -227,6 +394,44 @@ class I18n {
     
     const newsletterBtn = document.querySelector('.newsletter-form button');
     if (newsletterBtn) newsletterBtn.textContent = t.newsletter.submit;
+    
+    // Update auth buttons
+    document.querySelectorAll('.sign-in-btn').forEach(btn => btn.textContent = t.auth.signIn);
+    document.querySelectorAll('.sign-up-btn').forEach(btn => btn.textContent = t.auth.signUp);
+    document.querySelectorAll('.sign-out-btn').forEach(btn => btn.textContent = t.auth.signOut);
+    document.querySelectorAll('.my-account-btn').forEach(btn => btn.textContent = t.auth.myAccount);
+    
+    // Update account navigation
+    document.querySelectorAll('.account-nav a').forEach(link => {
+      const text = link.textContent.trim();
+      if (text === 'Dashboard' || text === 'Tableau de bord') link.textContent = t.account.dashboard;
+      if (text === 'My Orders' || text === 'Mes commandes') link.textContent = t.account.orders;
+      if (text === 'Wishlist' || text === 'Favoris') link.textContent = t.account.wishlist;
+      if (text === 'Profile' || text === 'Profil') link.textContent = t.account.profile;
+      if (text === 'Addresses' || text === 'Adresses') link.textContent = t.account.addresses;
+      if (text === 'Notifications') link.textContent = t.account.notifications;
+    });
+    
+    // Update admin tabs
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+      const text = tab.textContent.trim();
+      const adminKeys = Object.keys(t.admin);
+      const matchingKey = adminKeys.find(k => t.admin[k] === text || translations.fr.admin[k] === text);
+      if (matchingKey) {
+        tab.textContent = t.admin[matchingKey];
+      }
+    });
+    
+    // Update reviews section
+    const reviewsTitle = document.querySelector('.section-head h2');
+    if (reviewsTitle && (reviewsTitle.textContent.includes('Customer Reviews') || reviewsTitle.textContent.includes('Avis clients'))) {
+      reviewsTitle.textContent = t.reviews.title;
+    }
+    
+    const reviewsSubtitle = document.querySelector('.section-head p');
+    if (reviewsSubtitle && (reviewsSubtitle.textContent.includes('collectors') || reviewsSubtitle.textContent.includes('collectionneurs'))) {
+      reviewsSubtitle.textContent = t.reviews.whatCollectorsSay;
+    }
   }
 
   t(key) {

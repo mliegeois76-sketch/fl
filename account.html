@@ -63,6 +63,7 @@
         <a href="#" onclick="showAccountSection('wishlist')">Wishlist</a>
         <a href="#" onclick="showAccountSection('profile')">Profile</a>
         <a href="#" onclick="showAccountSection('addresses')">Addresses</a>
+        <a href="#" onclick="showAccountSection('notifications')">Notifications</a>
         <a href="#" onclick="window.authSystem.signOut()">Sign Out</a>
       </nav>
     </div>
@@ -159,6 +160,41 @@
           </form>
         </div>
       </div>
+
+      <!-- Notifications -->
+      <div id="notifications-section" class="account-section" style="display: none;">
+        <h2>Email Preferences</h2>
+        <div class="notifications-settings">
+          <h3>Email Notifications</h3>
+          <div class="notification-option">
+            <label>
+              <input type="checkbox" id="emailOrderUpdates" onchange="updateEmailPreferences()">
+              Order updates and shipping notifications
+            </label>
+          </div>
+          <div class="notification-option">
+            <label>
+              <input type="checkbox" id="emailPromotions" onchange="updateEmailPreferences()">
+              Promotional emails and special offers
+            </label>
+          </div>
+          <div class="notification-option">
+            <label>
+              <input type="checkbox" id="emailNewsletter" onchange="updateEmailPreferences()">
+              Newsletter and new product announcements
+            </label>
+          </div>
+          <div class="notification-option">
+            <label>
+              <input type="checkbox" id="emailReviews" onchange="updateEmailPreferences()">
+              Review reminders and product recommendations
+            </label>
+          </div>
+        </div>
+        <div class="unsubscribe-section" style="margin-top: 24px;">
+          <button class="secondary-btn cancel-btn" onclick="unsubscribeFromAll()">Unsubscribe from all emails</button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -168,6 +204,7 @@
 <script src="cart.js"></script>
 <script src="auth.js"></script>
 <script src="wishlist.js"></script>
+<script src="notifications.js"></script>
 <script src="main.js"></script>
 <script>
 function showAccountSection(section) {
@@ -416,6 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadAddresses();
   loadOrders();
   loadWishlist();
+  loadEmailPreferences();
 });
 
 // Load wishlist
@@ -478,6 +516,75 @@ function clearWishlist() {
       loadWishlist();
     }
   }
+}
+
+// Load email preferences
+function loadEmailPreferences() {
+  const user = window.authSystem.currentUser;
+  if (!user) return;
+  
+  const preferences = user.emailPreferences || {
+    orderUpdates: true,
+    promotions: true,
+    newsletter: true,
+    reviews: false
+  };
+  
+  document.getElementById('emailOrderUpdates').checked = preferences.orderUpdates;
+  document.getElementById('emailPromotions').checked = preferences.promotions;
+  document.getElementById('emailNewsletter').checked = preferences.newsletter;
+  document.getElementById('emailReviews').checked = preferences.reviews;
+}
+
+// Update email preferences
+function updateEmailPreferences() {
+  const user = window.authSystem.currentUser;
+  if (!user) return;
+  
+  user.emailPreferences = {
+    orderUpdates: document.getElementById('emailOrderUpdates').checked,
+    promotions: document.getElementById('emailPromotions').checked,
+    newsletter: document.getElementById('emailNewsletter').checked,
+    reviews: document.getElementById('emailReviews').checked
+  };
+  
+  localStorage.setItem('fl_currentUser', JSON.stringify(user));
+  
+  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
+  const userIndex = users.findIndex(u => u.id === user.id);
+  if (userIndex !== -1) {
+    users[userIndex] = user;
+    localStorage.setItem('fl_users', JSON.stringify(users));
+  }
+  
+  alert('Email preferences updated successfully');
+}
+
+// Unsubscribe from all emails
+function unsubscribeFromAll() {
+  if (!confirm('Are you sure you want to unsubscribe from all emails? You will no longer receive any communications from us.')) return;
+  
+  const user = window.authSystem.currentUser;
+  if (!user) return;
+  
+  user.emailPreferences = {
+    orderUpdates: false,
+    promotions: false,
+    newsletter: false,
+    reviews: false
+  };
+  
+  localStorage.setItem('fl_currentUser', JSON.stringify(user));
+  
+  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
+  const userIndex = users.findIndex(u => u.id === user.id);
+  if (userIndex !== -1) {
+    users[userIndex] = user;
+    localStorage.setItem('fl_users', JSON.stringify(users));
+  }
+  
+  loadEmailPreferences();
+  alert('You have been unsubscribed from all emails');
 }
 </script>
 </body>
