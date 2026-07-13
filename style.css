@@ -292,7 +292,7 @@ header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;f
 #mainNav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--ink);transition:width 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
 #mainNav a:hover::after{width:100%;}
 #mainNav a.active{color:var(--ink);font-weight:500;}
-.header-actions{display:flex;align-items:center;gap:16px;}
+.header-actions{display:flex !important;align-items:center;gap:16px;visibility:visible !important;opacity:1 !important;}
 .nav-toggle{display:none;background:none;border:none;color:var(--ink);font-size:14px;cursor:pointer;}
 @media (max-width:1024px){
   nav{gap:20px;}
@@ -303,7 +303,7 @@ header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;f
   #mainNav.open{transform:translateY(0);}
   #mainNav a{color:var(--ink);font-size:14px;}
   .menu-overlay{width:100%;padding:120px 48px;}
-  .header-actions{display:none;}
+  .header-actions{display:none !important;}
   .nav-toggle{display:block;}
   
   /* Mobile optimizations */
