@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Acquérir — FL Sculptures</title>
-<meta name="description" content="Découvrez le parcours d'acquisition des sculptures FL. Demande, échange, réservation et livraison d'œuvres d'art.">
-<meta name="keywords" content="acquérir sculpture, achat art, parcours acquisition, réservation œuvre">
+<title>Shipping Information — FL Sculptures</title>
+<meta name="description" content="FL Sculptures shipping information and delivery details for artwork purchases.">
+<meta name="keywords" content="shipping, delivery, artwork transport, sculpture shipping">
 <meta name="author" content="FL">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Acquérir — FL Sculptures">
-<meta property="og:description" content="Découvrez le parcours d'acquisition des sculptures FL.">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="fr_FR">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -39,7 +35,7 @@
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Panier</h3>
+    <h3>Cart</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
@@ -48,7 +44,7 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
   </div>
 </div>
 
@@ -59,10 +55,7 @@
     <nav class="menu-nav">
       <a href="index.html">Home</a>
       <a href="collection.html">Collection</a>
-      <a href="atelier.html">Atelier</a>
-      <a href="blog.html">Blog</a>
       <a href="about.html">About</a>
-      <a href="faq.html">FAQ</a>
       <a href="contact.html">Contact</a>
     </nav>
   </div>
@@ -87,10 +80,6 @@
         <input type="password" name="password" required>
       </div>
       <button type="submit" class="auth-submit-btn">Sign In</button>
-      
-      <div class="auth-footer">
-        <a href="#" onclick="window.authSystem.showAuthModal('reset'); return false;">Forgot password?</a>
-      </div>
       
       <div class="social-login">
         <p>Or continue with</p>
@@ -136,32 +125,103 @@
         </button>
       </div>
     </form>
-    
-    <form id="resetForm" class="auth-form" style="display: none;">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" required>
-      </div>
-      <button type="submit" class="auth-submit-btn">Send Reset Link</button>
-      <div class="auth-footer">
-        <a href="#" onclick="window.authSystem.showAuthModal('signin'); return false;">Back to Sign In</a>
-      </div>
-    </form>
   </div>
 </div>
 
 <div class="page-hero">
-  <div class="eyebrow">Acquérir</div>
-  <h1>Le parcours d'acquisition</h1>
-  <p class="placeholder">[À confirmer : décrire le vrai parcours d'achat souhaité]</p>
+  <div class="eyebrow">Information</div>
+  <h1>Shipping & Delivery</h1>
+  <p>How we safely deliver your sculpture to your location.</p>
 </div>
 
 <section class="reveal">
-  <div class="process-list">
-    <div class="process-item"><div class="num">01</div><h3>Demande</h3><p class="placeholder">[Étape à confirmer]</p></div>
-    <div class="process-item"><div class="num">02</div><h3>Échange</h3><p class="placeholder">[Étape à confirmer]</p></div>
-    <div class="process-item"><div class="num">03</div><h3>Réservation</h3><p class="placeholder">[Étape à confirmer]</p></div>
-    <div class="process-item"><div class="num">04</div><h3>Livraison</h3><p class="placeholder">[Étape à confirmer]</p></div>
+  <div class="policy-content">
+    <div class="policy-section">
+      <h2>Shipping Overview</h2>
+      <p>At FL Sculptures, we understand that shipping artwork requires special care and attention. Each sculpture is professionally packed and shipped using specialized art shipping services to ensure safe delivery to your location.</p>
+      
+      <div class="policy-item">
+        <h3>Shipping Methods</h3>
+        <p>We offer specialized art shipping options tailored to the size and value of each sculpture:</p>
+        <ul>
+          <li><strong>Standard Art Shipping:</strong> For small to medium sculptures within Europe</li>
+          <li><strong>Premium Art Shipping:</strong> For large sculptures and international deliveries</li>
+          <li><strong>White Glove Service:</strong> For high-value pieces requiring special handling and installation</li>
+        </ul>
+      </div>
+      
+      <div class="policy-item">
+        <h3>Delivery Timeframes</h3>
+        <p>Estimated delivery times vary based on destination and shipping method:</p>
+        <ul>
+          <li><strong>France:</strong> 2-4 weeks after order confirmation</li>
+          <li><strong>Europe:</strong> 3-6 weeks after order confirmation</li>
+          <li><strong>International:</strong> 4-8 weeks after order confirmation</li>
+          <li><strong>Custom Commissions:</strong> Delivery timeframe agreed upon commission completion</li>
+        </ul>
+      </div>
+      
+      <div class="policy-item">
+        <h3>Shipping Costs</h3>
+        <p>Shipping costs are calculated based on:</p>
+        <ul>
+          <li>Sculpture dimensions and weight</li>
+          <li>Destination country and region</li>
+          <li>Selected shipping method</li>
+          <li>Insurance coverage required</li>
+        </ul>
+        <p>Shipping costs are displayed during checkout before payment confirmation.</p>
+      </div>
+      
+      <div class="policy-item">
+        <h3>Packaging</h3>
+        <p>Each sculpture is carefully packed using:</p>
+        <ul>
+          <li>Custom-built wooden crates for larger pieces</li>
+          <li>Protective foam and padding materials</li>
+          <li>Shock-absorbing materials for transit protection</li>
+          <li>Weather-resistant outer packaging</li>
+        </ul>
+      </div>
+      
+      <div class="policy-item">
+        <h3>Insurance</h3>
+        <p>All shipments include full insurance coverage for the value of the artwork. In the unlikely event of damage during transit, we will work with you to resolve the issue through restoration, replacement, or refund.</p>
+      </div>
+      
+      <div class="policy-item">
+        <h3>International Shipping</h3>
+        <p>For international deliveries, we handle:</p>
+        <ul>
+          <li>Customs documentation and declarations</li>
+          <li>Import duty and tax calculations (paid by recipient)</li>
+          <li>Coordination with local customs authorities</li>
+          <li>Delivery to your specified address</li>
+        </ul>
+      </div>
+      
+      <div class="policy-item">
+        <h3>Delivery Process</h3>
+        <p>Upon delivery:</p>
+        <ul>
+          <li>You will be contacted to schedule a convenient delivery time</li>
+          <li>The sculpture will be delivered to your specified address</li>
+          <li>For white glove service, our team will unpack and position the sculpture</li>
+          <li>Please inspect the piece upon delivery and note any damage</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="policy-section">
+      <h2>Tracking Your Order</h2>
+      <p>Once your sculpture ships, you will receive tracking information via email. You can monitor your shipment's progress and contact us with any questions during transit.</p>
+      
+      <h2>Contact Us</h2>
+      <p>For specific shipping questions or special delivery requirements, please contact us:</p>
+      <p><strong>Email:</strong> contact@fl-sculptures.com</p>
+      <p><strong>Phone:</strong> +33 1 23 45 67 89</p>
+      <p>We are happy to discuss your shipping needs and find the best solution for your artwork delivery.</p>
+    </div>
   </div>
 </section>
 

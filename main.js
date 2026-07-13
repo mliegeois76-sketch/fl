@@ -36,6 +36,18 @@ function initGlobalMenu() {
   document.querySelectorAll('nav.menu-nav a:not([data-section])').forEach(link => {
     link.addEventListener('click', () => toggleMenu(false));
   });
+
+  // Add Acquérir link to menu if not present
+  const menuNav = document.querySelector('nav.menu-nav');
+  if (menuNav && !menuNav.querySelector('a[href="acquerir.html"]')) {
+    const aboutLink = menuNav.querySelector('a[href="about.html"]');
+    if (aboutLink) {
+      const acquérirLink = document.createElement('a');
+      acquérirLink.href = 'acquerir.html';
+      acquérirLink.textContent = 'Acquérir';
+      aboutLink.insertAdjacentElement('afterend', acquérirLink);
+    }
+  }
 }
 
 // Legacy navigation toggle

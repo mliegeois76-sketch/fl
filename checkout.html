@@ -127,22 +127,29 @@
       <form id="checkoutForm" onsubmit="handleCheckout(event)">
         <div class="checkout-section">
           <h3>Customer Information</h3>
+          <div id="loggedInUser" style="display: none;">
+            <p>You are signed in as <strong id="userDisplayName"></strong></p>
+            <button type="button" class="secondary-btn" onclick="signOutAndCheckout()">Sign out and continue as guest</button>
+          </div>
+          <div id="guestUser" style="display: none;">
+            <p>Continue as guest or <button type="button" class="secondary-btn" onclick="window.authSystem.showAuthModal('signin')">Sign in</button> for faster checkout</p>
+          </div>
           <div class="checkout-form">
             <div class="form-group">
               <label>First Name *</label>
-              <input type="text" name="firstName" required>
+              <input type="text" name="firstName" id="firstName" required>
             </div>
             <div class="form-group">
               <label>Last Name *</label>
-              <input type="text" name="lastName" required>
+              <input type="text" name="lastName" id="lastName" required>
             </div>
             <div class="form-group">
               <label>Email *</label>
-              <input type="email" name="email" required>
+              <input type="email" name="email" id="email" required>
             </div>
             <div class="form-group">
               <label>Phone *</label>
-              <input type="tel" name="phone" required>
+              <input type="tel" name="phone" id="phone" required>
             </div>
           </div>
         </div>
@@ -304,6 +311,8 @@
 
 <script src="cart.js"></script>
 <script src="auth.js"></script>
+<script src="products.js"></script>
+<script src="validation.js"></script>
 <script src="main.js"></script>
 <script>
 function toggleBillingAddress() {
@@ -386,7 +395,8 @@ function handleCheckout(e) {
         country: formData.get('country')
       },
       items: window.shoppingCart.cart,
-      total: window.shoppingCart.getCartTotal() + 150 + (window.shoppingCart.getCartTotal() * 0.20)
+      total: window.shoppingCart.getCartTotal() + 150 + (window.shoppingCart.getCartTotal() * 0.20),
+      paymentMethod: 'Card'
     };
     
     // Store order data for success page
@@ -412,6 +422,11 @@ function handleCheckout(e) {
     const allOrders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
     allOrders.push(orderData);
     localStorage.setItem('fl_allOrders', JSON.stringify(allOrders));
+    
+    // Decrease stock for each ordered item
+    window.shoppingCart.cart.forEach(item => {
+      ProductCatalog.decreaseStock(item.id, item.quantity);
+    });
     
     // Send email notifications
     sendOrderConfirmationEmail(orderData);
@@ -466,6 +481,11 @@ function handleApplePay() {
     allOrders.push(orderData);
     localStorage.setItem('fl_allOrders', JSON.stringify(allOrders));
     
+    // Decrease stock for each ordered item
+    window.shoppingCart.cart.forEach(item => {
+      ProductCatalog.decreaseStock(item.id, item.quantity);
+    });
+    
     sendOrderConfirmationEmail(orderData);
     sendAdminNotificationEmail(orderData);
     
@@ -515,6 +535,11 @@ function handleGooglePay() {
     allOrders.push(orderData);
     localStorage.setItem('fl_allOrders', JSON.stringify(allOrders));
     
+    // Decrease stock for each ordered item
+    window.shoppingCart.cart.forEach(item => {
+      ProductCatalog.decreaseStock(item.id, item.quantity);
+    });
+    
     sendOrderConfirmationEmail(orderData);
     sendAdminNotificationEmail(orderData);
     
@@ -525,58 +550,113 @@ function handleGooglePay() {
 
 // Send customer confirmation email
 function sendOrderConfirmationEmail(order) {
-  console.log('📧 Customer Confirmation Email Triggered:', {
-    to: order.customer.email,
-    subject: 'Order Confirmation #' + order.orderId,
-    template: 'order_confirmation',
-    data: {
-      orderId: order.orderId,
-      total: order.total.toFixed(2) + ' €',
-      items: order.items.length,
-      customerName: order.customer.firstName + ' ' + order.customer.lastName
-    }
-  });
-  
-  const emailLog = JSON.parse(localStorage.getItem('fl_emailLog')) || [];
-  emailLog.push({
-    type: 'order_confirmation',
-    to: order.customer.email,
-    sentAt: new Date().toISOString(),
-    status: 'sent',
-    orderId: order.orderId
-  });
-  localStorage.setItem('fl_emailLog', JSON.stringify(emailLog));
+  // Use EmailJSService if available, otherwise fallback to simulation
+  if (typeof EmailJSService !== 'undefined') {
+    EmailJSService.sendOrderConfirmation(order);
+  } else {
+    // Fallback simulation
+    console.log('📧 Customer Confirmation Email Triggered:', {
+      to: order.customer.email,
+      subject: 'Order Confirmation #' + order.orderId,
+      template: 'order_confirmation',
+      data: {
+        orderId: order.orderId,
+        total: order.total.toFixed(2) + ' €',
+        items: order.items.length,
+        customerName: order.customer.firstName + ' ' + order.customer.lastName
+      }
+    });
+    
+    const emailLog = JSON.parse(localStorage.getItem('fl_emailLog')) || [];
+    emailLog.push({
+      type: 'order_confirmation',
+      to: order.customer.email,
+      sentAt: new Date().toISOString(),
+      status: 'sent',
+      orderId: order.orderId
+    });
+    localStorage.setItem('fl_emailLog', JSON.stringify(emailLog));
+  }
 }
 
 // Send admin notification email
 function sendAdminNotificationEmail(order) {
-  console.log('📧 Admin Notification Email Triggered:', {
-    to: 'admin@fl-art.com',
-    subject: 'New Order #' + order.orderId,
-    template: 'admin_notification',
-    data: {
-      orderId: order.orderId,
-      total: order.total.toFixed(2) + ' €',
-      customerEmail: order.customer.email,
-      customerName: order.customer.firstName + ' ' + order.customer.lastName
-    }
-  });
-  
-  const emailLog = JSON.parse(localStorage.getItem('fl_emailLog')) || [];
-  emailLog.push({
-    type: 'admin_notification',
-    to: 'admin@fl-art.com',
-    sentAt: new Date().toISOString(),
-    status: 'sent',
-    orderId: order.orderId
-  });
-  localStorage.setItem('fl_emailLog', JSON.stringify(emailLog));
+  // Use EmailJSService if available, otherwise fallback to simulation
+  if (typeof EmailJSService !== 'undefined') {
+    EmailJSService.sendAdminNotification(order);
+  } else {
+    // Fallback simulation
+    console.log('📧 Admin Notification Email Triggered:', {
+      to: 'admin@fl-art.com',
+      subject: 'New Order #' + order.orderId,
+      template: 'admin_notification',
+      data: {
+        orderId: order.orderId,
+        total: order.total.toFixed(2) + ' €',
+        customerEmail: order.customer.email,
+        customerName: order.customer.firstName + ' ' + order.customer.lastName
+      }
+    });
+    
+    const emailLog = JSON.parse(localStorage.getItem('fl_emailLog')) || [];
+    emailLog.push({
+      type: 'admin_notification',
+      to: 'admin@fl-art.com',
+      sentAt: new Date().toISOString(),
+      status: 'sent',
+      orderId: order.orderId
+    });
+    localStorage.setItem('fl_emailLog', JSON.stringify(emailLog));
+  }
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   updateOrderSummary();
+  checkUserStatus();
+  
+  // Check if cart is empty
+  if (window.shoppingCart.cart.length === 0) {
+    document.querySelector('.checkout-grid').innerHTML = '<p class="empty-state">Your cart is empty. <a href="collection.html">Browse our collection</a></p>';
+  }
 });
+
+// Check if user is logged in and update UI accordingly
+function checkUserStatus() {
+  const currentUser = window.authSystem ? window.authSystem.currentUser : null;
+  const loggedInDiv = document.getElementById('loggedInUser');
+  const guestDiv = document.getElementById('guestUser');
+  const userDisplayName = document.getElementById('userDisplayName');
+  
+  if (currentUser) {
+    // User is logged in
+    loggedInDiv.style.display = 'block';
+    guestDiv.style.display = 'none';
+    userDisplayName.textContent = currentUser.firstName + ' ' + currentUser.lastName;
+    
+    // Pre-fill form with user data
+    document.getElementById('firstName').value = currentUser.firstName;
+    document.getElementById('lastName').value = currentUser.lastName;
+    document.getElementById('email').value = currentUser.email;
+    document.getElementById('phone').value = currentUser.phone || '';
+    
+    // Make email readonly for logged-in users
+    document.getElementById('email').readOnly = true;
+  } else {
+    // User is guest
+    loggedInDiv.style.display = 'none';
+    guestDiv.style.display = 'block';
+    document.getElementById('email').readOnly = false;
+  }
+}
+
+// Sign out and continue as guest
+function signOutAndCheckout() {
+  if (window.authSystem) {
+    window.authSystem.signOut();
+    checkUserStatus();
+  }
+}
 </script>
 </body>
 </html>

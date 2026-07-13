@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Acquérir — FL Sculptures</title>
-<meta name="description" content="Découvrez le parcours d'acquisition des sculptures FL. Demande, échange, réservation et livraison d'œuvres d'art.">
-<meta name="keywords" content="acquérir sculpture, achat art, parcours acquisition, réservation œuvre">
+<title>Returns & Refunds — FL Sculptures</title>
+<meta name="description" content="FL Sculptures returns and refund policy. Information about our return policy for artwork purchases.">
+<meta name="keywords" content="returns, refund policy, sculpture return, artwork exchange">
 <meta name="author" content="FL">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Acquérir — FL Sculptures">
-<meta property="og:description" content="Découvrez le parcours d'acquisition des sculptures FL.">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="fr_FR">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -39,7 +35,7 @@
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Panier</h3>
+    <h3>Cart</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
@@ -48,7 +44,7 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
   </div>
 </div>
 
@@ -59,10 +55,7 @@
     <nav class="menu-nav">
       <a href="index.html">Home</a>
       <a href="collection.html">Collection</a>
-      <a href="atelier.html">Atelier</a>
-      <a href="blog.html">Blog</a>
       <a href="about.html">About</a>
-      <a href="faq.html">FAQ</a>
       <a href="contact.html">Contact</a>
     </nav>
   </div>
@@ -87,10 +80,6 @@
         <input type="password" name="password" required>
       </div>
       <button type="submit" class="auth-submit-btn">Sign In</button>
-      
-      <div class="auth-footer">
-        <a href="#" onclick="window.authSystem.showAuthModal('reset'); return false;">Forgot password?</a>
-      </div>
       
       <div class="social-login">
         <p>Or continue with</p>
@@ -136,32 +125,65 @@
         </button>
       </div>
     </form>
-    
-    <form id="resetForm" class="auth-form" style="display: none;">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" required>
-      </div>
-      <button type="submit" class="auth-submit-btn">Send Reset Link</button>
-      <div class="auth-footer">
-        <a href="#" onclick="window.authSystem.showAuthModal('signin'); return false;">Back to Sign In</a>
-      </div>
-    </form>
   </div>
 </div>
 
 <div class="page-hero">
-  <div class="eyebrow">Acquérir</div>
-  <h1>Le parcours d'acquisition</h1>
-  <p class="placeholder">[À confirmer : décrire le vrai parcours d'achat souhaité]</p>
+  <div class="eyebrow">Policy</div>
+  <h1>Returns & Refunds</h1>
+  <p>Understanding our return policy for artwork purchases.</p>
 </div>
 
 <section class="reveal">
-  <div class="process-list">
-    <div class="process-item"><div class="num">01</div><h3>Demande</h3><p class="placeholder">[Étape à confirmer]</p></div>
-    <div class="process-item"><div class="num">02</div><h3>Échange</h3><p class="placeholder">[Étape à confirmer]</p></div>
-    <div class="process-item"><div class="num">03</div><h3>Réservation</h3><p class="placeholder">[Étape à confirmer]</p></div>
-    <div class="process-item"><div class="num">04</div><h3>Livraison</h3><p class="placeholder">[Étape à confirmer]</p></div>
+  <div class="policy-content">
+    <div class="policy-section">
+      <h2>Our Return Policy</h2>
+      <p>At FL Sculptures, we understand that purchasing artwork is a significant decision. Each sculpture is a unique, handcrafted piece created with care and attention to detail. Due to the unique nature of our artwork, we have established the following return policy:</p>
+      
+      <div class="policy-item">
+        <h3>No Standard Returns</h3>
+        <p>Because each sculpture is a one-of-a-kind artwork, we do not accept standard returns. We encourage all potential buyers to:</p>
+        <ul>
+          <li>Request detailed photos and videos of the artwork before purchasing</li>
+          <li>Schedule a studio visit to view the piece in person (when possible)</li>
+          <li>Ask any questions about materials, dimensions, or condition</li>
+          <li>Review the certificate of authenticity and provenance documentation</li>
+        </ul>
+      </div>
+      
+      <div class="policy-item">
+        <h3>Damage During Shipping</h3>
+        <p>If your sculpture arrives damaged due to shipping, we will work with you to resolve the issue. Please contact us within 48 hours of delivery with photos of the damage. We will either:</p>
+        <ul>
+          <li>Arrange for professional restoration at our expense</li>
+          <li>Provide a replacement if a similar piece is available</li>
+          <li>Offer a full refund in rare cases of irreparable damage</li>
+        </ul>
+      </div>
+      
+      <div class="policy-item">
+        <h3>Material Defects</h3>
+        <p>In the unlikely event of a material defect or structural issue not disclosed prior to sale, please contact us within 30 days of delivery. We will assess the situation and work toward a fair resolution, which may include repair, replacement, or refund.</p>
+      </div>
+      
+      <div class="policy-item">
+        <h3>Custom Commissions</h3>
+        <p>For custom-commissioned pieces, a 50% non-refundable deposit is required to begin work. Once work has begun, cancellations are not accepted. The final 50% payment is due upon completion and before delivery. No returns on custom commissions.</p>
+      </div>
+      
+      <div class="policy-item">
+        <h3>Refund Process</h3>
+        <p>In cases where a refund is approved (shipping damage, material defects), refunds will be processed within 14 business days to the original payment method. Shipping costs are non-refundable unless the return is due to our error.</p>
+      </div>
+    </div>
+    
+    <div class="policy-section">
+      <h2>Contact Us</h2>
+      <p>If you have any questions about our return policy or need to discuss a specific situation, please don't hesitate to contact us:</p>
+      <p><strong>Email:</strong> contact@fl-sculptures.com</p>
+      <p><strong>Phone:</strong> +33 1 23 45 67 89</p>
+      <p>We are committed to ensuring your satisfaction with your FL sculpture purchase.</p>
+    </div>
   </div>
 </section>
 

@@ -21,6 +21,7 @@
 <header>
   <button class="menu-toggle">Menu</button>
   <div class="header-actions">
+    <button class="search-toggle" onclick="toggleSearchOverlay()">Search</button>
     <div class="auth-buttons">
       <button class="sign-in-btn">Sign In</button>
       <button class="sign-up-btn">Sign Up</button>
@@ -50,6 +51,19 @@
   </div>
 </div>
 
+<!-- Search Overlay -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-content">
+    <button class="search-close">×</button>
+    <div class="search-input-wrapper">
+      <input type="text" id="globalSearchInput" placeholder="Search products..." autocomplete="off">
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="search-placeholder">Start typing to search products...</div>
+    </div>
+  </div>
+</div>
+
 <!-- Authentication Modal -->
 <div class="auth-overlay" id="authModal" style="display: none;">
   <div class="auth-modal">
@@ -69,6 +83,10 @@
         <input type="password" name="password" required>
       </div>
       <button type="submit" class="auth-submit-btn">Sign In</button>
+      
+      <div class="auth-footer">
+        <a href="#" onclick="window.authSystem.showAuthModal('reset'); return false;">Forgot password?</a>
+      </div>
       
       <div class="social-login">
         <p>Or continue with</p>
@@ -114,6 +132,17 @@
         </button>
       </div>
     </form>
+    
+    <form id="resetForm" class="auth-form" style="display: none;">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required>
+      </div>
+      <button type="submit" class="auth-submit-btn">Send Reset Link</button>
+      <div class="auth-footer">
+        <a href="#" onclick="window.authSystem.showAuthModal('signin'); return false;">Back to Sign In</a>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -139,57 +168,30 @@
 </div>
 
 <section class="reveal">
-  <div class="piece-grid">
-
-    <div class="piece s-xl">
-      <div class="piece-visual"><svg viewBox="0 0 200 200"><path d="M60 180 C40 120 55 60 100 20 C145 60 160 120 140 180 Z" fill="#8A6E4F" opacity="0.85"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Work Title 1]</div>
-      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
-      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="1" data-product-name="[Work Title 1]" data-product-price="2500" data-product-image="">Add to Cart</button></div>
+  <div class="search-container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search sculptures by name, material, or category..." oninput="handleSearch()">
+      <button class="search-clear" onclick="clearSearch()" style="display: none;">×</button>
     </div>
-
-    <div class="piece s-s">
-      <div class="piece-visual"><svg viewBox="0 0 200 200"><rect x="60" y="30" width="80" height="150" rx="6" fill="#C9C3B6"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Work Title 2]</div>
-      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
-      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="2" data-product-name="[Work Title 2]" data-product-price="1800" data-product-image="">Add to Cart</button></div>
+    <div class="search-filters">
+      <select id="categoryFilter" onchange="handleSearch()">
+        <option value="">All Categories</option>
+        <option value="Abstract">Abstract</option>
+        <option value="Figurative">Figurative</option>
+        <option value="Minimalist">Minimalist</option>
+        <option value="Organic">Organic</option>
+      </select>
+      <select id="materialFilter" onchange="handleSearch()">
+        <option value="">All Materials</option>
+        <option value="Bronze">Bronze</option>
+        <option value="Stone">Stone</option>
+        <option value="Wood">Wood</option>
+        <option value="Ceramic">Ceramic</option>
+      </select>
     </div>
-
-    <div class="piece s-m">
-      <div class="piece-visual"><svg viewBox="0 0 200 200"><ellipse cx="100" cy="100" rx="70" ry="60" fill="#B57A4C" opacity="0.8"/><ellipse cx="100" cy="100" rx="40" ry="34" fill="#F3F1EC"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Work Title 3]</div>
-      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
-      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="3" data-product-name="[Work Title 3]" data-product-price="3200" data-product-image="">Add to Cart</button></div>
-    </div>
-
-    <div class="piece s-l">
-      <div class="piece-visual"><svg viewBox="0 0 200 200"><path d="M40 170 L100 30 L160 170 Z" fill="#A79E8E"/><path d="M70 170 L100 90 L130 170 Z" fill="#F3F1EC"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Work Title 4]</div>
-      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
-      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="4" data-product-name="[Work Title 4]" data-product-price="4500" data-product-image="">Add to Cart</button></div>
-    </div>
-
-    <div class="piece s-m">
-      <div class="piece-visual"><svg viewBox="0 0 200 200"><path d="M100 20 C130 60 130 140 100 180 C70 140 70 60 100 20 Z" fill="#8A6E4F"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Work Title 5]</div>
-      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
-      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="5" data-product-name="[Work Title 5]" data-product-price="2800" data-product-image="">Add to Cart</button></div>
-    </div>
-
-    <div class="piece s-s">
-      <div class="piece-visual"><svg viewBox="0 0 200 200"><rect x="50" y="50" width="100" height="100" fill="#DCD5C4"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Work Title 6]</div>
-      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
-      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="6" data-product-name="[Work Title 6]" data-product-price="1500" data-product-image="">Add to Cart</button></div>
-    </div>
-
-    <div class="piece s-xl">
-      <div class="piece-visual"><svg viewBox="0 0 200 200"><ellipse cx="100" cy="150" rx="60" ry="18" fill="#191817" opacity="0.08"/><path d="M70 150 C60 100 75 50 100 25 C125 50 140 100 130 150 Z" fill="#C97B4A" opacity="0.75"/></svg></div>
-      <div><div class="piece-name serif placeholder">[Work Title 7]</div>
-      <div class="piece-meta placeholder">[Material] — [H × W × D cm] — [weight]</div></div>
-      <div class="piece-price"><span class="placeholder">[Price / On request]</span><button class="add-to-cart" data-product-id="7" data-product-name="[Work Title 7]" data-product-price="5200" data-product-image="">Add to Cart</button></div>
-    </div>
-
+  </div>
+  <div class="piece-grid" id="productGrid">
+    <!-- Products will be dynamically loaded here -->
   </div>
 </section>
 
@@ -234,29 +236,234 @@
 
 <script src="cart.js"></script>
 <script src="auth.js"></script>
+<script src="products.js"></script>
+<script src="wishlist.js"></script>
 <script src="main.js"></script>
 <script>
-// Language dropdown toggle
-function toggleLangDropdown() {
-  const langMenu = document.getElementById('langMenu');
-  langMenu.classList.toggle('active');
+// Load products dynamically from ProductCatalog
+function loadProducts(productsToLoad = null) {
+  const productGrid = document.getElementById('productGrid');
+  const products = productsToLoad || ProductCatalog.getAvailable();
+  
+  if (products.length === 0) {
+    productGrid.innerHTML = '<p class="placeholder">No products currently available.</p>';
+    return;
+  }
+  
+  productGrid.innerHTML = products.map(product => {
+    const rating = ProductCatalog.getProductRating(product.id);
+    const ratingDisplay = rating.count > 0 
+      ? `<div class="product-rating">${'★'.repeat(Math.round(rating.average))}${'☆'.repeat(5 - Math.round(rating.average))} (${rating.count})</div>`
+      : '';
+    
+    return `
+    <div class="piece ${product.size}">
+      <div class="piece-visual">
+        <svg viewBox="0 0 200 200">
+          <path d="M60 180 C40 120 55 60 100 20 C145 60 160 120 140 180 Z" fill="#8A6E4F" opacity="0.85"/>
+        </svg>
+      </div>
+      <div>
+        <div class="piece-name serif">${product.name}</div>
+        <div class="piece-meta">${product.material} — ${product.dimensions} — ${product.weight}</div>
+        ${ratingDisplay}
+      </div>
+      <div class="piece-price">
+        <span>${product.price.toFixed(2)} €</span>
+        <span class="stock-badge">${product.stock > 0 ? product.stock + ' in stock' : 'Out of stock'}</span>
+        <div class="piece-actions">
+          <button class="add-to-cart" 
+                  data-product-id="${product.id}" 
+                  data-product-name="${product.name}" 
+                  data-product-price="${product.price}" 
+                  data-product-image="${product.image}"
+                  ${product.stock === 0 ? 'disabled' : ''}>
+            ${product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+          </button>
+          <button class="wishlist-btn" 
+                  data-product-id="${product.id}" 
+                  data-product-name="${product.name}" 
+                  data-product-price="${product.price}" 
+                  data-product-image="${product.image}"
+                  onclick="toggleWishlist(this)">
+            ♡
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  }).join('');
+  
+  // Re-attach event listeners to new add-to-cart buttons
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+      const productId = this.dataset.productId;
+      const productName = this.dataset.productName;
+      const productPrice = parseFloat(this.dataset.productPrice);
+      const productImage = this.dataset.productImage;
+      window.shoppingCart.addToCart(productId, productName, productPrice, productImage);
+    });
+  });
+  
+  // Update wishlist button states
+  updateWishlistButtonStates();
 }
 
-// Connect dropdown to existing i18n system
-document.addEventListener('DOMContentLoaded', () => {
-  const langButtons = document.querySelectorAll('#langMenu button');
-  langButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const lang = e.target.textContent.toLowerCase();
-      if (window.i18n) {
-        window.i18n.setLanguage(lang);
-        const langCurrent = document.querySelector('.lang-current');
-        langCurrent.textContent = lang.toUpperCase();
+// Toggle wishlist
+function toggleWishlist(button) {
+  const productId = button.dataset.productId;
+  const productName = button.dataset.productName;
+  const productPrice = parseFloat(button.dataset.productPrice);
+  const productImage = button.dataset.productImage;
+  
+  if (typeof WishlistService !== 'undefined') {
+    if (WishlistService.isInWishlist(productId)) {
+      WishlistService.removeFromWishlist(productId);
+      button.textContent = '♡';
+      button.classList.remove('active');
+    } else {
+      WishlistService.addToWishlist(productId, productName, productPrice, productImage);
+      button.textContent = '♥';
+      button.classList.add('active');
+    }
+  }
+}
+
+// Update wishlist button states on page load
+function updateWishlistButtonStates() {
+  if (typeof WishlistService !== 'undefined') {
+    document.querySelectorAll('.wishlist-btn').forEach(button => {
+      const productId = button.dataset.productId;
+      if (WishlistService.isInWishlist(productId)) {
+        button.textContent = '♥';
+        button.classList.add('active');
+      } else {
+        button.textContent = '♡';
+        button.classList.remove('active');
       }
     });
+    
+    WishlistService.updateWishlistCount();
+  }
+}
+
+// Search overlay functionality
+function toggleSearchOverlay() {
+  const overlay = document.getElementById('searchOverlay');
+  const input = document.getElementById('globalSearchInput');
+  
+  if (overlay.classList.contains('active')) {
+    overlay.classList.remove('active');
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 300);
+  } else {
+    overlay.style.display = 'flex';
+    setTimeout(() => {
+      overlay.classList.add('active');
+      input.focus();
+    }, 10);
+  }
+}
+
+// Initialize search overlay
+document.addEventListener('DOMContentLoaded', () => {
+  const searchOverlay = document.getElementById('searchOverlay');
+  const searchInput = document.getElementById('globalSearchInput');
+  const searchResults = document.getElementById('searchResults');
+  
+  // Close on close button
+  document.querySelector('.search-close').addEventListener('click', toggleSearchOverlay);
+  
+  // Close on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
+      toggleSearchOverlay();
+    }
+  });
+  
+  // Search functionality
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase().trim();
+    
+    if (query.length < 2) {
+      searchResults.innerHTML = '<div class="search-placeholder">Start typing to search products...</div>';
+      return;
+    }
+    
+    const products = ProductCatalog.getAvailable();
+    const filtered = products.filter(product => {
+      return product.name.toLowerCase().includes(query) ||
+             product.category.toLowerCase().includes(query) ||
+             product.material.toLowerCase().includes(query) ||
+             product.description.toLowerCase().includes(query);
+    });
+    
+    if (filtered.length === 0) {
+      searchResults.innerHTML = '<div class="no-results">No products found matching your search.</div>';
+      return;
+    }
+    
+    searchResults.innerHTML = filtered.map(product => `
+      <div class="search-result-item" onclick="goToProduct(${product.id})">
+        <div class="search-result-title">${product.name}</div>
+        <div class="search-result-meta">${product.category} — ${product.material}</div>
+        <div class="search-result-price">${product.price.toFixed(2)} €</div>
+      </div>
+    `).join('');
   });
 });
 
+function goToProduct(productId) {
+  toggleSearchOverlay();
+  window.location.href = `product.html?id=${productId}`;
+}
+
+// Handle search and filter
+function handleSearch() {
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
+  const categoryFilter = document.getElementById('categoryFilter').value;
+  const materialFilter = document.getElementById('materialFilter').value;
+  const clearBtn = document.querySelector('.search-clear');
+  
+  // Show/hide clear button
+  clearBtn.style.display = searchInput ? 'block' : 'none';
+  
+  const allProducts = ProductCatalog.getAvailable();
+  
+  const filteredProducts = allProducts.filter(product => {
+    // Search text filter
+    const matchesSearch = !searchInput || 
+      product.name.toLowerCase().includes(searchInput) ||
+      product.material.toLowerCase().includes(searchInput) ||
+      product.category.toLowerCase().includes(searchInput) ||
+      product.description.toLowerCase().includes(searchInput);
+    
+    // Category filter
+    const matchesCategory = !categoryFilter || product.category === categoryFilter;
+    
+    // Material filter
+    const matchesMaterial = !materialFilter || product.material === materialFilter;
+    
+    return matchesSearch && matchesCategory && matchesMaterial;
+  });
+  
+  loadProducts(filteredProducts);
+}
+
+// Clear search
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('categoryFilter').value = '';
+  document.getElementById('materialFilter').value = '';
+  document.querySelector('.search-clear').style.display = 'none';
+  loadProducts();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  loadProducts();
+});
 </script>
 </body>
 </html>

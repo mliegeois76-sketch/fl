@@ -60,6 +60,7 @@
       <nav class="account-nav">
         <a href="#" class="active" onclick="showAccountSection('dashboard')">Dashboard</a>
         <a href="#" onclick="showAccountSection('orders')">My Orders</a>
+        <a href="#" onclick="showAccountSection('wishlist')">Wishlist</a>
         <a href="#" onclick="showAccountSection('profile')">Profile</a>
         <a href="#" onclick="showAccountSection('addresses')">Addresses</a>
         <a href="#" onclick="window.authSystem.signOut()">Sign Out</a>
@@ -87,6 +88,18 @@
         <h2>My Orders</h2>
         <div class="orders-list" id="ordersList">
           <p class="empty-state">You have no orders yet.</p>
+        </div>
+      </div>
+
+      <!-- Wishlist -->
+      <div id="wishlist-section" class="account-section" style="display: none;">
+        <h2>My Wishlist</h2>
+        <div class="wishlist-actions">
+          <button class="secondary-btn" onclick="moveAllToCart()">Move All to Cart</button>
+          <button class="secondary-btn cancel-btn" onclick="clearWishlist()">Clear Wishlist</button>
+        </div>
+        <div class="wishlist-list" id="wishlistList">
+          <p class="empty-state">Your wishlist is empty.</p>
         </div>
       </div>
 
@@ -154,6 +167,7 @@
 
 <script src="cart.js"></script>
 <script src="auth.js"></script>
+<script src="wishlist.js"></script>
 <script src="main.js"></script>
 <script>
 function showAccountSection(section) {
@@ -269,7 +283,9 @@ function loadOrders() {
   }
   
   document.getElementById('orderCount').textContent = user.orders.length;
-  document.getElementById('ordersList').innerHTML = user.orders.map(order => `
+  document.getElementById('ordersList').innerHTML = user.orders.map(order => {
+    const canCancel = order.status === 'Processing' || order.status === 'Confirmed';
+    return `
     <div class="order-card">
       <div class="order-header">
         <strong>Order #${order.orderId}</strong>
@@ -278,8 +294,108 @@ function loadOrders() {
       <p>Date: ${new Date(order.date).toLocaleDateString()}</p>
       <p>Total: ${order.total.toFixed(2)} €</p>
       <p>Items: ${order.items.length}</p>
+      <div class="order-actions">
+        <button class="secondary-btn" onclick="viewOrderTracking('${order.orderId}')">Track Order</button>
+        ${canCancel ? `<button class="secondary-btn cancel-btn" onclick="cancelOrder('${order.orderId}')">Cancel Order</button>` : ''}
+      </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
+}
+
+function viewOrderTracking(orderId) {
+  const user = window.authSystem.currentUser;
+  if (!user || !user.orders) return;
+  
+  const order = user.orders.find(o => o.orderId === orderId);
+  if (!order) return;
+  
+  // Generate tracking timeline based on order status
+  const statusSteps = ['Processing', 'Confirmed', 'Preparing', 'Shipped', 'Delivered'];
+  const currentStepIndex = statusSteps.indexOf(order.status);
+  
+  const timelineHTML = statusSteps.map((step, index) => {
+    const isCompleted = index <= currentStepIndex;
+    const isCurrent = index === currentStepIndex;
+    return `
+      <div class="tracking-step ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}">
+        <div class="tracking-dot"></div>
+        <div class="tracking-label">${step}</div>
+      </div>
+    `;
+  }).join('');
+  
+  const trackingModal = document.createElement('div');
+  trackingModal.className = 'tracking-modal';
+  trackingModal.innerHTML = `
+    <div class="tracking-content">
+      <button class="tracking-close" onclick="this.closest('.tracking-modal').remove()">×</button>
+      <h3>Order Tracking: ${order.orderId}</h3>
+      <div class="tracking-timeline">
+        ${timelineHTML}
+      </div>
+      <div class="tracking-details">
+        <p><strong>Order Date:</strong> ${new Date(order.date).toLocaleString()}</p>
+        <p><strong>Current Status:</strong> ${order.status}</p>
+        <p><strong>Estimated Delivery:</strong> 2-4 weeks from order date</p>
+        ${order.trackingNumber ? `<p><strong>Tracking Number:</strong> ${order.trackingNumber}</p>` : ''}
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(trackingModal);
+  trackingModal.style.display = 'flex';
+}
+
+function cancelOrder(orderId) {
+  const user = window.authSystem.currentUser;
+  if (!user || !user.orders) return;
+  
+  const order = user.orders.find(o => o.orderId === orderId);
+  if (!order) return;
+  
+  // Check if order can be cancelled
+  if (order.status !== 'Processing' && order.status !== 'Confirmed') {
+    alert('This order cannot be cancelled as it has already been processed.');
+    return;
+  }
+  
+  if (confirm(`Are you sure you want to cancel order #${orderId}? This action cannot be undone.`)) {
+    // Update order status in user's orders
+    order.status = 'Cancelled';
+    order.cancelledAt = new Date().toISOString();
+    
+    // Update in localStorage
+    localStorage.setItem('fl_currentUser', JSON.stringify(user));
+    
+    const users = JSON.parse(localStorage.getItem('fl_users')) || [];
+    const userIndex = users.findIndex(u => u.id === user.id);
+    if (userIndex !== -1) {
+      users[userIndex] = user;
+      localStorage.setItem('fl_users', JSON.stringify(users));
+    }
+    
+    // Update in global orders log
+    const allOrders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
+    const orderIndex = allOrders.findIndex(o => o.orderId === orderId);
+    if (orderIndex !== -1) {
+      allOrders[orderIndex].status = 'Cancelled';
+      allOrders[orderIndex].cancelledAt = new Date().toISOString();
+      localStorage.setItem('fl_allOrders', JSON.stringify(allOrders));
+    }
+    
+    // Restore stock for cancelled items
+    if (typeof ProductCatalog !== 'undefined') {
+      order.items.forEach(item => {
+        ProductCatalog.increaseStock(item.id, item.quantity);
+      });
+    }
+    
+    // Reload orders display
+    loadOrders();
+    
+    alert('Order #' + orderId + ' has been cancelled. Stock has been restored.');
+  }
 }
 
 // Initialize account page
@@ -299,7 +415,70 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load addresses and orders
   loadAddresses();
   loadOrders();
+  loadWishlist();
 });
+
+// Load wishlist
+function loadWishlist() {
+  if (typeof WishlistService !== 'undefined') {
+    const wishlist = WishlistService.getWishlist();
+    const wishlistList = document.getElementById('wishlistList');
+    
+    if (wishlist.length === 0) {
+      wishlistList.innerHTML = '<p class="empty-state">Your wishlist is empty.</p>';
+      return;
+    }
+    
+    wishlistList.innerHTML = wishlist.map(item => `
+      <div class="wishlist-item">
+        <div class="wishlist-item-info">
+          <strong>${item.productName}</strong>
+          <span>${item.productPrice.toFixed(2)} €</span>
+        </div>
+        <div class="wishlist-item-actions">
+          <button class="secondary-btn" onclick="addToCartFromWishlist('${item.productId}', '${item.productName}', ${item.productPrice}, '${item.productImage}')">Add to Cart</button>
+          <button class="secondary-btn cancel-btn" onclick="removeFromWishlist('${item.productId}')">Remove</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+// Add to cart from wishlist
+function addToCartFromWishlist(productId, productName, productPrice, productImage) {
+  if (window.shoppingCart) {
+    window.shoppingCart.addToCart(productId, productName, productPrice, productImage);
+    WishlistService.removeFromWishlist(productId);
+    loadWishlist();
+  }
+}
+
+// Remove from wishlist
+function removeFromWishlist(productId) {
+  if (typeof WishlistService !== 'undefined') {
+    WishlistService.removeFromWishlist(productId);
+    loadWishlist();
+  }
+}
+
+// Move all to cart
+function moveAllToCart() {
+  if (typeof WishlistService !== 'undefined') {
+    const result = WishlistService.moveAllToCart();
+    alert(result.message);
+    loadWishlist();
+  }
+}
+
+// Clear wishlist
+function clearWishlist() {
+  if (confirm('Are you sure you want to clear your wishlist?')) {
+    if (typeof WishlistService !== 'undefined') {
+      WishlistService.clearWishlist();
+      loadWishlist();
+    }
+  }
+}
 </script>
 </body>
 </html>

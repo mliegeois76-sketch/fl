@@ -12,6 +12,15 @@
 
 <div class="page-transition"></div>
 
+<!-- Admin Login Check -->
+<div id="adminLoginCheck" style="display: none;">
+  <div class="admin-login-container">
+    <h2>Admin Access Required</h2>
+    <p>Please log in with an admin account to access this dashboard.</p>
+    <button class="checkout-btn" onclick="window.location.href='index.html'">Return to Home</button>
+  </div>
+</div>
+
 <header>
   <div class="logo">FL</div>
   <div class="header-actions">
@@ -30,9 +39,14 @@
   <div class="admin-dashboard">
     <div class="admin-tabs">
       <button class="admin-tab active" onclick="showAdminSection('overview')">Overview</button>
+      <button class="admin-tab" onclick="showAdminSection('products')">Products</button>
       <button class="admin-tab" onclick="showAdminSection('users')">Users</button>
       <button class="admin-tab" onclick="showAdminSection('orders')">Orders</button>
+      <button class="admin-tab" onclick="showAdminSection('shipping')">Shipping</button>
+      <button class="admin-tab" onclick="showAdminSection('analytics')">Analytics</button>
       <button class="admin-tab" onclick="showAdminSection('emails')">Email Log</button>
+      <button class="admin-tab" onclick="showAdminSection('reviews')">Reviews</button>
+      <button class="admin-tab" onclick="showAdminSection('data')">Data Management</button>
     </div>
 
     <!-- Overview -->
@@ -58,6 +72,81 @@
       </div>
     </div>
 
+    <!-- Products -->
+    <div id="products-section" class="admin-section" style="display: none;">
+      <h2>Product Management</h2>
+      <div class="inventory-actions">
+        <button class="checkout-btn" onclick="showAddProductForm()">Add New Product</button>
+        <button class="secondary-btn" onclick="showLowStockAlerts()">Low Stock Alerts</button>
+      </div>
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+            <tr><td colspan="6" class="empty-state">No products available.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div id="addProductForm" style="display: none; margin-top: 24px; background: var(--paper); padding: 24px;">
+        <h3>Add New Product</h3>
+        <form class="account-form" onsubmit="addProduct(event)">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Material</label>
+            <input type="text" name="material" required>
+          </div>
+          <div class="form-group">
+            <label>Dimensions</label>
+            <input type="text" name="dimensions" required>
+          </div>
+          <div class="form-group">
+            <label>Weight</label>
+            <input type="text" name="weight" required>
+          </div>
+          <div class="form-group">
+            <label>Price (€)</label>
+            <input type="number" name="price" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Stock</label>
+            <input type="number" name="stock" required>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <input type="text" name="category" required>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Size</label>
+            <select name="size" required>
+              <option value="s-s">Small-Small</option>
+              <option value="s-m">Small-Medium</option>
+              <option value="s-l">Small-Large</option>
+              <option value="s-xl">Small-Extra Large</option>
+            </select>
+          </div>
+          <button type="submit" class="checkout-btn">Add Product</button>
+          <button type="button" class="secondary-btn" onclick="hideAddProductForm()">Cancel</button>
+        </form>
+      </div>
+    </div>
+
     <!-- Users -->
     <div id="users-section" class="admin-section" style="display: none;">
       <h2>Registered Users</h2>
@@ -70,10 +159,11 @@
               <th>Email</th>
               <th>Registered</th>
               <th>Orders</th>
+              <th>X</th>
             </tr>
           </thead>
           <tbody id="usersTableBody">
-            <tr><td colspan="5" class="empty-state">No users registered yet.</td></tr>
+            <tr><td colspan="6" class="empty-state">No users registered yet.</td></tr>
           </tbody>
         </table>
       </div>
@@ -101,6 +191,90 @@
       </div>
     </div>
 
+    <!-- Shipping -->
+    <div id="shipping-section" class="admin-section" style="display: none;">
+      <h2>Shipping Management</h2>
+      <div class="shipping-controls">
+        <button class="checkout-btn" onclick="showAddShippingMethod()">Add Shipping Method</button>
+      </div>
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Delivery Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="shippingMethodsBody">
+            <tr><td colspan="5" class="empty-state">No shipping methods configured.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div id="addShippingForm" style="display: none; margin-top: 24px; background: var(--paper); padding: 24px;">
+        <h3>Add Shipping Method</h3>
+        <form class="account-form" onsubmit="addShippingMethod(event)">
+          <div class="form-group">
+            <label>Method Name</label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <input type="text" name="description" required>
+          </div>
+          <div class="form-group">
+            <label>Price (€)</label>
+            <input type="number" name="price" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Delivery Time</label>
+            <input type="text" name="deliveryTime" placeholder="e.g., 3-5 business days" required>
+          </div>
+          <button type="submit" class="checkout-btn">Add Method</button>
+          <button type="button" class="secondary-btn" onclick="hideAddShippingForm()">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div id="analytics-section" class="admin-section" style="display: none;">
+      <h2>Sales Analytics</h2>
+      <div class="analytics-controls">
+        <select id="analyticsPeriod" onchange="loadAnalytics()">
+          <option value="all">All Time</option>
+          <option value="30">Last 30 Days</option>
+          <option value="7">Last 7 Days</option>
+        </select>
+      </div>
+      <div class="analytics-grid">
+        <div class="analytics-card">
+          <h3>Total Revenue</h3>
+          <span class="analytics-value" id="totalRevenue">0.00 €</span>
+        </div>
+        <div class="analytics-card">
+          <h3>Total Orders</h3>
+          <span class="analytics-value" id="totalOrders">0</span>
+        </div>
+        <div class="analytics-card">
+          <h3>Average Order Value</h3>
+          <span class="analytics-value" id="avgOrderValue">0.00 €</span>
+        </div>
+        <div class="analytics-card">
+          <h3>Conversion Rate</h3>
+          <span class="analytics-value" id="conversionRate">0%</span>
+        </div>
+      </div>
+      <div class="analytics-details">
+        <h3>Top Selling Products</h3>
+        <div id="topProducts" class="top-products-list">
+          <p class="empty-state">No sales data available.</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Email Log -->
     <div id="emails-section" class="admin-section" style="display: none;">
       <h2>Email Log</h2>
@@ -121,31 +295,360 @@
         </table>
       </div>
     </div>
+
+    <!-- Reviews -->
+    <div id="reviews-section" class="admin-section" style="display: none;">
+      <h2>Review Moderation</h2>
+      <div class="review-filters">
+        <button class="secondary-btn" onclick="loadReviews('all')">All Reviews</button>
+        <button class="secondary-btn" onclick="loadReviews('pending')">Pending</button>
+        <button class="secondary-btn" onclick="loadReviews('approved')">Approved</button>
+        <button class="secondary-btn" onclick="loadReviews('rejected')">Rejected</button>
+      </div>
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Reviewer</th>
+              <th>Rating</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reviewsTableBody">
+            <tr><td colspan="6" class="empty-state">No reviews yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Data Management -->
+    <div id="data-section" class="admin-section" style="display: none;">
+      <h2>Data Management</h2>
+      <div class="data-management-container">
+        <div class="data-stats">
+          <h3>Data Statistics</h3>
+          <div class="stat-grid">
+            <div class="stat-item">
+              <strong>Users:</strong> <span id="dataUsers">0</span>
+            </div>
+            <div class="stat-item">
+              <strong>Products:</strong> <span id="dataProducts">0</span>
+            </div>
+            <div class="stat-item">
+              <strong>Orders:</strong> <span id="dataOrders">0</span>
+            </div>
+            <div class="stat-item">
+              <strong>Emails:</strong> <span id="dataEmails">0</span>
+            </div>
+            <div class="stat-item">
+              <strong>Reviews:</strong> <span id="dataReviews">0</span>
+            </div>
+            <div class="stat-item">
+              <strong>Storage Size:</strong> <span id="dataStorage">0 KB</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="data-actions">
+          <h3>Export Data</h3>
+          <div class="action-buttons">
+            <button class="secondary-btn" onclick="DataExportService.exportAllData()">Export All Data</button>
+            <button class="secondary-btn" onclick="DataExportService.exportDataType('users')">Export Users</button>
+            <button class="secondary-btn" onclick="DataExportService.exportDataType('products')">Export Products</button>
+            <button class="secondary-btn" onclick="DataExportService.exportDataType('orders')">Export Orders</button>
+            <button class="secondary-btn" onclick="DataExportService.exportDataType('reviews')">Export Reviews</button>
+          </div>
+
+          <h3>Import Data</h3>
+          <div class="import-section">
+            <input type="file" id="importFile" accept=".json" onchange="handleImportFile()">
+            <button class="secondary-btn" onclick="importData()">Import Selected File</button>
+          </div>
+
+          <h3>Data Validation</h3>
+          <button class="secondary-btn" onclick="validateData()">Validate Data Integrity</button>
+          <div id="validationResult"></div>
+
+          <h3>Danger Zone</h3>
+          <div class="danger-actions">
+            <button class="secondary-btn cancel-btn" onclick="clearDataType('users')">Clear Users</button>
+            <button class="secondary-btn cancel-btn" onclick="clearDataType('products')">Clear Products</button>
+            <button class="secondary-btn cancel-btn" onclick="clearDataType('orders')">Clear Orders</button>
+            <button class="secondary-btn cancel-btn" onclick="clearAllData()">Clear All Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <footer id="site-footer"></footer>
 
+<script src="cart.js"></script>
+<script src="auth.js"></script>
+<script src="products.js"></script>
 <script src="main.js"></script>
+<script src="data-export.js"></script>
 <script>
+// Admin authentication check
+document.addEventListener('DOMContentLoaded', () => {
+  checkAdminAccess();
+});
+
+function checkAdminAccess() {
+  const currentUser = JSON.parse(localStorage.getItem('fl_currentUser'));
+  const adminDashboard = document.querySelector('.admin-dashboard');
+  const loginCheck = document.getElementById('adminLoginCheck');
+  
+  // Check if user is logged in and is admin
+  if (!currentUser || !currentUser.isAdmin) {
+    // Hide dashboard and show login check
+    if (adminDashboard) adminDashboard.style.display = 'none';
+    if (loginCheck) loginCheck.style.display = 'block';
+    return false;
+  }
+  
+  // User is admin, show dashboard
+  if (adminDashboard) adminDashboard.style.display = 'block';
+  if (loginCheck) loginCheck.style.display = 'none';
+  
+  // Load initial data
+  loadOverview();
+  return true;
+}
+
+// Make admin user function (for testing - should be removed in production)
+function makeUserAdmin(email) {
+  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
+  const userIndex = users.findIndex(u => u.email === email);
+  
+  if (userIndex !== -1) {
+    users[userIndex].isAdmin = true;
+    localStorage.setItem('fl_users', JSON.stringify(users));
+    
+    // Update current user if it's the same user
+    const currentUser = JSON.parse(localStorage.getItem('fl_currentUser'));
+    if (currentUser && currentUser.email === email) {
+      currentUser.isAdmin = true;
+      localStorage.setItem('fl_currentUser', JSON.stringify(currentUser));
+    }
+    
+    console.log('User ' + email + ' is now admin');
+    return true;
+  }
+  
+  return false;
+}
+
 function showAdminSection(section) {
   document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
   document.getElementById(section + '-section').style.display = 'block';
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
+  
+  // Load data for specific sections
+  if (section === 'data') {
+    loadDataStats();
+  } else if (section === 'reviews') {
+    loadReviews('all');
+  } else if (section === 'analytics') {
+    loadAnalytics();
+  } else if (section === 'shipping') {
+    loadShippingMethods();
+  }
 }
 
 function loadOverview() {
   const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-  const orders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
-  const emails = JSON.parse(localStorage.getItem('fl_emailLog')) || [];
-  
-  const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
   
   document.getElementById('totalUsers').textContent = users.length;
-  document.getElementById('totalOrders').textContent = orders.length;
-  document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2) + ' €';
-  document.getElementById('emailsSent').textContent = emails.length;
+  document.getElementById('totalOrders').textContent = (JSON.parse(localStorage.getItem('fl_allOrders')) || []).length;
+  document.getElementById('totalProducts').textContent = (JSON.parse(localStorage.getItem('fl_products')) || []).length;
+  document.getElementById('totalEmails').textContent = (JSON.parse(localStorage.getItem('fl_emailLog')) || []).length;
+}
+
+function loadDataStats() {
+  if (typeof DataExportService !== 'undefined') {
+    const stats = DataExportService.getDataStats();
+    document.getElementById('dataUsers').textContent = stats.users;
+    document.getElementById('dataProducts').textContent = stats.products;
+    document.getElementById('dataOrders').textContent = stats.orders;
+    document.getElementById('dataEmails').textContent = stats.emails;
+    document.getElementById('dataReviews').textContent = stats.reviews;
+    document.getElementById('dataStorage').textContent = (stats.storageSize / 1024).toFixed(2) + ' KB';
+  }
+}
+
+function handleImportFile() {
+  // File selection handled by input change event
+}
+
+function importData() {
+  const fileInput = document.getElementById('importFile');
+  const file = fileInput.files[0];
+  
+  if (!file) {
+    alert('Please select a file to import');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const jsonData = JSON.parse(e.target.result);
+      const result = DataExportService.importData(jsonData, { merge: true });
+      alert(result.message);
+      loadDataStats();
+      loadOverview();
+    } catch (error) {
+      alert('Error parsing JSON file: ' + error.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function validateData() {
+  if (typeof DataExportService !== 'undefined') {
+    const result = DataExportService.validateData();
+    const resultDiv = document.getElementById('validationResult');
+    
+    if (result.valid) {
+      resultDiv.innerHTML = '<p class="success-message">All data is valid!</p>';
+    } else {
+      resultDiv.innerHTML = '<p class="error-message">Data validation failed:</p><ul>' + 
+        result.issues.map(issue => `<li>${issue}</li>`).join('') + '</ul>';
+    }
+  }
+}
+
+function clearDataType(dataType) {
+  if (confirm(`Are you sure you want to clear all ${dataType} data? This action cannot be undone.`)) {
+    if (typeof DataExportService !== 'undefined') {
+      const result = DataExportService.clearDataType(dataType);
+      alert(result.message);
+      loadDataStats();
+      loadOverview();
+    }
+  }
+}
+
+function clearAllData() {
+  if (typeof DataExportService !== 'undefined') {
+    const result = DataExportService.clearAllData();
+    alert(result.message);
+    loadDataStats();
+    loadOverview();
+  }
+}
+
+function loadReviews(filter = 'all') {
+  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
+  const products = ProductCatalog ? ProductCatalog.getAll() : [];
+  const tbody = document.getElementById('reviewsTableBody');
+  
+  let reviewsList = [];
+  
+  // Flatten reviews from all products
+  Object.keys(allReviews).forEach(productId => {
+    const product = products.find(p => p.id === parseInt(productId));
+    const productName = product ? product.name : 'Unknown Product';
+    
+    allReviews[productId].forEach(review => {
+      reviewsList.push({
+        ...review,
+        productId,
+        productName,
+        status: review.status || 'pending' // Default to pending if no status
+      });
+    });
+  });
+  
+  // Filter by status
+  if (filter !== 'all') {
+    reviewsList = reviewsList.filter(r => r.status === filter);
+  }
+  
+  if (reviewsList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No reviews found.</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = reviewsList.map(review => `
+    <tr>
+      <td>${review.productName}</td>
+      <td>${review.name}</td>
+      <td>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</td>
+      <td>${new Date(review.date).toLocaleDateString()}</td>
+      <td><span class="status-${review.status}">${review.status}</span></td>
+      <td>
+        <button class="secondary-btn" onclick="viewReview('${review.id}')">View</button>
+        ${review.status === 'pending' ? `
+          <button class="secondary-btn" onclick="approveReview('${review.id}', '${review.productId}')">Approve</button>
+          <button class="secondary-btn cancel-btn" onclick="rejectReview('${review.id}', '${review.productId}')">Reject</button>
+        ` : ''}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function viewReview(reviewId) {
+  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
+  let review = null;
+  
+  Object.keys(allReviews).forEach(productId => {
+    const found = allReviews[productId].find(r => r.id === reviewId);
+    if (found) review = found;
+  });
+  
+  if (!review) {
+    alert('Review not found');
+    return;
+  }
+  
+  alert(`Review by ${review.name}:\n\nRating: ${review.rating}/5\n\n${review.text}`);
+}
+
+function approveReview(reviewId, productId) {
+  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
+  const productReviews = allReviews[productId];
+  
+  if (!productReviews) return;
+  
+  const reviewIndex = productReviews.findIndex(r => r.id === reviewId);
+  if (reviewIndex === -1) return;
+  
+  productReviews[reviewIndex].status = 'approved';
+  productReviews[reviewIndex].moderatedAt = new Date().toISOString();
+  
+  allReviews[productId] = productReviews;
+  localStorage.setItem('fl_productReviews', JSON.stringify(allReviews));
+  
+  loadReviews('pending');
+  alert('Review approved');
+}
+
+function rejectReview(reviewId, productId) {
+  if (!confirm('Are you sure you want to reject this review?')) return;
+  
+  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
+  const productReviews = allReviews[productId];
+  
+  if (!productReviews) return;
+  
+  const reviewIndex = productReviews.findIndex(r => r.id === reviewId);
+  if (reviewIndex === -1) return;
+  
+  productReviews[reviewIndex].status = 'rejected';
+  productReviews[reviewIndex].moderatedAt = new Date().toISOString();
+  
+  allReviews[productId] = productReviews;
+  localStorage.setItem('fl_productReviews', JSON.stringify(allReviews));
+  
+  loadReviews('pending');
+  alert('Review rejected');
 }
 
 function loadUsers() {
@@ -153,7 +656,7 @@ function loadUsers() {
   const tbody = document.getElementById('usersTableBody');
   
   if (users.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No users registered yet.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No users registered yet.</td></tr>';
     return;
   }
   
@@ -164,8 +667,21 @@ function loadUsers() {
       <td>${user.email}</td>
       <td>${new Date(user.createdAt).toLocaleDateString()}</td>
       <td>${user.orders ? user.orders.length : 0}</td>
+      <td>
+        <button class="secondary-btn" onclick="deleteUser('${user.id}')">Delete</button>
+      </td>
     </tr>
   `).join('');
+}
+
+function deleteUser(userId) {
+  if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+    const users = JSON.parse(localStorage.getItem('fl_users')) || [];
+    const updatedUsers = users.filter(u => u.id !== userId);
+    localStorage.setItem('fl_users', JSON.stringify(updatedUsers));
+    loadUsers();
+    alert('User deleted successfully!');
+  }
 }
 
 function loadOrders() {
@@ -226,9 +742,59 @@ function viewOrderDetails(orderId) {
   const orders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
   const order = orders.find(o => o.orderId === orderId);
   
-  if (order) {
-    alert(`Order Details:\n\nOrder ID: ${order.orderId}\nCustomer: ${order.customer ? order.customer.firstName + ' ' + order.customer.lastName : 'Guest'}\nEmail: ${order.customer ? order.customer.email : 'N/A'}\nTotal: ${order.total.toFixed(2)} €\nStatus: ${order.status}\nItems: ${order.items.length}\n\nPayment Method: ${order.paymentMethod || 'Card'}`);
-  }
+  if (!order) return;
+  
+  const itemsHTML = order.items.map(item => `
+    <div class="order-detail-item">
+      <strong>${item.name}</strong>
+      <span>Qty: ${item.quantity}</span>
+      <span>${(item.price * item.quantity).toFixed(2)} €</span>
+    </div>
+  `).join('');
+  
+  const customerHTML = order.customer ? `
+    <div class="order-detail-section">
+      <h4>Customer Information</h4>
+      <p><strong>Name:</strong> ${order.customer.firstName} ${order.customer.lastName}</p>
+      <p><strong>Email:</strong> ${order.customer.email}</p>
+      <p><strong>Phone:</strong> ${order.customer.phone || 'N/A'}</p>
+      <p><strong>Address:</strong> ${order.customer.address}, ${order.customer.postalCode} ${order.customer.city}, ${order.customer.country}</p>
+    </div>
+  ` : '<div class="order-detail-section"><h4>Customer Information</h4><p>Guest checkout</p></div>';
+  
+  const orderModal = document.createElement('div');
+  orderModal.className = 'tracking-modal';
+  orderModal.innerHTML = `
+    <div class="tracking-content order-detail-modal">
+      <button class="tracking-close" onclick="this.closest('.tracking-modal').remove()">×</button>
+      <h3>Order Details: ${order.orderId}</h3>
+      
+      <div class="order-detail-section">
+        <h4>Order Information</h4>
+        <p><strong>Order ID:</strong> ${order.orderId}</p>
+        <p><strong>Date:</strong> ${new Date(order.date).toLocaleString()}</p>
+        <p><strong>Status:</strong> ${order.status}</p>
+        <p><strong>Payment Method:</strong> ${order.paymentMethod || 'Card'}</p>
+        <p><strong>Total:</strong> ${order.total.toFixed(2)} €</p>
+      </div>
+      
+      ${customerHTML}
+      
+      <div class="order-detail-section">
+        <h4>Order Items</h4>
+        <div class="order-detail-items">
+          ${itemsHTML}
+        </div>
+      </div>
+      
+      <div class="order-detail-actions">
+        <button class="secondary-btn" onclick="this.closest('.tracking-modal').remove()">Close</button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(orderModal);
+  orderModal.style.display = 'flex';
 }
 
 function loadEmails() {
@@ -251,9 +817,290 @@ function loadEmails() {
   `).join('');
 }
 
+function loadProducts() {
+  const products = ProductCatalog.getAll();
+  const tbody = document.getElementById('productsTableBody');
+  
+  if (products.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No products available.</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = products.map(product => `
+    <tr>
+      <td><code>${product.id}</code></td>
+      <td>${product.name}</td>
+      <td>${product.category}</td>
+      <td>${product.price.toFixed(2)} €</td>
+      <td class="${product.stock < 5 ? 'stock-warning' : ''}">${product.stock}</td>
+      <td>
+        <button class="secondary-btn" onclick="editProduct(${product.id})">Edit</button>
+        <button class="secondary-btn" onclick="updateStock(${product.id})">Update Stock</button>
+        <button class="secondary-btn" onclick="deleteProduct(${product.id})">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function showLowStockAlerts() {
+  const products = ProductCatalog.getAll();
+  const lowStockProducts = products.filter(p => p.stock < 5);
+  
+  if (lowStockProducts.length === 0) {
+    alert('No products with low stock (less than 5 units).');
+    return;
+  }
+  
+  const itemsHtml = lowStockProducts.map(product => `
+    <div class="low-stock-item">
+      <div>
+        <strong>${product.name}</strong>
+        <span>ID: ${product.id}</span>
+      </div>
+      <span class="stock-warning">${product.stock} units</span>
+    </div>
+  `).join('');
+  
+  const modalHtml = `
+    <div class="low-stock-modal" id="lowStockModal" style="display: flex;">
+      <div class="low-stock-content">
+        <h3>Low Stock Alerts</h3>
+        <p>The following products have less than 5 units in stock:</p>
+        <div class="low-stock-list">${itemsHtml}</div>
+        <button class="secondary-btn" style="margin-top: 16px;" onclick="closeLowStockModal()">Close</button>
+      </div>
+    </div>
+  `;
+  
+  // Remove existing modal if present
+  const existingModal = document.getElementById('lowStockModal');
+  if (existingModal) {
+    existingModal.remove();
+  }
+  
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function closeLowStockModal() {
+  const modal = document.getElementById('lowStockModal');
+  if (modal) {
+    modal.remove();
+  }
+}
+
+function updateStock(productId) {
+  const products = ProductCatalog.getAll();
+  const product = products.find(p => p.id === productId);
+  
+  if (!product) {
+    alert('Product not found');
+    return;
+  }
+  
+  const newStock = prompt(`Current stock for ${product.name}: ${product.stock}\nEnter new stock quantity:`, product.stock);
+  
+  if (newStock === null || newStock === '') return;
+  
+  const stockNum = parseInt(newStock);
+  if (isNaN(stockNum) || stockNum < 0) {
+    alert('Please enter a valid non-negative number');
+    return;
+  }
+  
+  product.stock = stockNum;
+  ProductCatalog.saveToStorage();
+  loadProducts();
+  alert('Stock updated successfully');
+}
+
+function loadAnalytics() {
+  const orders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
+  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
+  const period = document.getElementById('analyticsPeriod').value;
+  
+  // Filter orders by period
+  let filteredOrders = orders;
+  if (period !== 'all') {
+    const days = parseInt(period);
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    filteredOrders = orders.filter(order => new Date(order.date) >= cutoffDate);
+  }
+  
+  // Calculate metrics
+  const totalRevenue = filteredOrders.reduce((sum, order) => sum + order.total, 0);
+  const totalOrders = filteredOrders.length;
+  const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+  const conversionRate = users.length > 0 ? (totalOrders / users.length) * 100 : 0;
+  
+  // Update UI
+  document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2) + ' €';
+  document.getElementById('totalOrders').textContent = totalOrders;
+  document.getElementById('avgOrderValue').textContent = avgOrderValue.toFixed(2) + ' €';
+  document.getElementById('conversionRate').textContent = conversionRate.toFixed(1) + '%';
+  
+  // Calculate top selling products
+  const productSales = {};
+  filteredOrders.forEach(order => {
+    if (order.items) {
+      order.items.forEach(item => {
+        if (!productSales[item.id]) {
+          productSales[item.id] = { name: item.name, quantity: 0, revenue: 0 };
+        }
+        productSales[item.id].quantity += item.quantity;
+        productSales[item.id].revenue += item.price * item.quantity;
+      });
+    }
+  });
+  
+  const sortedProducts = Object.values(productSales).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+  const topProductsDiv = document.getElementById('topProducts');
+  
+  if (sortedProducts.length === 0) {
+    topProductsDiv.innerHTML = '<p class="empty-state">No sales data available.</p>';
+  } else {
+    topProductsDiv.innerHTML = sortedProducts.map(product => `
+      <div class="top-product-item">
+        <strong>${product.name}</strong>
+        <span>${product.quantity} sold - ${product.revenue.toFixed(2)} €</span>
+      </div>
+    `).join('');
+  }
+}
+
+function loadShippingMethods() {
+  const shippingMethods = JSON.parse(localStorage.getItem('fl_shippingMethods')) || [];
+  const tbody = document.getElementById('shippingMethodsBody');
+  
+  if (shippingMethods.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No shipping methods configured.</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = shippingMethods.map(method => `
+    <tr>
+      <td>${method.name}</td>
+      <td>${method.description}</td>
+      <td>${method.price.toFixed(2)} €</td>
+      <td>${method.deliveryTime}</td>
+      <td>
+        <button class="secondary-btn" onclick="deleteShippingMethod('${method.id}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function showAddShippingForm() {
+  document.getElementById('addShippingForm').style.display = 'block';
+}
+
+function hideAddShippingForm() {
+  document.getElementById('addShippingForm').style.display = 'none';
+}
+
+function addShippingMethod(e) {
+  e.preventDefault();
+  
+  const newMethod = {
+    id: 'shipping_' + Date.now(),
+    name: e.target.name.value,
+    description: e.target.description.value,
+    price: parseFloat(e.target.price.value),
+    deliveryTime: e.target.deliveryTime.value
+  };
+  
+  const shippingMethods = JSON.parse(localStorage.getItem('fl_shippingMethods')) || [];
+  shippingMethods.push(newMethod);
+  localStorage.setItem('fl_shippingMethods', JSON.stringify(shippingMethods));
+  
+  hideAddShippingForm();
+  loadShippingMethods();
+  e.target.reset();
+  alert('Shipping method added successfully');
+}
+
+function deleteShippingMethod(methodId) {
+  if (!confirm('Are you sure you want to delete this shipping method?')) return;
+  
+  const shippingMethods = JSON.parse(localStorage.getItem('fl_shippingMethods')) || [];
+  const updatedMethods = shippingMethods.filter(m => m.id !== methodId);
+  localStorage.setItem('fl_shippingMethods', JSON.stringify(updatedMethods));
+  
+  loadShippingMethods();
+  alert('Shipping method deleted');
+}
+
+function showAddProductForm() {
+  document.getElementById('addProductForm').style.display = 'block';
+}
+
+function hideAddProductForm() {
+  document.getElementById('addProductForm').style.display = 'none';
+}
+
+function addProduct(e) {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  
+  const newProduct = {
+    name: formData.get('name'),
+    material: formData.get('material'),
+    dimensions: formData.get('dimensions'),
+    weight: formData.get('weight'),
+    price: parseFloat(formData.get('price')),
+    stock: parseInt(formData.get('stock')),
+    category: formData.get('category'),
+    description: formData.get('description'),
+    size: formData.get('size'),
+    image: '',
+    available: true
+  };
+  
+  ProductCatalog.addProduct(newProduct);
+  hideAddProductForm();
+  e.target.reset();
+  loadProducts();
+  alert('Product added successfully!');
+}
+
+function deleteProduct(productId) {
+  if (confirm('Are you sure you want to delete this product?')) {
+    ProductCatalog.deleteProduct(productId);
+    loadProducts();
+    alert('Product deleted successfully!');
+  }
+}
+
+function editProduct(productId) {
+  const product = ProductCatalog.getById(productId);
+  if (!product) return;
+  
+  alert(`Edit functionality for product ${productId} would open here.\n\nCurrent product: ${product.name}\nPrice: ${product.price} €\nStock: ${product.stock}`);
+}
+
+// Check if user is authenticated and has admin access
+function checkAdminAccess() {
+  const currentUser = localStorage.getItem('fl_currentUser');
+  if (!currentUser) {
+    alert('Access denied. Please sign in first.');
+    window.location.href = 'index.html';
+    return false;
+  }
+  
+  const user = JSON.parse(currentUser);
+  // For simulation, we'll allow any logged-in user to access admin
+  // In production, you'd check for specific admin role
+  return true;
+}
+
 // Initialize admin dashboard
 document.addEventListener('DOMContentLoaded', () => {
+  if (!checkAdminAccess()) {
+    return;
+  }
+  
   loadOverview();
+  loadProducts();
   loadUsers();
   loadOrders();
   loadEmails();

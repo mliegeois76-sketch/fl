@@ -1,17 +1,11 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Acquérir — FL Sculptures</title>
-<meta name="description" content="Découvrez le parcours d'acquisition des sculptures FL. Demande, échange, réservation et livraison d'œuvres d'art.">
-<meta name="keywords" content="acquérir sculpture, achat art, parcours acquisition, réservation œuvre">
-<meta name="author" content="FL">
-<meta name="robots" content="index, follow">
-<meta property="og:title" content="Acquérir — FL Sculptures">
-<meta property="og:description" content="Découvrez le parcours d'acquisition des sculptures FL.">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="fr_FR">
+<title>Verify Email — FL Sculptures</title>
+<meta name="description" content="Verify your email address for FL Sculptures account">
+<meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -39,7 +33,7 @@
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Panier</h3>
+    <h3>Cart</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
@@ -48,23 +42,7 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
-  </div>
-</div>
-
-<!-- Menu Overlay -->
-<div class="menu-overlay" id="menuOverlay">
-  <div class="menu-content">
-    <button class="menu-close">×</button>
-    <nav class="menu-nav">
-      <a href="index.html">Home</a>
-      <a href="collection.html">Collection</a>
-      <a href="atelier.html">Atelier</a>
-      <a href="blog.html">Blog</a>
-      <a href="about.html">About</a>
-      <a href="faq.html">FAQ</a>
-      <a href="contact.html">Contact</a>
-    </nav>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
   </div>
 </div>
 
@@ -136,32 +114,19 @@
         </button>
       </div>
     </form>
-    
-    <form id="resetForm" class="auth-form" style="display: none;">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" required>
-      </div>
-      <button type="submit" class="auth-submit-btn">Send Reset Link</button>
-      <div class="auth-footer">
-        <a href="#" onclick="window.authSystem.showAuthModal('signin'); return false;">Back to Sign In</a>
-      </div>
-    </form>
   </div>
 </div>
 
 <div class="page-hero">
-  <div class="eyebrow">Acquérir</div>
-  <h1>Le parcours d'acquisition</h1>
-  <p class="placeholder">[À confirmer : décrire le vrai parcours d'achat souhaité]</p>
+  <div class="eyebrow">Account</div>
+  <h1>Email Verification</h1>
 </div>
 
 <section class="reveal">
-  <div class="process-list">
-    <div class="process-item"><div class="num">01</div><h3>Demande</h3><p class="placeholder">[Étape à confirmer]</p></div>
-    <div class="process-item"><div class="num">02</div><h3>Échange</h3><p class="placeholder">[Étape à confirmer]</p></div>
-    <div class="process-item"><div class="num">03</div><h3>Réservation</h3><p class="placeholder">[Étape à confirmer]</p></div>
-    <div class="process-item"><div class="num">04</div><h3>Livraison</h3><p class="placeholder">[Étape à confirmer]</p></div>
+  <div class="auth-container">
+    <div id="verificationResult">
+      <p>Verifying your email...</p>
+    </div>
   </div>
 </section>
 
@@ -170,5 +135,66 @@
 <script src="cart.js"></script>
 <script src="auth.js"></script>
 <script src="main.js"></script>
+<script>
+// Verify email on page load
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  const email = urlParams.get('email');
+  const resultDiv = document.getElementById('verificationResult');
+  
+  if (!token || !email) {
+    resultDiv.innerHTML = `
+      <div class="error-message">
+        <h3>Invalid Verification Link</h3>
+        <p>The verification link is incomplete. Please check your email for the complete link or request a new verification email.</p>
+        <button class="checkout-btn" onclick="window.location.href='index.html'">Return Home</button>
+      </div>
+    `;
+    return;
+  }
+  
+  if (window.authSystem) {
+    const result = window.authSystem.verifyEmail(token, email);
+    
+    if (result.success) {
+      resultDiv.innerHTML = `
+        <div class="success-message">
+          <h3>Email Verified Successfully!</h3>
+          <p>Your email has been verified. You can now enjoy all features of your account.</p>
+          <button class="checkout-btn" onclick="window.location.href='account.html'">Go to My Account</button>
+        </div>
+      `;
+    } else {
+      resultDiv.innerHTML = `
+        <div class="error-message">
+          <h3>Verification Failed</h3>
+          <p>${result.message}</p>
+          <button class="secondary-btn" onclick="resendVerification('${email}')">Resend Verification Email</button>
+          <button class="secondary-btn" onclick="window.location.href='index.html'">Return Home</button>
+        </div>
+      `;
+    }
+  } else {
+    resultDiv.innerHTML = `
+      <div class="error-message">
+        <h3>Authentication System Not Available</h3>
+        <p>Please refresh the page and try again.</p>
+      </div>
+    `;
+  }
+});
+
+function resendVerification(email) {
+  if (window.authSystem) {
+    const result = window.authSystem.resendVerificationEmail(email);
+    if (result.success) {
+      alert('Verification email has been sent to ' + email);
+    } else {
+      alert(result.message);
+    }
+  }
+}
+</script>
 </body>
 </html>
