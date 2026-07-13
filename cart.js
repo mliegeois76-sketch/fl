@@ -30,11 +30,14 @@ class ShoppingCart {
       }
     });
 
-    // Cart toggle
-    const cartToggle = document.querySelector('.cart-toggle');
-    if (cartToggle) {
-      cartToggle.addEventListener('click', () => this.toggleCart());
-    }
+    // Cart toggle - use event delegation
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.cart-toggle')) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleCart();
+      }
+    });
 
     // Close cart
     const closeCart = document.querySelector('.close-cart');
