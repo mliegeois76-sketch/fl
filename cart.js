@@ -77,7 +77,7 @@ class ShoppingCart {
     
     this.saveCart();
     this.updateCartUI();
-    this.showNotification('Product added to cart');
+    this.showNotification('Produit ajouté au panier');
   }
 
   removeFromCart(index) {
@@ -122,7 +122,7 @@ class ShoppingCart {
     const cartItems = document.querySelector('.cart-items');
     if (cartItems) {
       if (this.cart.length === 0) {
-        cartItems.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
+        cartItems.innerHTML = '<p class="empty-cart">Votre panier est vide</p>';
       } else {
         cartItems.innerHTML = this.cart.map((item, index) => `
           <div class="cart-item">

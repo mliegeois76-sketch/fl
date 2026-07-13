@@ -40,7 +40,21 @@ const translations = {
       contact: {
         title: "Nous écrire",
         subtitle: "[Texte d'intro contact — à confirmer]"
+      },
+      acquire: {
+        title: "Acquérir",
+        subtitle: "[Texte d'intro page acquérir — à confirmer]"
       }
+    },
+    nav: {
+      home: "Accueil",
+      collection: "Collection",
+      about: "À propos",
+      atelier: "Atelier",
+      blog: "Blog",
+      faq: "FAQ",
+      contact: "Contact",
+      acquire: "Acquérir"
     },
     cart: {
       title: "Panier",
@@ -82,7 +96,9 @@ const translations = {
       forgotPassword: "Mot de passe oublié ?",
       createAccount: "Créer un compte",
       welcomeBack: "Bon retour",
-      register: "S'inscrire"
+      register: "S'inscrire",
+      orContinueWith: "Ou continuer avec",
+      orSignUpWith: "Ou s'inscrire avec"
     },
     wishlist: {
       title: "Liste de souhaits",
@@ -187,7 +203,21 @@ const translations = {
       contact: {
         title: "Get in Touch",
         subtitle: "[Contact page intro text to confirm]"
+      },
+      acquire: {
+        title: "Acquire",
+        subtitle: "[Acquire page intro text to confirm]"
       }
+    },
+    nav: {
+      home: "Home",
+      collection: "Collection",
+      about: "About",
+      atelier: "Studio",
+      blog: "Blog",
+      faq: "FAQ",
+      contact: "Contact",
+      acquire: "Acquire"
     },
     cart: {
       title: "Cart",
@@ -229,7 +259,9 @@ const translations = {
       forgotPassword: "Forgot password?",
       createAccount: "Create Account",
       welcomeBack: "Welcome back",
-      register: "Register"
+      register: "Register",
+      orContinueWith: "Or continue with",
+      orSignUpWith: "Or sign up with"
     },
     wishlist: {
       title: "Wishlist",
@@ -308,9 +340,10 @@ class I18n {
   }
 
   bindEvents() {
-    document.querySelectorAll('.lang-switcher button').forEach(btn => {
+    document.querySelectorAll('.lang-option').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        const lang = e.target.textContent.toLowerCase();
+        e.preventDefault();
+        const lang = e.target.dataset.lang;
         this.setLanguage(lang);
       });
     });
@@ -320,118 +353,42 @@ class I18n {
     this.currentLang = lang;
     localStorage.setItem('fl_lang', lang);
     this.applyLanguage(lang);
-    
+
     // Update active state
-    document.querySelectorAll('.lang-switcher button').forEach(btn => {
+    document.querySelectorAll('.lang-option').forEach(btn => {
       btn.classList.remove('active');
-      if (btn.textContent.toLowerCase() === lang) {
+      if (btn.dataset.lang === lang) {
         btn.classList.add('active');
       }
     });
+
+    // Update current lang display
+    const currentLangDisplay = document.querySelector('.current-lang');
+    if (currentLangDisplay) {
+      currentLangDisplay.textContent = lang.toUpperCase();
+    }
   }
 
   applyLanguage(lang) {
     const t = translations[lang];
     
-    // Update navigation
-    document.querySelectorAll('#mainNav a, nav.menu-nav a').forEach(link => {
-      const key = link.textContent.trim();
-      const navKeys = Object.keys(t.nav);
-      const matchingKey = navKeys.find(k => t.nav[k] === key || translations.fr.nav[k] === key);
-      if (matchingKey) {
-        link.textContent = t.nav[matchingKey];
+    // Generic data-i18n translation
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      const translation = this.t(key);
+      if (translation && translation !== key) {
+        el.textContent = translation;
       }
     });
 
-    // Update cart
-    const cartTitle = document.querySelector('.cart-header h3');
-    if (cartTitle) cartTitle.textContent = t.cart.title;
-    
-    const cartEmpty = document.querySelector('.empty-cart');
-    if (cartEmpty) cartEmpty.textContent = t.cart.empty;
-    
-    const cartTotal = document.querySelector('.cart-total-row span:first-child');
-    if (cartTotal) cartTotal.textContent = t.cart.total;
-    
-    const checkoutBtn = document.querySelector('.checkout-btn');
-    if (checkoutBtn) checkoutBtn.textContent = t.cart.checkout;
-
-    // Update search
-    const searchInput = document.querySelector('.search-input');
-    if (searchInput) searchInput.placeholder = t.search.placeholder;
-    
-    const globalSearchInput = document.getElementById('globalSearchInput');
-    if (globalSearchInput) globalSearchInput.placeholder = t.search.placeholderGlobal;
-    
-    const searchPlaceholder = document.querySelector('.search-placeholder');
-    if (searchPlaceholder) searchPlaceholder.textContent = t.search.startTyping;
-    
-    const noResults = document.querySelector('.no-results');
-    if (noResults) noResults.textContent = t.search.noResults;
-
-    // Update filters
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      const filter = btn.dataset.filter;
-      if (t.filters[filter]) {
-        btn.textContent = t.filters[filter];
+    // Handle placeholder attributes separately
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      const translation = this.t(key);
+      if (translation && translation !== key) {
+        el.placeholder = translation;
       }
     });
-
-    // Update add to cart buttons
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
-      btn.textContent = t.addToCart;
-    });
-
-    // Update newsletter
-    const newsletterTitle = document.querySelector('.newsletter-content h2');
-    if (newsletterTitle) newsletterTitle.textContent = t.newsletter.title;
-    
-    const newsletterText = document.querySelector('.newsletter-content p');
-    if (newsletterText) newsletterText.textContent = t.newsletter.text;
-    
-    const newsletterInput = document.querySelector('.newsletter-form input');
-    if (newsletterInput) newsletterInput.placeholder = t.newsletter.placeholder;
-    
-    const newsletterBtn = document.querySelector('.newsletter-form button');
-    if (newsletterBtn) newsletterBtn.textContent = t.newsletter.submit;
-    
-    // Update auth buttons
-    document.querySelectorAll('.sign-in-btn').forEach(btn => btn.textContent = t.auth.signIn);
-    document.querySelectorAll('.sign-up-btn').forEach(btn => btn.textContent = t.auth.signUp);
-    document.querySelectorAll('.sign-out-btn').forEach(btn => btn.textContent = t.auth.signOut);
-    document.querySelectorAll('.my-account-btn').forEach(btn => btn.textContent = t.auth.myAccount);
-    
-    // Update account navigation
-    document.querySelectorAll('.account-nav a').forEach(link => {
-      const text = link.textContent.trim();
-      if (text === 'Dashboard' || text === 'Tableau de bord') link.textContent = t.account.dashboard;
-      if (text === 'My Orders' || text === 'Mes commandes') link.textContent = t.account.orders;
-      if (text === 'Wishlist' || text === 'Favoris') link.textContent = t.account.wishlist;
-      if (text === 'Profile' || text === 'Profil') link.textContent = t.account.profile;
-      if (text === 'Addresses' || text === 'Adresses') link.textContent = t.account.addresses;
-      if (text === 'Notifications') link.textContent = t.account.notifications;
-    });
-    
-    // Update admin tabs
-    document.querySelectorAll('.admin-tab').forEach(tab => {
-      const text = tab.textContent.trim();
-      const adminKeys = Object.keys(t.admin);
-      const matchingKey = adminKeys.find(k => t.admin[k] === text || translations.fr.admin[k] === text);
-      if (matchingKey) {
-        tab.textContent = t.admin[matchingKey];
-      }
-    });
-    
-    // Update reviews section
-    const reviewsTitle = document.querySelector('.section-head h2');
-    if (reviewsTitle && (reviewsTitle.textContent.includes('Customer Reviews') || reviewsTitle.textContent.includes('Avis clients'))) {
-      reviewsTitle.textContent = t.reviews.title;
-    }
-    
-    const reviewsSubtitle = document.querySelector('.section-head p');
-    if (reviewsSubtitle && (reviewsSubtitle.textContent.includes('collectors') || reviewsSubtitle.textContent.includes('collectionneurs'))) {
-      reviewsSubtitle.textContent = t.reviews.whatCollectorsSay;
-    }
   }
 
   t(key) {

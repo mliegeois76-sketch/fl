@@ -18,33 +18,43 @@
   <button class="menu-toggle">Menu</button>
   <div class="header-actions">
     <div class="auth-buttons">
-      <button class="sign-in-btn">Sign In</button>
-      <button class="sign-up-btn">Sign Up</button>
+      <button class="sign-in-btn" data-i18n="auth.signIn">Connexion</button>
+      <button class="sign-up-btn" data-i18n="auth.signUp">Inscription</button>
     </div>
     <div class="user-menu" style="display: none;">
       <span class="user-name"></span>
-      <button class="sign-out-btn">Sign Out</button>
-      <a href="account.html" class="my-account-btn">My Account</a>
+      <button class="sign-out-btn" data-i18n="auth.signOut">Déconnexion</button>
+      <a href="account.html" class="my-account-btn" data-i18n="auth.myAccount">Mon compte</a>
     </div>
-    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
-      <span class="cart-text">Cart</span>
+    <button class="cart-toggle">
+      <span class="cart-text" data-i18n="cart.title">Panier</span>
       <span class="cart-count">(0)</span>
     </button>
+    <div class="lang-selector">
+      <button class="lang-toggle">
+        <span class="current-lang">FR</span>
+        <span class="lang-arrow">▼</span>
+      </button>
+      <div class="lang-menu" id="langMenu">
+        <a href="#" class="lang-option active" data-lang="fr">Français</a>
+        <a href="#" class="lang-option" data-lang="en">English</a>
+      </div>
+    </div>
   </div>
 </header>
 
 <div class="cart-sidebar">
   <div class="cart-header">
-    <h3>Cart</h3>
+    <h3 data-i18n="cart.title">Panier</h3>
     <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
   </div>
   <div class="cart-items"></div>
   <div class="cart-footer">
     <div class="cart-total-row">
-      <span>Total</span>
+      <span data-i18n="cart.total">Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'" data-i18n="cart.checkout">Commander</button>
   </div>
 </div>
 
@@ -52,12 +62,7 @@
 <div class="menu-overlay" id="menuOverlay">
   <div class="menu-content">
     <button class="menu-close">×</button>
-    <nav class="menu-nav">
-      <a href="index.html">Home</a>
-      <a href="collection.html">Collection</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-    </nav>
+    <nav class="menu-nav"></nav>
   </div>
 </div>
 
@@ -66,62 +71,62 @@
   <div class="auth-modal">
     <button class="auth-close">×</button>
     <div class="auth-tabs">
-      <button class="auth-tab active" data-mode="signin">Sign In</button>
-      <button class="auth-tab" data-mode="signup">Sign Up</button>
+      <button class="auth-tab active" data-mode="signin" data-i18n="auth.signIn">Connexion</button>
+      <button class="auth-tab" data-mode="signup" data-i18n="auth.signUp">Inscription</button>
     </div>
-    
+
     <form id="signinForm" class="auth-form">
       <div class="form-group">
-        <label>Email</label>
+        <label data-i18n="auth.email">Email</label>
         <input type="email" name="email" required>
       </div>
       <div class="form-group">
-        <label>Password</label>
+        <label data-i18n="auth.password">Mot de passe</label>
         <input type="password" name="password" required>
       </div>
-      <button type="submit" class="auth-submit-btn">Sign In</button>
-      
+      <button type="submit" class="auth-submit-btn" data-i18n="auth.signIn">Se connecter</button>
+
       <div class="social-login">
-        <p>Or continue with</p>
+        <p data-i18n="auth.orContinueWith">Ou continuer avec</p>
         <button type="button" class="google-login">
           <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          Sign in with Google
-        </button>
-        <button type="button" class="apple-login">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74.84 0 2.17-.93 3.63-.8 1.25.1 2.22.62 2.92 1.48-2.6 1.57-2.16 5.5.63 6.74zM13 5.49c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-          Sign in with Apple
-        </button>
-      </div>
-    </form>
-    
-    <form id="signupForm" class="auth-form" style="display: none;">
-      <div class="form-group">
-        <label>First Name</label>
-        <input type="text" name="firstName" required>
-      </div>
-      <div class="form-group">
-        <label>Last Name</label>
-        <input type="text" name="lastName" required>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" required>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" required minlength="6">
-      </div>
-      <button type="submit" class="auth-submit-btn">Create Account</button>
-      
-      <div class="social-login">
-        <p>Or sign up with</p>
-        <button type="button" class="google-login">
-          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          Sign up with Google
+          Continuer avec Google
         </button>
         <button type="button" class="apple-login">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74.84 0 2.17-.93 3.63-.8 1.25.1 2.22.62 2.92 1.48-2.6 1.57-2.16 5.5.63 6.74zM13 5.49c.73-.83 1.94-1.46 2.94-1.5c.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-          Sign up with Apple
+          Continuer avec Apple
+        </button>
+      </div>
+    </form>
+
+    <form id="signupForm" class="auth-form" style="display: none;">
+      <div class="form-group">
+        <label data-i18n="auth.firstName">Prénom</label>
+        <input type="text" name="firstName" required>
+      </div>
+      <div class="form-group">
+        <label data-i18n="auth.lastName">Nom</label>
+        <input type="text" name="lastName" required>
+      </div>
+      <div class="form-group">
+        <label data-i18n="auth.email">Email</label>
+        <input type="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label data-i18n="auth.password">Mot de passe</label>
+        <input type="password" name="password" required minlength="6">
+      </div>
+      <button type="submit" class="auth-submit-btn" data-i18n="auth.createAccount">Créer un compte</button>
+
+      <div class="social-login">
+        <p data-i18n="auth.orSignUpWith">Ou s'inscrire avec</p>
+        <button type="button" class="google-login">
+          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          S'inscrire avec Google
+        </button>
+        <button type="button" class="apple-login">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74.84 0 2.17-.93 3.63-.8 1.25.1 2.22.62 2.92 1.48-2.6 1.57-2.16 5.5.63 6.74zM13 5.49c.73-.83 1.94-1.46 2.94-1.5c.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          S'inscrire avec Apple
         </button>
       </div>
     </form>
@@ -180,45 +185,6 @@
         <button id="addToCartBtn" class="checkout-btn" disabled>Ajouter au panier</button>
         <button class="secondary-btn" onclick="window.location.href='collection.html'">Retour à la collection</button>
       </div>
-    </div>
-  </div>
-</section>
-
-<section class="reveal scroll-fade-up">
-  <div class="reviews-section">
-    <h2>Avis clients</h2>
-    <div id="reviewsList">
-      <p class="empty-state">Aucun avis pour le moment. Soyez le premier à donner votre avis !</p>
-    </div>
-
-    <div class="review-form-container">
-      <h3>Donner votre avis</h3>
-      <form id="reviewForm" onsubmit="submitReview(event)">
-        <div class="form-group">
-          <label>Votre nom *</label>
-          <input type="text" name="reviewerName" required>
-        </div>
-        <div class="form-group">
-          <label>Note *</label>
-          <div class="rating-input">
-            <input type="radio" name="rating" value="5" id="rating5" required>
-            <label for="rating5" class="rating-star">★</label>
-            <input type="radio" name="rating" value="4" id="rating4">
-            <label for="rating4" class="rating-star">★</label>
-            <input type="radio" name="rating" value="3" id="rating3">
-            <label for="rating3" class="rating-star">★</label>
-            <input type="radio" name="rating" value="2" id="rating2">
-            <label for="rating2" class="rating-star">★</label>
-            <input type="radio" name="rating" value="1" id="rating1">
-            <label for="rating1" class="rating-star">★</label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Votre avis *</label>
-          <textarea name="reviewText" rows="4" required placeholder="Partagez votre expérience avec cette sculpture..."></textarea>
-        </div>
-        <button type="submit" class="checkout-btn">Envoyer l'avis</button>
-      </form>
     </div>
   </div>
 </section>
@@ -293,104 +259,6 @@ function loadProductDetails() {
     addToCartBtn.disabled = true;
     addToCartBtn.textContent = 'Out of Stock';
   }
-  
-  // Load reviews for this product
-  loadReviews(productId);
-}
-
-// Load reviews for a product
-function loadReviews(productId) {
-  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
-  const productReviews = allReviews[productId] || [];
-  const reviewsList = document.getElementById('reviewsList');
-  
-  // Only show approved reviews
-  const approvedReviews = productReviews.filter(r => r.status === 'approved');
-  
-  if (approvedReviews.length === 0) {
-    reviewsList.innerHTML = '<p class="empty-state">No reviews yet. Be the first to review this product!</p>';
-    return;
-  }
-  
-  reviewsList.innerHTML = approvedReviews.map(review => `
-    <div class="review-item">
-      <div class="review-header">
-        <strong>${review.name}</strong>
-        <span class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span>
-      </div>
-      <p class="review-date">${new Date(review.date).toLocaleDateString()}</p>
-      <p class="review-text">${review.text}</p>
-    </div>
-  `).join('');
-}
-
-// Submit a review
-function submitReview(e) {
-  e.preventDefault();
-  
-  const urlParams = new URLSearchParams(window.location.search);
-  const productId = urlParams.get('id');
-  
-  if (!productId) {
-    alert('Product ID not found');
-    return;
-  }
-  
-  const formData = new FormData(e.target);
-  
-  // Enhanced validation using ValidationService
-  let reviewData;
-  if (typeof ValidationService !== 'undefined') {
-    const schema = {
-      reviewerName: { type: 'name', required: true },
-      rating: { type: 'number', required: true, min: 1, max: 5 },
-      reviewText: { type: 'text', required: true, minLength: 10, maxLength: 1000 }
-    };
-    
-    const validationResult = ValidationService.validateFormData(formData, schema);
-    if (!validationResult.valid) {
-      const errorMessages = Object.values(validationResult.errors).join(', ');
-      alert(errorMessages);
-      return;
-    }
-    
-    reviewData = {
-      id: 'review_' + Date.now(),
-      productId: productId,
-      name: validationResult.sanitized.reviewerName,
-      rating: parseInt(validationResult.sanitized.rating),
-      text: ValidationService.sanitizeReview(validationResult.sanitized.reviewText),
-      date: new Date().toISOString(),
-      status: 'pending'
-    };
-  } else {
-    // Fallback to basic validation
-    reviewData = {
-      id: 'review_' + Date.now(),
-      productId: productId,
-      name: formData.get('reviewerName'),
-      rating: parseInt(formData.get('rating')),
-      text: formData.get('reviewText'),
-      date: new Date().toISOString(),
-      status: 'pending'
-    };
-  }
-  
-  // Store review
-  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
-  if (!allReviews[productId]) {
-    allReviews[productId] = [];
-  }
-  allReviews[productId].push(reviewData);
-  localStorage.setItem('fl_productReviews', JSON.stringify(allReviews));
-  
-  // Reload reviews
-  loadReviews(productId);
-  
-  // Reset form
-  e.target.reset();
-  
-  alert('Thank you for your review!');
 }
 
 // Initialize on page load
@@ -403,5 +271,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+
+<script src="cart.js"></script>
+<script src="auth.js"></script>
+<script src="i18n.js"></script>
+<script src="main.js"></script>
 </body>
 </html>

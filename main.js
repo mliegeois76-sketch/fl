@@ -36,18 +36,6 @@ function initGlobalMenu() {
   document.querySelectorAll('nav.menu-nav a:not([data-section])').forEach(link => {
     link.addEventListener('click', () => toggleMenu(false));
   });
-
-  // Add Acquérir link to menu if not present
-  const menuNav = document.querySelector('nav.menu-nav');
-  if (menuNav && !menuNav.querySelector('a[href="acquerir.html"]')) {
-    const aboutLink = menuNav.querySelector('a[href="about.html"]');
-    if (aboutLink) {
-      const acquérirLink = document.createElement('a');
-      acquérirLink.href = 'acquerir.html';
-      acquérirLink.textContent = 'Acquérir';
-      aboutLink.insertAdjacentElement('afterend', acquérirLink);
-    }
-  }
 }
 
 // Legacy navigation toggle
@@ -65,18 +53,25 @@ document.querySelectorAll('#mainNav a').forEach(link => {
   });
 });
 
+// Menu HTML
+const MENU_HTML = `
+  <a href="index.html" data-i18n="nav.home">Accueil</a>
+  <a href="collection.html" data-i18n="nav.collection">Collection</a>
+  <a href="about.html" data-i18n="nav.about">À propos</a>
+  <a href="contact.html" data-i18n="nav.contact">Contact</a>`;
+
 // Footer HTML
 const FOOTER_HTML = `
 <div class="footer-grid">
-  <a href="index.html">Accueil</a>
-  <a href="collection.html">Collection</a>
-  <a href="about.html">À propos</a>
-  <a href="contact.html">Contact</a>
+  <a href="index.html" data-i18n="nav.home">Accueil</a>
+  <a href="collection.html" data-i18n="nav.collection">Collection</a>
+  <a href="about.html" data-i18n="nav.about">À propos</a>
+  <a href="contact.html" data-i18n="nav.contact">Contact</a>
   <a href="mentions-legales.html">Mentions Légales</a>
   <a href="confidentialite.html">Politique de Confidentialité</a>
   <a href="cgv.html">CGV</a>
   <a href="cookies.html">Cookies</a>
-  <a href="#">Paiement & Sécurité</a>
+  <a href="cgv.html#paiement">Paiement & Sécurité</a>
 </div>`;
 
 // Cookie Consent Banner
@@ -129,12 +124,70 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const mount = document.getElementById('site-footer');
   if(mount){ mount.innerHTML = FOOTER_HTML; }
   
+  // Inject menu HTML into menu overlay
+  const menuNav = document.querySelector('.menu-overlay .menu-nav');
+  if(menuNav){ menuNav.innerHTML = MENU_HTML; }
+  
   // Add cookie banner to body
   document.body.insertAdjacentHTML('beforeend', COOKIE_BANNER_HTML);
   initCookieConsent();
   
   initContactForm();
+  
+  // Initialize cart toggle
+  initCartToggle();
+  
+  // Initialize language selector
+  initLanguageSelector();
 });
+
+// Cart toggle
+function initCartToggle() {
+  const cartToggle = document.querySelector('.cart-toggle');
+  if (cartToggle && window.shoppingCart) {
+    cartToggle.addEventListener('click', () => {
+      window.shoppingCart.toggleCart();
+    });
+  }
+}
+
+// Language selector
+function initLanguageSelector() {
+  const langToggle = document.querySelector('.lang-toggle');
+  const langMenu = document.getElementById('langMenu');
+  
+  if (langToggle && langMenu) {
+    langToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langMenu.classList.toggle('active');
+    });
+    
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!langToggle.contains(e.target) && !langMenu.contains(e.target)) {
+        langMenu.classList.remove('active');
+      }
+    });
+    
+    // Language option clicks
+    const langOptions = langMenu.querySelectorAll('.lang-option');
+    langOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.preventDefault();
+        const lang = option.dataset.lang;
+        if (window.i18n) {
+          window.i18n.setLanguage(lang);
+          document.querySelector('.current-lang').textContent = lang.toUpperCase();
+        }
+        langMenu.classList.remove('active');
+        
+        // Update active state
+        langOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+      });
+    });
+  }
+}
 
 // Contact form handling
 function initContactForm(){

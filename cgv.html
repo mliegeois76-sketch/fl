@@ -17,8 +17,26 @@
       <span class="cart-text">Panier</span>
       <span class="cart-count">(0)</span>
     </button>
+    <div class="lang-selector">
+      <button class="lang-toggle" onclick="toggleLangDropdown()">
+        <span class="current-lang">FR</span>
+        <span class="lang-arrow">▼</span>
+      </button>
+      <div class="lang-menu" id="langMenu">
+        <a href="#" class="lang-option active" data-lang="fr">Français</a>
+        <a href="#" class="lang-option" data-lang="en">English</a>
+      </div>
+    </div>
   </div>
 </header>
+
+<!-- Menu Overlay -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="menu-content">
+    <button class="menu-close">×</button>
+    <nav class="menu-nav"></nav>
+  </div>
+</div>
 
 <div class="cart-sidebar">
   <div class="cart-header">
@@ -51,7 +69,7 @@
   <h2>4. Commande</h2>
   <p>Le Client valide sa commande en remplissant le formulaire de commande et en acceptant les présentes CGV. La validation de la commande vaut acceptation intégrale des CGV. FL Sculptures envoie une confirmation par email récapitulant les éléments de la commande.</p>
 
-  <h2>5. Paiement</h2>
+  <h2 id="paiement">5. Paiement</h2>
   <p>Le paiement est exigible immédiatement à la commande. Les moyens de paiement acceptés sont : carte bancaire (via Stripe sécurisé), virement bancaire. Le paiement est sécurisé par cryptage SSL. Aucune information bancaire n'est stockée sur nos serveurs.</p>
 
   <h2>6. Droit de rétractation</h2>
