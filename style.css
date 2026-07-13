@@ -303,6 +303,7 @@ section{padding:140px 5vw;position:relative;}
 /* Main content wrapper for homepage */
 .main-content{
   flex: 1;
+  min-height: calc(100vh - 200px);
   display: flex;
   flex-direction: column;
   justify-content: center;
