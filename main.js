@@ -63,15 +63,34 @@ const MENU_HTML = `
 // Footer HTML
 const FOOTER_HTML = `
 <div class="footer-grid">
-  <a href="index.html" data-i18n="nav.home">Accueil</a>
-  <a href="collection.html" data-i18n="nav.collection">Collection</a>
-  <a href="about.html" data-i18n="nav.about">À propos</a>
-  <a href="contact.html" data-i18n="nav.contact">Contact</a>
-  <a href="mentions-legales.html">Mentions Légales</a>
-  <a href="confidentialite.html">Politique de Confidentialité</a>
-  <a href="cgv.html">CGV</a>
-  <a href="cookies.html">Cookies</a>
-  <a href="cgv.html#paiement">Paiement & Sécurité</a>
+  <div class="footer-col">
+    <div class="footer-logo">FL</div>
+    <p>Sculptures d'art contemporain minimaliste. Une démarche artistique entre tradition et contemporanéité.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Navigation</h4>
+    <a href="index.html" data-i18n="nav.home">Accueil</a>
+    <a href="collection.html" data-i18n="nav.collection">Collection</a>
+    <a href="about.html" data-i18n="nav.about">À propos</a>
+    <a href="contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+  <div class="footer-col">
+    <h4>Informations</h4>
+    <a href="cgv.html">Conditions Générales de Vente</a>
+    <a href="cgv.html#paiement">Paiement & Sécurité</a>
+    <a href="mentions-legales.html">Mentions Légales</a>
+    <a href="confidentialite.html">Politique de Confidentialité</a>
+  </div>
+  <div class="footer-col">
+    <h4>Légal</h4>
+    <a href="cookies.html">Politique de Cookies</a>
+    <a href="cgv.html#livraison">Livraison & Retours</a>
+    <a href="cgv.html#garantie">Garantie</a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <span>© 2024 FL Sculptures. Tous droits réservés.</span>
+  <span>Paris, France</span>
 </div>`;
 
 // Cookie Consent Banner
@@ -174,18 +193,82 @@ function initLanguageSelector() {
     langOptions.forEach(option => {
       option.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const lang = option.dataset.lang;
-        if (window.i18n) {
-          window.i18n.setLanguage(lang);
-          document.querySelector('.current-lang').textContent = lang.toUpperCase();
-        }
-        langMenu.classList.remove('active');
         
         // Update active state
         langOptions.forEach(opt => opt.classList.remove('active'));
         option.classList.add('active');
+        
+        // Update current lang display
+        const currentLangDisplay = document.querySelector('.current-lang');
+        if (currentLangDisplay) {
+          currentLangDisplay.textContent = lang.toUpperCase();
+        }
+        
+        // Apply translation
+        if (window.i18n) {
+          window.i18n.setLanguage(lang);
+        } else {
+          // Fallback: manually apply translations if i18n not loaded
+          console.warn('i18n not loaded, using fallback');
+          const translations = {
+            en: {
+              'nav.home': 'Home',
+              'nav.collection': 'Collection',
+              'nav.about': 'About',
+              'nav.contact': 'Contact',
+              'cart.title': 'Cart',
+              'cart.empty': 'Your cart is empty',
+              'cart.total': 'Total',
+              'cart.checkout': 'Checkout',
+              'auth.signIn': 'Sign In',
+              'auth.signUp': 'Sign Up',
+              'auth.signOut': 'Sign Out',
+              'auth.myAccount': 'My Account'
+            },
+            fr: {
+              'nav.home': 'Accueil',
+              'nav.collection': 'Collection',
+              'nav.about': 'À propos',
+              'nav.contact': 'Contact',
+              'cart.title': 'Panier',
+              'cart.empty': 'Votre panier est vide',
+              'cart.total': 'Total',
+              'cart.checkout': 'Commander',
+              'auth.signIn': 'Connexion',
+              'auth.signUp': 'Inscription',
+              'auth.signOut': 'Déconnexion',
+              'auth.myAccount': 'Mon compte'
+            }
+          };
+          
+          document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.dataset.i18n;
+            if (translations[lang] && translations[lang][key]) {
+              el.textContent = translations[lang][key];
+            }
+          });
+        }
+        
+        // Close menu
+        langMenu.classList.remove('active');
       });
     });
+    
+    // Set initial active state based on saved language or default to French
+    const savedLang = localStorage.getItem('fl_lang') || 'fr';
+    langOptions.forEach(opt => {
+      opt.classList.remove('active');
+      if (opt.dataset.lang === savedLang) {
+        opt.classList.add('active');
+      }
+    });
+    
+    const currentLangDisplay = document.querySelector('.current-lang');
+    if (currentLangDisplay) {
+      currentLangDisplay.textContent = savedLang.toUpperCase();
+    }
   }
 }
 
