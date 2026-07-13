@@ -152,7 +152,7 @@ nav.menu-nav a.active {
   background: var(--paper);
   border: 1px solid var(--line);
   cursor: pointer;
-  display: flex;
+  display: flex !important;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
@@ -164,6 +164,8 @@ nav.menu-nav a.active {
   border-radius: 2px;
   position: relative;
   z-index: 1;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .cart-toggle:hover {
