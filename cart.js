@@ -114,8 +114,14 @@ class ShoppingCart {
     // Update cart count
     const cartCount = document.querySelector('.cart-count');
     if (cartCount) {
-      cartCount.textContent = this.getCartCount();
-      cartCount.style.display = this.getCartCount() > 0 ? 'flex' : 'none';
+      cartCount.textContent = `(${this.getCartCount()})`;
+    }
+
+    // Update cart count badge
+    const cartCountBadge = document.querySelector('.cart-count-badge');
+    if (cartCountBadge) {
+      cartCountBadge.textContent = this.getCartCount();
+      cartCountBadge.style.display = this.getCartCount() > 0 ? 'flex' : 'none';
     }
 
     // Update cart items
