@@ -35,6 +35,7 @@ class ShoppingCart {
       if (e.target.closest('.cart-toggle')) {
         e.preventDefault();
         e.stopPropagation();
+        console.log('Cart toggle clicked');
         this.toggleCart();
       }
     });
@@ -167,9 +168,12 @@ class ShoppingCart {
   }
 
   toggleCart() {
+    console.log('toggleCart called');
     const cartSidebar = document.querySelector('.cart-sidebar');
+    console.log('Cart sidebar found:', cartSidebar);
     if (cartSidebar) {
       cartSidebar.classList.toggle('open');
+      console.log('Cart sidebar classes after toggle:', cartSidebar.className);
     }
   }
 
