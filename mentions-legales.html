@@ -13,7 +13,7 @@
 <header>
   <button class="menu-toggle">Menu</button>
   <div class="header-actions">
-    <button class="cart-toggle" onclick="window.shoppingCart.toggleCart()">
+    <button class="cart-toggle">
       <span class="cart-text">Panier</span>
       <span class="cart-count">(0)</span>
     </button>
@@ -23,7 +23,7 @@
 <div class="cart-sidebar">
   <div class="cart-header">
     <h3>Panier</h3>
-    <button class="close-cart" onclick="window.shoppingCart.closeCart()">×</button>
+    <button class="close-cart">×</button>
   </div>
   <div class="cart-items"></div>
   <div class="cart-footer">
@@ -31,7 +31,7 @@
       <span>Total</span>
       <span class="cart-total">0.00 €</span>
     </div>
-    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Commander</button>
+    <button class="checkout-btn">Commander</button>
   </div>
 </div>
 
@@ -82,6 +82,8 @@
 <footer id="site-footer"></footer>
 
 <script src="cart.js"></script>
+<script src="auth.js"></script>
+<script src="i18n.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

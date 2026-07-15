@@ -153,22 +153,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
   
   initContactForm();
   
-  // Initialize cart toggle
-  initCartToggle();
-  
   // Initialize language selector
   initLanguageSelector();
 });
-
-// Cart toggle
-function initCartToggle() {
-  const cartToggle = document.querySelector('.cart-toggle');
-  if (cartToggle && window.shoppingCart) {
-    cartToggle.addEventListener('click', () => {
-      window.shoppingCart.toggleCart();
-    });
-  }
-}
 
 // Language selector
 function initLanguageSelector() {
