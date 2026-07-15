@@ -43,7 +43,8 @@
   }
 
   .hero-content {
-    position: relative;
+    position: absolute;
+    inset: 0;
     z-index: 1;
     height: 100vh;
     display: flex;
@@ -52,6 +53,44 @@
     align-items: center;
     text-align: center;
     padding: 0 5vw;
+  }
+
+  header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    background: transparent;
+  }
+
+  header .menu-toggle,
+  header .sign-in-btn,
+  header .sign-up-btn,
+  header .sign-out-btn,
+  header .my-account-btn,
+  header .cart-toggle,
+  header .cart-text,
+  header .cart-count,
+  header .lang-toggle,
+  header .current-lang,
+  header .lang-arrow,
+  header .lang-option {
+    color: var(--white);
+  }
+
+  header .menu-toggle:hover,
+  header .sign-in-btn:hover,
+  header .sign-up-btn:hover,
+  header .sign-out-btn:hover,
+  header .my-account-btn:hover,
+  header .cart-toggle:hover,
+  header .lang-toggle:hover {
+    color: var(--white);
+  }
+
+  header .lang-option:hover {
+    color: var(--white);
   }
 
   .hero-title {
