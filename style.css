@@ -1811,7 +1811,7 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--w
 .scroll-fade-up {
   opacity: 0;
   transform: translateY(60px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .scroll-fade-up.visible {
@@ -1822,7 +1822,7 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--w
 .scroll-stagger .item {
   opacity: 0;
   transform: translateY(60px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .scroll-stagger.visible .item {

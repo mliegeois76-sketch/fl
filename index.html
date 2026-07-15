@@ -37,7 +37,18 @@
     margin-bottom: 24px;
     opacity: 0;
     transform: translateY(30px);
-    animation: fadeInUp 1.5s ease forwards;
+  }
+
+  .hero-title .letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hero-title .letter.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
   
   .hero-subtitle {
@@ -675,6 +686,26 @@ function enterSite() {
   // Show hero content
   if (heroContent) {
     heroContent.style.display = 'block';
+    
+    // Animate hero title letter by letter
+    const heroTitle = heroContent.querySelector('.hero-title');
+    if (heroTitle) {
+      const text = heroTitle.textContent;
+      heroTitle.textContent = '';
+      
+      // Split text into letter spans
+      text.split('').forEach((char, index) => {
+        const span = document.createElement('span');
+        span.className = 'letter';
+        span.textContent = char;
+        heroTitle.appendChild(span);
+        
+        // Animate each letter with delay
+        setTimeout(() => {
+          span.classList.add('visible');
+        }, index * 60);
+      });
+    }
   }
 }
 
