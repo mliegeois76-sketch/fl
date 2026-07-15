@@ -14,7 +14,6 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
   .hero-content {
     position: relative;
@@ -28,32 +27,59 @@
     padding: 0 5vw;
   }
   
+  .hero-video-wrap {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .hero-video-wrap video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-video-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.28);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 5vw;
+  }
+
   .hero-title {
     font-family: 'Fraunces', serif;
     font-size: clamp(80px, 15vw, 200px);
     font-weight: 300;
     letter-spacing: 0.1em;
-    color: var(--ink);
+    color: var(--white);
     margin-bottom: 24px;
     opacity: 0;
     transform: translateY(30px);
-  }
-
-  .hero-title .letter {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hero-title .letter.visible {
-    opacity: 1;
-    transform: translateY(0);
+    animation: fadeInUp 1.5s ease forwards;
   }
   
   .hero-subtitle {
     font-size: clamp(14px, 2vw, 18px);
-    color: var(--stone);
+    color: var(--white);
     max-width: 500px;
     line-height: 1.6;
     opacity: 0;
@@ -71,9 +97,9 @@
   .cta-button {
     display: inline-block;
     padding: 16px 48px;
-    border: 1px solid var(--ink);
+    border: 1px solid var(--white);
     background: transparent;
-    color: var(--ink);
+    color: var(--white);
     font-size: 12px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -82,8 +108,8 @@
   }
   
   .cta-button:hover {
-    background: var(--ink);
-    color: var(--white);
+    background: var(--white);
+    color: var(--ink);
     transform: scale(1.05);
   }
   
@@ -107,7 +133,7 @@
     display: block;
     width: 1px;
     height: 60px;
-    background: var(--stone);
+    background: var(--white);
     margin: 0 auto;
     animation: scrollDown 2s ease infinite;
   }
@@ -302,38 +328,6 @@
     }
   }
   
-  /* Loading animation */
-  .loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--white);
-    z-index: 10001;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.8s ease;
-  }
-  
-  .loader.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-  
-  .loader-logo {
-    font-family: 'Fraunces', serif;
-    font-size: 48px;
-    opacity: 0;
-    animation: loaderFadeIn 1s ease forwards;
-  }
-  
-  .loader-logo img {
-    max-width: 200px;
-    height: auto;
-  }
-  
   /* Header layout */
   header {
     display: flex;
@@ -354,99 +348,9 @@
     text-transform: uppercase;
   }
   
-  @keyframes loaderFadeIn {
-    to {
-      opacity: 1;
-    }
-  }
-  
-  /* Landing Page */
-  .landing-page {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--white);
-    z-index: 10002;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.8s ease;
-  }
-  
-  .landing-page.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-  
-  .landing-content {
-    text-align: center;
-    position: relative;
-    z-index: 10000;
-  }
-  
-  .landing-content h1 {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(80px, 15vw, 200px);
-    font-weight: 300;
-    letter-spacing: 0.1em;
-    margin-bottom: 24px;
-  }
-  
-  .landing-content p {
-    font-size: 16px;
-    color: var(--stone);
-    max-width: 400px;
-    margin: 0 auto 48px;
-    line-height: 1.6;
-  }
-  
-  .continue-btn {
-    padding: 16px 48px;
-    border: 1px solid var(--ink);
-    background: transparent;
-    color: var(--ink);
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    position: relative;
-    z-index: 9999;
-  }
-  
-  .continue-btn:hover {
-    background: var(--ink);
-    color: var(--white);
-  }
-  
-  #sculpture-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-  }
 </style>
 </head>
 <body>
-
-<!-- Landing Page -->
-<div class="landing-page" id="splash-screen" style="z-index: 1;">
-  <canvas id="sculpture-canvas"></canvas>
-  <div class="landing-content">
-    <button class="continue-btn" id="continue-btn" style="z-index: 2; position: relative; cursor: pointer;">Continuer</button>
-  </div>
-</div>
-
-<!-- Loader -->
-<div class="loader" id="loader" style="display: none;">
-  <div class="loader-logo">
-    <img src="logo.jpg" alt="FL">
-  </div>
-</div>
 
 <div class="page-transition"></div>
 
@@ -572,8 +476,11 @@
 
 <div class="content-wrapper">
   <main class="main-content">
-    <!-- Hero content will be shown after landing page -->
-    <div class="hero-content" id="hero-content" style="display: none;">
+    <div class="hero-video-wrap">
+      <video autoplay muted loop playsinline poster="logo.jpg">
+        <source src="hero-ocean.mp4" type="video/mp4">
+      </video>
+      <div class="hero-content" id="hero-content">
       <h1 class="hero-title">FL</h1>
       <p class="hero-subtitle">Sculptures d'art contemporain minimaliste. Une démarche artistique entre tradition et contemporanéité.</p>
       <div class="hero-cta">
@@ -594,131 +501,5 @@
 <script src="auth.js"></script>
 <script src="i18n.js"></script>
 <script src="main.js"></script>
-<script>
-// Three.js 3D Animation for Landing Page
-window.addEventListener('load', () => {
-  console.log('Page loaded, initializing 3D...');
-  const canvas = document.getElementById('sculpture-canvas');
-  console.log('Canvas found:', canvas);
-  
-  if (canvas && typeof THREE !== 'undefined') {
-    console.log('THREE.js available, initializing scene...');
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
-    
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    
-    // Create abstract ceramic form - smooth torus knot for elegant flow
-    const geometry = new THREE.TorusKnotGeometry(1.5, 0.4, 100, 16);
-    const material = new THREE.MeshStandardMaterial({
-      color: 0xcccccc,
-      roughness: 0.2,
-      metalness: 0.1
-    });
-    
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-    
-    // Premium studio lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-    
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(-5, 5, 5);
-    scene.add(directionalLight);
-    
-    camera.position.z = 7;
-    
-    console.log('3D scene initialized, starting animation...');
-    
-    // Animation loop
-    function animate() {
-      requestAnimationFrame(animate);
-      
-      // Gentle rotation
-      mesh.rotation.y += 0.003;
-      mesh.rotation.x += 0.002;
-      
-      renderer.render(scene, camera);
-    }
-    
-    animate();
-    
-    // Handle resize
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  } else {
-    console.error('Canvas not found or THREE.js not loaded');
-  }
-});
-
-// Enter site function
-function enterSite() {
-  const splashScreen = document.getElementById('splash-screen');
-  const canvas = document.getElementById('sculpture-canvas');
-  const heroContent = document.getElementById('hero-content');
-  
-  if (splashScreen) {
-    splashScreen.style.opacity = '0';
-    setTimeout(() => {
-      splashScreen.style.display = 'none';
-    }, 800);
-  }
-  
-  // Keep canvas visible and active - move it to body level
-  if (canvas) {
-    canvas.style.position = 'fixed';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.style.zIndex = '0';
-    canvas.style.opacity = '0.4';
-    canvas.style.transition = 'opacity 1.5s ease';
-  }
-  
-  // Show hero content
-  if (heroContent) {
-    heroContent.style.display = 'block';
-    
-    // Animate hero title letter by letter
-    const heroTitle = heroContent.querySelector('.hero-title');
-    if (heroTitle) {
-      const text = heroTitle.textContent;
-      heroTitle.textContent = '';
-      
-      // Split text into letter spans
-      text.split('').forEach((char, index) => {
-        const span = document.createElement('span');
-        span.className = 'letter';
-        span.textContent = char;
-        heroTitle.appendChild(span);
-        
-        // Animate each letter with delay
-        setTimeout(() => {
-          span.classList.add('visible');
-        }, index * 60);
-      });
-    }
-  }
-}
-
-// Direct event listener for Continue button
-document.addEventListener('DOMContentLoaded', () => {
-  const continueBtn = document.getElementById('continue-btn');
-  if (continueBtn) {
-    continueBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      enterSite();
-    });
-  }
-});
-</script>
 </body>
 </html>
