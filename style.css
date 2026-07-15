@@ -149,7 +149,7 @@ nav.menu-nav a.active {
 
 /* Cart toggle button */
 .cart-toggle {
-  background: var(--paper);
+  background: none;
   border: 1px solid var(--line);
   cursor: pointer;
   display: flex !important;
@@ -157,11 +157,10 @@ nav.menu-nav a.active {
   gap: 8px;
   padding: 8px 16px;
   font-size: 11px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 2px;
+  transition: all 0.3s ease;
   position: relative;
   z-index: 1;
   visibility: visible !important;
@@ -169,9 +168,8 @@ nav.menu-nav a.active {
 }
 
 .cart-toggle:hover {
-  border-color: var(--ink);
-  background: var(--white);
-  transform: translateY(-1px);
+  border-color: var(--bronze);
+  color: var(--bronze);
 }
 
 /* Cart text styles */
@@ -193,7 +191,7 @@ nav.menu-nav a.active {
 }
 
 .lang-toggle {
-  background: var(--paper);
+  background: none;
   border: 1px solid var(--line);
   cursor: pointer;
   display: flex;
@@ -201,16 +199,15 @@ nav.menu-nav a.active {
   gap: 8px;
   padding: 8px 16px;
   font-size: 11px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 2px;
+  transition: all 0.3s ease;
 }
 
 .lang-toggle:hover {
-  border-color: var(--ink);
-  background: var(--white);
+  border-color: var(--bronze);
+  color: var(--bronze);
 }
 
 .current-lang {

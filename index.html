@@ -64,6 +64,18 @@
     background: transparent;
   }
 
+  .bottom-blur {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+    z-index: 2;
+  }
+
   .main-content {
     padding: 0;
   }
@@ -496,6 +508,8 @@
   <main class="main-content">
   </main>
 </div>
+
+<div class="bottom-blur"></div>
 
 <footer id="site-footer"></footer>
 
