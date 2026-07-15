@@ -49,10 +49,10 @@
     height: 100dvh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 0 5vw;
+    justify-content: flex-end;
+    align-items: flex-start;
+    text-align: left;
+    padding: 60px;
   }
 
   header {
@@ -103,20 +103,22 @@
     font-weight: 300;
     letter-spacing: 0.1em;
     color: var(--white);
+    text-align: left;
     margin-bottom: 24px;
     opacity: 0;
     transform: translateY(30px);
-    animation: fadeInUp 1.5s ease forwards;
+    animation: fadeInUp 1.5s ease 0.3s forwards;
   }
   
   .hero-subtitle {
-    font-size: clamp(14px, 2vw, 18px);
-    color: var(--white);
-    max-width: 500px;
-    line-height: 1.6;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 16px;
     opacity: 0;
     transform: translateY(30px);
-    animation: fadeInUp 1.5s ease 0.3s forwards;
+    animation: fadeInUp 1.5s ease forwards;
   }
   
   .hero-cta {
@@ -128,21 +130,23 @@
   
   .cta-button {
     display: inline-block;
-    padding: 16px 48px;
-    border: 1px solid var(--white);
-    background: transparent;
+    padding: 0;
+    border: none;
+    background: none;
     color: var(--white);
     font-size: 12px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     text-decoration: none;
-    transition: all 0.4s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    padding-bottom: 4px;
+    transition: border-color 0.3s ease;
   }
   
   .cta-button:hover {
-    background: var(--white);
-    color: var(--ink);
-    transform: scale(1.05);
+    border-color: var(--white);
+    background: none;
+    transform: none;
   }
   
   @keyframes fadeInUp {
@@ -516,6 +520,7 @@
     <source src="hero-ocean.mp4" type="video/mp4">
   </video>
   <div class="hero-content" id="hero-content">
+    <p class="hero-subtitle">Sculptures — Collection 2026</p>
     <h1 class="hero-title">FL</h1>
     <div class="hero-cta">
       <a href="collection.html" class="cta-button">Découvrir la collection</a>

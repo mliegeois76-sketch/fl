@@ -79,44 +79,23 @@
     position: absolute;
     bottom: 40px;
     right: 40px;
-    width: 48px;
-    height: 48px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
+    background: none;
+    border: none;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
     pointer-events: auto;
   }
 
   .atelier-play-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
   }
 
   .atelier-play-btn svg {
-    width: 16px;
-    height: 16px;
-    fill: white;
-  }
-
-  .atelier-play-btn.playing svg {
     display: none;
-  }
-
-  .atelier-play-btn.pause svg {
-    display: block;
-  }
-
-  .atelier-play-btn svg.pause-icon {
-    display: none;
-  }
-
-  .atelier-play-btn.playing svg.pause-icon {
-    display: block;
   }
 
   @media (max-width: 760px) {
@@ -135,8 +114,6 @@
     .atelier-play-btn {
       bottom: 20px;
       right: 20px;
-      width: 40px;
-      height: 40px;
     }
   }
 </style>
@@ -281,10 +258,7 @@
   <div class="atelier-overlay">
     <div class="atelier-coordinates">48.8566° N, 2.3522° E</div>
     <div class="atelier-title">Atelier</div>
-    <button class="atelier-play-btn" id="atelierPlayBtn">
-      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      <svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-    </button>
+    <button class="atelier-play-btn" id="atelierPlayBtn">PLAY</button>
   </div>
 </div>
 
@@ -308,10 +282,10 @@
   playBtn.addEventListener('click', () => {
     if (video.paused) {
       video.play();
-      playBtn.classList.add('playing');
+      playBtn.textContent = 'PAUSE';
     } else {
       video.pause();
-      playBtn.classList.remove('playing');
+      playBtn.textContent = 'PLAY';
     }
   });
 </script>
