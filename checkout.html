@@ -12,6 +12,11 @@
 </head>
 <body>
 
+<svg style="position:fixed;inset:0;width:0;height:0;">
+  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/></filter>
+</svg>
+<div class="grain-overlay"></div>
+
 <div class="page-transition"></div>
 
 <header>
@@ -678,9 +683,16 @@ function signOutAndCheckout() {
 }
 </script>
 
+<script src="cursor.js"></script>
 <script src="cart.js"></script>
 <script src="auth.js"></script>
 <script src="i18n.js"></script>
 <script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script>
+  const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+</script>
 </body>
 </html>

@@ -1838,3 +1838,28 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--w
   margin-bottom: 24px;
   max-width: 400px;
 }
+
+/* Custom Cursor */
+#custom-cursor {
+  position: fixed;
+  top: -6px;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ink);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 99999;
+  transition: transform 0.08s linear;
+}
+
+/* Grain Overlay */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  filter: url(#grain);
+  opacity: 0.04;
+}

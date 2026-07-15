@@ -16,6 +16,11 @@
 </head>
 <body>
 
+<svg style="position:fixed;inset:0;width:0;height:0;">
+  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/></filter>
+</svg>
+<div class="grain-overlay"></div>
+
 <div class="page-transition"></div>
 
 <header>
@@ -164,7 +169,14 @@
 
 <footer id="site-footer"></footer>
 
+<script src="cursor.js"></script>
 <script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script>
+  const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+</script>
 <script>
 // Contact form submission
 document.getElementById('contactForm').addEventListener('submit', function(e) {
