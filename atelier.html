@@ -13,8 +13,140 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <link rel="stylesheet" href="style.css">
+<style>
+  .atelier-video-wrap {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .atelier-video-wrap video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: grayscale(1) contrast(1.1);
+  }
+
+  .atelier-video-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.28);
+    pointer-events: none;
+  }
+
+  .atelier-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .atelier-coordinates {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .atelier-title {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(32px, 5vw, 64px);
+    font-weight: 200;
+    letter-spacing: 0.1em;
+    color: white;
+  }
+
+  .atelier-play-btn {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+  }
+
+  .atelier-play-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .atelier-play-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: white;
+  }
+
+  .atelier-play-btn.playing svg {
+    display: none;
+  }
+
+  .atelier-play-btn.pause svg {
+    display: block;
+  }
+
+  .atelier-play-btn svg.pause-icon {
+    display: none;
+  }
+
+  .atelier-play-btn.playing svg.pause-icon {
+    display: block;
+  }
+
+  @media (max-width: 760px) {
+    .atelier-coordinates {
+      top: 20px;
+      left: 20px;
+      font-size: 10px;
+    }
+
+    .atelier-title {
+      bottom: 20px;
+      left: 20px;
+      font-size: clamp(24px, 4vw, 40px);
+    }
+
+    .atelier-play-btn {
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+</style>
 </head>
 <body>
+
+<svg style="position:fixed;inset:0;width:0;height:0;">
+  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/></filter>
+</svg>
+<div class="grain-overlay"></div>
 
 <div class="page-transition"></div>
 
@@ -87,7 +219,7 @@
       <div class="social-login">
         <p data-i18n="auth.orContinueWith">Ou continuer avec</p>
         <button type="button" class="google-login">
-          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04-2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Sign in with Google
         </button>
         <button type="button" class="apple-login">
@@ -119,11 +251,11 @@
       <div class="social-login">
         <p data-i18n="auth.orSignUpWith">Ou s'inscrire avec</p>
         <button type="button" class="google-login">
-          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04-2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Sign up with Google
         </button>
         <button type="button" class="apple-login">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74.84 0 2.17-.93 3.63-.8 1.25.1 2.22.62 2.92 1.48-2.6 1.57-2.16 5.5.63 6.74zM13 5.49c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74.84 0 2.17-.93 3.63-.8 1.25.1 2.22.62 2.92 1.48-2.6 1.57-2.16 5.5.63 6.74zM13 5.49c.73-.83 1.94-1.46 2.94-1.5c.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
           Sign up with Apple
         </button>
       </div>
@@ -142,27 +274,46 @@
   </div>
 </div>
 
-<div class="page-hero">
-  <div class="eyebrow">Atelier</div>
-  <h1>La démarche</h1>
-  <p class="placeholder">[Texte d'intro de la page atelier — à confirmer]</p>
-</div>
-
-<section class="reveal">
-  <div class="manifesto-grid">
-    <p class="big placeholder">[Paragraphe principal du manifeste — présentation de la démarche artistique]</p>
-    <div class="side">
-      <p class="placeholder">[Paragraphe secondaire 1 — matières travaillées, technique]</p>
-      <p class="placeholder">[Paragraphe secondaire 2 — parcours, filiation, ce qui rend chaque pièce unique]</p>
-    </div>
+<div class="atelier-video-wrap">
+  <video id="atelierVideo" autoplay muted loop playsinline poster="logo.jpg">
+    <source src="hero-ocean.mp4" type="video/mp4">
+  </video>
+  <div class="atelier-overlay">
+    <div class="atelier-coordinates">48.8566° N, 2.3522° E</div>
+    <div class="atelier-title">Atelier</div>
+    <button class="atelier-play-btn" id="atelierPlayBtn">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </button>
   </div>
-</section>
+</div>
 
 <footer id="site-footer"></footer>
 
+<script src="cursor.js"></script>
 <script src="cart.js"></script>
 <script src="auth.js"></script>
 <script src="i18n.js"></script>
 <script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script>
+  const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+</script>
+<script>
+  const video = document.getElementById('atelierVideo');
+  const playBtn = document.getElementById('atelierPlayBtn');
+
+  playBtn.addEventListener('click', () => {
+    if (video.paused) {
+      video.play();
+      playBtn.classList.add('playing');
+    } else {
+      video.pause();
+      playBtn.classList.remove('playing');
+    }
+  });
+</script>
 </body>
 </html>
