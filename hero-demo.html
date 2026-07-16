@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hero Demo — FL Sculptures</title>
+<meta name="description" content="Hero section with GSAP animations">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --bg: #0E0D0C;
+    --text: #F2EDE4;
+    --accent: #8C6E4A;
+  }
+
+  body {
+    font-family: 'General Sans', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    background: transparent;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--accent);
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('hero-ocean.mp4');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(14, 13, 12, 0.4);
+    z-index: 2;
+  }
+
+  .hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 60px;
+    z-index: 3;
+  }
+
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(4rem, 9vw, 9rem);
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1;
+    margin: 0;
+  }
+
+  .hero-title .line {
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero-title .line .word {
+    display: inline-block;
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  @media (max-width: 760px) {
+    nav {
+      padding: 20px 30px;
+    }
+
+    .nav-links {
+      gap: 20px;
+    }
+
+    .hero-content {
+      padding: 30px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">FL</a>
+  <div class="nav-links">
+    <a href="#">Collection</a>
+    <a href="#">Atelier</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">
+      <span class="line"><span class="word">Sculpture</span></span>
+      <span class="line"><span class="word">Contemporaine</span></span>
+    </h1>
+  </div>
+</section>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+<!-- Lenis -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+
+<script>
+  // Register GSAP plugins
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Initialize Lenis
+  const lenis = new Lenis({
+    lerp: 0.1,
+    smoothWheel: true,
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // Split text animation on load
+  const title = document.querySelector('.hero-title');
+  const splitTitle = new SplitType(title, {
+    types: 'lines',
+    tagName: 'span'
+  });
+
+  // Re-wrap lines for animation
+  const lines = document.querySelectorAll('.hero-title .line');
+  lines.forEach(line => {
+    const word = line.querySelector('.word');
+    if (word) {
+      line.innerHTML = '';
+      line.appendChild(word);
+    }
+  });
+
+  // Animate lines on load
+  gsap.to('.hero-title .word', {
+    y: 0,
+    opacity: 1,
+    duration: 1.2,
+    stagger: 0.1,
+    ease: 'power3.out',
+    delay: 0.2
+  });
+
+  // Parallax animation on scroll
+  gsap.to('.hero-bg', {
+    scale: 1.1,
+    scrollTrigger: {
+      trigger: '.hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+</script>
+
+</body>
+</html>
