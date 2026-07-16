@@ -84,9 +84,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('hero-ocean.mp4');
-    background-size: cover;
-    background-position: center;
+    object-fit: cover;
+    object-position: center;
     z-index: 1;
   }
 
@@ -147,7 +146,7 @@
 <body>
 
 <nav>
-  <a href="#" class="logo">FL</a>
+  <a href="#" class="logo">[LOGO]</a>
   <div class="nav-links">
     <a href="#">Collection</a>
     <a href="#">Atelier</a>
@@ -156,12 +155,13 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-bg"></div>
+  <video class="hero-bg" autoplay muted loop playsinline poster="logo.jpg">
+    <source src="hero-ocean.mp4" type="video/mp4">
+  </video>
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <h1 class="hero-title">
-      <span class="line"><span class="word">Sculpture</span></span>
-      <span class="line"><span class="word">Contemporaine</span></span>
+      <span class="line"><span class="word">[COLLE TON VRAI TITRE ICI]</span></span>
     </h1>
   </div>
 </section>
@@ -219,6 +219,17 @@
   // Parallax animation on scroll
   gsap.to('.hero-bg', {
     scale: 1.1,
+    scrollTrigger: {
+      trigger: '.hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+
+  // Title parallax depth effect (40% scroll speed)
+  gsap.to('.hero-title', {
+    y: -100,
     scrollTrigger: {
       trigger: '.hero',
       start: 'top top',
