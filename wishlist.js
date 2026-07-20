@@ -1,38 +1,46 @@
 /**
  * Wishlist/Favorites Service
- * This service handles wishlist functionality for the FL Sculptures platform
+ * This service handles wishlist functionality using Supabase profiles table
  */
 
 const WishlistService = {
   /**
-   * Get wishlist for current user
+   * Get wishlist for current user from Supabase
    */
-  getWishlist() {
-    const currentUser = JSON.parse(localStorage.getItem('fl_currentUser'));
-    if (!currentUser) return [];
+  async getWishlist() {
+    const { data: { user } } = await window.supabase.auth.getUser();
+    if (!user) return [];
     
-    const allWishlists = JSON.parse(localStorage.getItem('fl_wishlists')) || {};
-    return allWishlists[currentUser.id] || [];
+    const { data: profile, error } = await window.supabase
+      .from('profiles')
+      .select('wishlist')
+      .eq('id', user.id)
+      .single();
+    
+    if (error || !profile) return [];
+    return profile.wishlist || [];
   },
 
   /**
-   * Save wishlist for current user
+   * Save wishlist to Supabase profiles table
    */
-  saveWishlist(wishlist) {
-    const currentUser = JSON.parse(localStorage.getItem('fl_currentUser'));
-    if (!currentUser) return false;
+  async saveWishlist(wishlist) {
+    const { data: { user } } = await window.supabase.auth.getUser();
+    if (!user) return false;
     
-    const allWishlists = JSON.parse(localStorage.getItem('fl_wishlists')) || {};
-    allWishlists[currentUser.id] = wishlist;
-    localStorage.setItem('fl_wishlists', JSON.stringify(allWishlists));
-    return true;
+    const { error } = await window.supabase
+      .from('profiles')
+      .update({ wishlist })
+      .eq('id', user.id);
+    
+    return !error;
   },
 
   /**
    * Add product to wishlist
    */
-  addToWishlist(productId, productName, productPrice, productImage) {
-    const wishlist = this.getWishlist();
+  async addToWishlist(productId, productName, productPrice, productImage) {
+    const wishlist = await this.getWishlist();
     
     // Check if product already in wishlist
     if (wishlist.some(item => item.productId === productId)) {
@@ -47,7 +55,7 @@ const WishlistService = {
       addedAt: new Date().toISOString()
     });
     
-    this.saveWishlist(wishlist);
+    await this.saveWishlist(wishlist);
     this.updateWishlistCount();
     
     return { success: true, message: 'Added to wishlist' };
@@ -56,11 +64,11 @@ const WishlistService = {
   /**
    * Remove product from wishlist
    */
-  removeFromWishlist(productId) {
-    const wishlist = this.getWishlist();
+  async removeFromWishlist(productId) {
+    const wishlist = await this.getWishlist();
     const filtered = wishlist.filter(item => item.productId !== productId);
     
-    this.saveWishlist(filtered);
+    await this.saveWishlist(filtered);
     this.updateWishlistCount();
     
     return { success: true, message: 'Removed from wishlist' };
@@ -69,16 +77,16 @@ const WishlistService = {
   /**
    * Check if product is in wishlist
    */
-  isInWishlist(productId) {
-    const wishlist = this.getWishlist();
+  async isInWishlist(productId) {
+    const wishlist = await this.getWishlist();
     return wishlist.some(item => item.productId === productId);
   },
 
   /**
    * Clear wishlist
    */
-  clearWishlist() {
-    this.saveWishlist([]);
+  async clearWishlist() {
+    await this.saveWishlist([]);
     this.updateWishlistCount();
     return { success: true, message: 'Wishlist cleared' };
   },
@@ -87,34 +95,36 @@ const WishlistService = {
    * Update wishlist count in UI
    */
   updateWishlistCount() {
-    const wishlist = this.getWishlist();
-    const countElements = document.querySelectorAll('.wishlist-count');
-    countElements.forEach(el => {
-      el.textContent = `(${wishlist.length})`;
+    this.getWishlist().then(wishlist => {
+      const countElements = document.querySelectorAll('.wishlist-count');
+      countElements.forEach(el => {
+        el.textContent = `(${wishlist.length})`;
+      });
     });
   },
 
   /**
    * Move all wishlist items to cart
    */
-  moveAllToCart() {
-    const wishlist = this.getWishlist();
+  async moveAllToCart() {
+    const wishlist = await this.getWishlist();
     let movedCount = 0;
     
     wishlist.forEach(item => {
       if (window.shoppingCart) {
-        window.shoppingCart.addToCart(
-          item.productId,
-          item.productName,
-          item.productPrice,
-          item.productImage
-        );
+        window.shoppingCart.addToCart({
+          id: item.productId,
+          name: item.productName,
+          price: item.productPrice,
+          image: item.productImage,
+          quantity: 1
+        });
         movedCount++;
       }
     });
     
     if (movedCount > 0) {
-      this.clearWishlist();
+      await this.clearWishlist();
       return { success: true, message: `${movedCount} items moved to cart` };
     }
     

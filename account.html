@@ -483,9 +483,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Load wishlist
-function loadWishlist() {
+async function loadWishlist() {
   if (typeof WishlistService !== 'undefined') {
-    const wishlist = WishlistService.getWishlist();
+    const wishlist = await WishlistService.getWishlist();
     const wishlistList = document.getElementById('wishlistList');
     
     if (wishlist.length === 0) {
@@ -509,47 +509,61 @@ function loadWishlist() {
 }
 
 // Add to cart from wishlist
-function addToCartFromWishlist(productId, productName, productPrice, productImage) {
+async function addToCartFromWishlist(productId, productName, productPrice, productImage) {
   if (window.shoppingCart) {
-    window.shoppingCart.addToCart(productId, productName, productPrice, productImage);
-    WishlistService.removeFromWishlist(productId);
-    loadWishlist();
+    window.shoppingCart.addToCart({
+      id: productId,
+      name: productName,
+      price: productPrice,
+      image: productImage,
+      quantity: 1
+    });
+    await WishlistService.removeFromWishlist(productId);
+    await loadWishlist();
   }
 }
 
 // Remove from wishlist
-function removeFromWishlist(productId) {
+async function removeFromWishlist(productId) {
   if (typeof WishlistService !== 'undefined') {
-    WishlistService.removeFromWishlist(productId);
-    loadWishlist();
+    await WishlistService.removeFromWishlist(productId);
+    await loadWishlist();
   }
 }
 
 // Move all to cart
-function moveAllToCart() {
+async function moveAllToCart() {
   if (typeof WishlistService !== 'undefined') {
-    const result = WishlistService.moveAllToCart();
+    const result = await WishlistService.moveAllToCart();
     alert(result.message);
-    loadWishlist();
+    await loadWishlist();
   }
 }
 
 // Clear wishlist
-function clearWishlist() {
+async function clearWishlist() {
   if (confirm('Are you sure you want to clear your wishlist?')) {
     if (typeof WishlistService !== 'undefined') {
-      WishlistService.clearWishlist();
-      loadWishlist();
+      await WishlistService.clearWishlist();
+      await loadWishlist();
     }
   }
 }
 
-// Load email preferences
-function loadEmailPreferences() {
-  const user = window.authSystem.currentUser;
+// Load email preferences from Supabase
+async function loadEmailPreferences() {
+  const { data: { user } } = await window.supabase.auth.getUser();
   if (!user) return;
   
-  const preferences = user.emailPreferences || {
+  const { data: profile, error } = await window.supabase
+    .from('profiles')
+    .select('email_preferences')
+    .eq('id', user.id)
+    .single();
+  
+  if (error || !profile) return;
+  
+  const preferences = profile.email_preferences || {
     orderUpdates: true,
     promotions: true,
     newsletter: true,
@@ -562,55 +576,55 @@ function loadEmailPreferences() {
   document.getElementById('emailReviews').checked = preferences.reviews;
 }
 
-// Update email preferences
-function updateEmailPreferences() {
-  const user = window.authSystem.currentUser;
+// Update email preferences to Supabase
+async function updateEmailPreferences() {
+  const { data: { user } } = await window.supabase.auth.getUser();
   if (!user) return;
   
-  user.emailPreferences = {
+  const preferences = {
     orderUpdates: document.getElementById('emailOrderUpdates').checked,
     promotions: document.getElementById('emailPromotions').checked,
     newsletter: document.getElementById('emailNewsletter').checked,
     reviews: document.getElementById('emailReviews').checked
   };
   
-  localStorage.setItem('fl_currentUser', JSON.stringify(user));
+  const { error } = await window.supabase
+    .from('profiles')
+    .update({ email_preferences: preferences })
+    .eq('id', user.id);
   
-  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-  const userIndex = users.findIndex(u => u.id === user.id);
-  if (userIndex !== -1) {
-    users[userIndex] = user;
-    localStorage.setItem('fl_users', JSON.stringify(users));
+  if (error) {
+    alert('Error updating preferences: ' + error.message);
+  } else {
+    alert('Préférences email mises à jour avec succès');
   }
-  
-  alert('Préférences email mises à jour avec succès');
 }
 
 // Unsubscribe from all emails
-function unsubscribeFromAll() {
+async function unsubscribeFromAll() {
   if (!confirm('Êtes-vous sûr de vouloir vous désabonner de tous les emails ? Vous ne recevrez plus aucune communication de notre part.')) return;
   
-  const user = window.authSystem.currentUser;
+  const { data: { user } } = await window.supabase.auth.getUser();
   if (!user) return;
   
-  user.emailPreferences = {
+  const preferences = {
     orderUpdates: false,
     promotions: false,
     newsletter: false,
     reviews: false
   };
   
-  localStorage.setItem('fl_currentUser', JSON.stringify(user));
+  const { error } = await window.supabase
+    .from('profiles')
+    .update({ email_preferences: preferences })
+    .eq('id', user.id);
   
-  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-  const userIndex = users.findIndex(u => u.id === user.id);
-  if (userIndex !== -1) {
-    users[userIndex] = user;
-    localStorage.setItem('fl_users', JSON.stringify(users));
+  if (error) {
+    alert('Error updating preferences: ' + error.message);
+  } else {
+    await loadEmailPreferences();
+    alert('You have been unsubscribed from all emails');
   }
-  
-  loadEmailPreferences();
-  alert('You have been unsubscribed from all emails');
 }
 </script>
 

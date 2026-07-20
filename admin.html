@@ -439,29 +439,42 @@
 
 <footer id="site-footer"></footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  window.supabase = supabase.createClient('https://yytxrapemcsloyuqewhf.supabase.co', 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl');
+</script>
 <script src="cart.js"></script>
 <script src="auth.js"></script>
 <script src="products.js"></script>
 <script src="main.js"></script>
 <script src="data-export.js"></script>
 <script>
-// Admin authentication check - RLS handles protection server-side
-document.addEventListener('DOMContentLoaded', () => {
-  checkAdminAccess();
+// Admin authentication check - Supabase auth + RLS
+document.addEventListener('DOMContentLoaded', async () => {
+  await checkAdminAccess();
 });
 
-function checkAdminAccess() {
-  // RLS policy handles admin protection on Supabase
-  // Just show the dashboard for authenticated users
-  const adminDashboard = document.querySelector('.admin-dashboard');
+async function checkAdminAccess() {
+  const { data: { user }, error } = await window.supabase.auth.getUser();
+  
+  if (error || !user) {
+    // Not authenticated, redirect to login
+    window.location.href = 'index.html';
+    return false;
+  }
+  
+  // User is authenticated, show dashboard
+  // RLS policies will handle admin access on server-side
   const loginForm = document.getElementById('adminLoginForm');
   const adminDashboardDiv = document.getElementById('adminDashboard');
   
-  // Show login form by default, dashboard will be shown after auth
-  if (loginForm) loginForm.style.display = 'flex';
-  if (adminDashboardDiv) adminDashboardDiv.style.display = 'none';
+  if (loginForm) loginForm.style.display = 'none';
+  if (adminDashboardDiv) adminDashboardDiv.style.display = 'block';
   
-  return false;
+  // Load initial data
+  await loadOverview();
+  await loadProducts();
+  return true;
 }
 
 function showAdminSection(section) {
@@ -484,320 +497,196 @@ function showAdminSection(section) {
   }
 }
 
-function loadOverview() {
-  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
+async function loadOverview() {
+  // Load stats from Supabase
+  const { data: profiles, error: profilesError } = await window.supabase
+    .from('profiles')
+    .select('id', { count: 'exact', head: true });
   
-  document.getElementById('totalUsers').textContent = users.length;
-  document.getElementById('totalOrders').textContent = (JSON.parse(localStorage.getItem('fl_allOrders')) || []).length;
-  document.getElementById('totalProducts').textContent = (JSON.parse(localStorage.getItem('fl_products')) || []).length;
-  document.getElementById('totalEmails').textContent = (JSON.parse(localStorage.getItem('fl_emailLog')) || []).length;
+  const { count: ordersCount, error: ordersError } = await window.supabase
+    .from('orders')
+    .select('*', { count: 'exact', head: true });
+  
+  const { count: productsCount, error: productsError } = await window.supabase
+    .from('products')
+    .select('*', { count: 'exact', head: true });
+  
+  const { data: ordersData } = await window.supabase
+    .from('orders')
+    .select('total');
+  
+  const totalRevenue = ordersData ? ordersData.reduce((sum, order) => sum + (order.total || 0), 0) : 0;
+  
+  document.getElementById('totalUsers').textContent = profiles.count || 0;
+  document.getElementById('totalOrders').textContent = ordersCount || 0;
+  document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2) + ' €';
+  document.getElementById('emailsSent').textContent = '0'; // Email tracking not in Supabase yet
 }
 
 function loadDataStats() {
-  if (typeof DataExportService !== 'undefined') {
-    const stats = DataExportService.getDataStats();
-    document.getElementById('dataUsers').textContent = stats.users;
-    document.getElementById('dataProducts').textContent = stats.products;
-    document.getElementById('dataOrders').textContent = stats.orders;
-    document.getElementById('dataEmails').textContent = stats.emails;
-    document.getElementById('dataReviews').textContent = stats.reviews;
-    document.getElementById('dataStorage').textContent = (stats.storageSize / 1024).toFixed(2) + ' KB';
-  }
+  // Data export not available with Supabase - Supabase has built-in backup
+  document.getElementById('dataUsers').textContent = 'N/A';
+  document.getElementById('dataProducts').textContent = 'N/A';
+  document.getElementById('dataOrders').textContent = 'N/A';
+  document.getElementById('dataEmails').textContent = 'N/A';
+  document.getElementById('dataReviews').textContent = 'N/A';
+  document.getElementById('dataStorage').textContent = 'N/A';
 }
 
 function handleImportFile() {
-  // File selection handled by input change event
+  alert('Data export/import not available with Supabase - use Supabase dashboard for backups');
 }
 
 function importData() {
-  const fileInput = document.getElementById('importFile');
-  const file = fileInput.files[0];
-  
-  if (!file) {
-    alert('Please select a file to import');
-    return;
-  }
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const jsonData = JSON.parse(e.target.result);
-      const result = DataExportService.importData(jsonData, { merge: true });
-      alert(result.message);
-      loadDataStats();
-      loadOverview();
-    } catch (error) {
-      alert('Error parsing JSON file: ' + error.message);
-    }
-  };
-  reader.readAsText(file);
+  alert('Data export/import not available with Supabase - use Supabase dashboard for backups');
 }
 
 function validateData() {
-  if (typeof DataExportService !== 'undefined') {
-    const result = DataExportService.validateData();
-    const resultDiv = document.getElementById('validationResult');
-    
-    if (result.valid) {
-      resultDiv.innerHTML = '<p class="success-message">All data is valid!</p>';
-    } else {
-      resultDiv.innerHTML = '<p class="error-message">Data validation failed:</p><ul>' + 
-        result.issues.map(issue => `<li>${issue}</li>`).join('') + '</ul>';
-    }
-  }
+  alert('Data validation not needed with Supabase - database constraints handle this');
 }
 
 function clearDataType(dataType) {
-  if (confirm(`Are you sure you want to clear all ${dataType} data? This action cannot be undone.`)) {
-    if (typeof DataExportService !== 'undefined') {
-      const result = DataExportService.clearDataType(dataType);
-      alert(result.message);
-      loadDataStats();
-      loadOverview();
-    }
-  }
+  alert('Data clearing not available - use Supabase dashboard for data management');
 }
 
 function clearAllData() {
-  if (typeof DataExportService !== 'undefined') {
-    const result = DataExportService.clearAllData();
-    alert(result.message);
-    loadDataStats();
-    loadOverview();
-  }
+  alert('Data clearing not available - use Supabase dashboard for data management');
 }
 
-function loadReviews(filter = 'all') {
-  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
-  const products = ProductCatalog ? ProductCatalog.getAll() : [];
+async function loadReviews(filter = 'all') {
+  // Reviews not migrated to Supabase yet - showing placeholder
   const tbody = document.getElementById('reviewsTableBody');
-  
-  let reviewsList = [];
-  
-  // Flatten reviews from all products
-  Object.keys(allReviews).forEach(productId => {
-    const product = products.find(p => p.id === parseInt(productId));
-    const productName = product ? product.name : 'Unknown Product';
-    
-    allReviews[productId].forEach(review => {
-      reviewsList.push({
-        ...review,
-        productId,
-        productName,
-        status: review.status || 'pending' // Default to pending if no status
-      });
-    });
-  });
-  
-  // Filter by status
-  if (filter !== 'all') {
-    reviewsList = reviewsList.filter(r => r.status === filter);
-  }
-  
-  if (reviewsList.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No reviews found.</td></tr>';
-    return;
-  }
-  
-  tbody.innerHTML = reviewsList.map(review => `
-    <tr>
-      <td>${review.productName}</td>
-      <td>${review.name}</td>
-      <td>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</td>
-      <td>${new Date(review.date).toLocaleDateString()}</td>
-      <td><span class="status-${review.status}">${review.status}</span></td>
-      <td>
-        <button class="secondary-btn" onclick="viewReview('${review.id}')">View</button>
-        ${review.status === 'pending' ? `
-          <button class="secondary-btn" onclick="approveReview('${review.id}', '${review.productId}')">Approve</button>
-          <button class="secondary-btn cancel-btn" onclick="rejectReview('${review.id}', '${review.productId}')">Reject</button>
-        ` : ''}
-      </td>
-    </tr>
-  `).join('');
+  tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Reviews not yet migrated to Supabase.</td></tr>';
 }
 
 function viewReview(reviewId) {
-  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
-  let review = null;
-  
-  Object.keys(allReviews).forEach(productId => {
-    const found = allReviews[productId].find(r => r.id === reviewId);
-    if (found) review = found;
-  });
-  
-  if (!review) {
-    alert('Review not found');
-    return;
-  }
-  
-  alert(`Review by ${review.name}:\n\nRating: ${review.rating}/5\n\n${review.text}`);
+  alert('Reviews not yet migrated to Supabase');
 }
 
 function approveReview(reviewId, productId) {
-  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
-  const productReviews = allReviews[productId];
-  
-  if (!productReviews) return;
-  
-  const reviewIndex = productReviews.findIndex(r => r.id === reviewId);
-  if (reviewIndex === -1) return;
-  
-  productReviews[reviewIndex].status = 'approved';
-  productReviews[reviewIndex].moderatedAt = new Date().toISOString();
-  
-  allReviews[productId] = productReviews;
-  localStorage.setItem('fl_productReviews', JSON.stringify(allReviews));
-  
-  loadReviews('pending');
-  alert('Review approved');
+  alert('Reviews not yet migrated to Supabase');
 }
 
 function rejectReview(reviewId, productId) {
-  if (!confirm('Are you sure you want to reject this review?')) return;
-  
-  const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
-  const productReviews = allReviews[productId];
-  
-  if (!productReviews) return;
-  
-  const reviewIndex = productReviews.findIndex(r => r.id === reviewId);
-  if (reviewIndex === -1) return;
-  
-  productReviews[reviewIndex].status = 'rejected';
-  productReviews[reviewIndex].moderatedAt = new Date().toISOString();
-  
-  allReviews[productId] = productReviews;
-  localStorage.setItem('fl_productReviews', JSON.stringify(allReviews));
-  
-  loadReviews('pending');
-  alert('Review rejected');
+  alert('Reviews not yet migrated to Supabase');
 }
 
-function loadUsers() {
-  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
+async function loadUsers() {
+  const { data: profiles, error } = await window.supabase
+    .from('profiles')
+    .select('*');
+  
   const tbody = document.getElementById('usersTableBody');
   
-  if (users.length === 0) {
+  if (error || !profiles || profiles.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No users registered yet.</td></tr>';
     return;
   }
   
-  tbody.innerHTML = users.map(user => `
+  tbody.innerHTML = profiles.map(profile => `
     <tr>
-      <td><code>${user.id}</code></td>
-      <td>${user.firstName} ${user.lastName}</td>
-      <td>${user.email}</td>
-      <td>${new Date(user.createdAt).toLocaleDateString()}</td>
-      <td>${user.orders ? user.orders.length : 0}</td>
+      <td><code>${profile.id}</code></td>
+      <td>${profile.first_name || ''} ${profile.last_name || ''}</td>
+      <td>${profile.email || ''}</td>
+      <td>${new Date(profile.created_at).toLocaleDateString()}</td>
+      <td>-</td>
       <td>
-        <button class="secondary-btn" onclick="deleteUser('${user.id}')">Delete</button>
+        <span class="text-muted">Managed via Supabase</span>
       </td>
     </tr>
   `).join('');
 }
 
-function deleteUser(userId) {
-  if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-    const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-    const updatedUsers = users.filter(u => u.id !== userId);
-    localStorage.setItem('fl_users', JSON.stringify(updatedUsers));
-    loadUsers();
-    alert('User deleted successfully!');
-  }
-}
-
-function loadOrders() {
-  const orders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
+async function loadOrders() {
+  const { data: orders, error } = await window.supabase
+    .from('orders')
+    .select('*, profiles(first_name, last_name, email)');
+  
   const tbody = document.getElementById('ordersTableBody');
   
-  if (orders.length === 0) {
+  if (error || !orders || orders.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No orders yet.</td></tr>';
     return;
   }
   
   tbody.innerHTML = orders.map(order => `
     <tr>
-      <td><code>${order.orderId}</code></td>
-      <td>${order.customer ? order.customer.firstName + ' ' + order.customer.lastName : 'Guest'}</td>
+      <td><code>${order.id}</code></td>
+      <td>${order.profiles ? order.profiles.first_name + ' ' + order.profiles.last_name : 'Unknown'}</td>
       <td>${order.total.toFixed(2)} €</td>
-      <td>${new Date(order.date).toLocaleDateString()}</td>
+      <td>${new Date(order.created_at).toLocaleDateString()}</td>
       <td>
-        <select class="status-select" onchange="updateOrderStatus('${order.orderId}', this.value)">
-          <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
-          <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
-          <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
-          <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+        <select class="status-select" onchange="updateOrderStatus('${order.id}', this.value)">
+          <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+          <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+          <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+          <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+          <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
         </select>
       </td>
       <td>
-        <button class="secondary-btn" onclick="viewOrderDetails('${order.orderId}')">View</button>
+        <button class="secondary-btn" onclick="viewOrderDetails('${order.id}')">View</button>
       </td>
     </tr>
   `).join('');
 }
 
-function updateOrderStatus(orderId, newStatus) {
-  const orders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
-  const orderIndex = orders.findIndex(o => o.orderId === orderId);
+async function updateOrderStatus(orderId, newStatus) {
+  const { error } = await window.supabase
+    .from('orders')
+    .update({ status: newStatus })
+    .eq('id', orderId);
   
-  if (orderIndex !== -1) {
-    orders[orderIndex].status = newStatus;
-    localStorage.setItem('fl_allOrders', JSON.stringify(orders));
-    
-    // Also update in user's orders
-    const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-    users.forEach(user => {
-      if (user.orders) {
-        const userOrderIndex = user.orders.findIndex(o => o.orderId === orderId);
-        if (userOrderIndex !== -1) {
-          user.orders[userOrderIndex].status = newStatus;
-        }
-      }
-    });
-    localStorage.setItem('fl_users', JSON.stringify(users));
-    
+  if (error) {
+    console.error('Error updating order status:', error);
+    alert('Error updating order status: ' + error.message);
+  } else {
     console.log('Order status updated:', orderId, newStatus);
+    await loadOrders();
   }
 }
 
-function viewOrderDetails(orderId) {
-  const orders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
-  const order = orders.find(o => o.orderId === orderId);
+async function viewOrderDetails(orderId) {
+  const { data: order, error } = await window.supabase
+    .from('orders')
+    .select('*, order_items(*, products(name))')
+    .eq('id', orderId)
+    .single();
   
-  if (!order) return;
+  if (error || !order) {
+    alert('Order not found');
+    return;
+  }
   
-  const itemsHTML = order.items.map(item => `
+  const itemsHTML = order.order_items ? order.order_items.map(item => `
     <div class="order-detail-item">
-      <strong>${item.name}</strong>
+      <strong>${item.products ? item.products.name : 'Unknown Product'}</strong>
       <span>Qty: ${item.quantity}</span>
       <span>${(item.price * item.quantity).toFixed(2)} €</span>
     </div>
-  `).join('');
+  `).join('') : '<p>No items</p>';
   
-  const customerHTML = order.customer ? `
+  const customerHTML = order.profiles ? `
     <div class="order-detail-section">
       <h4>Customer Information</h4>
-      <p><strong>Name:</strong> ${order.customer.firstName} ${order.customer.lastName}</p>
-      <p><strong>Email:</strong> ${order.customer.email}</p>
-      <p><strong>Phone:</strong> ${order.customer.phone || 'N/A'}</p>
-      <p><strong>Address:</strong> ${order.customer.address}, ${order.customer.postalCode} ${order.customer.city}, ${order.customer.country}</p>
+      <p><strong>Name:</strong> ${order.profiles.first_name} ${order.profiles.last_name}</p>
+      <p><strong>Email:</strong> ${order.profiles.email}</p>
     </div>
-  ` : '<div class="order-detail-section"><h4>Customer Information</h4><p>Guest checkout</p></div>';
+  ` : '<div class="order-detail-section"><h4>Customer Information</h4><p>Unknown</p></div>';
   
   const orderModal = document.createElement('div');
   orderModal.className = 'tracking-modal';
   orderModal.innerHTML = `
     <div class="tracking-content order-detail-modal">
       <button class="tracking-close" onclick="this.closest('.tracking-modal').remove()">×</button>
-      <h3>Order Details: ${order.orderId}</h3>
+      <h3>Order Details: ${order.id}</h3>
       
       <div class="order-detail-section">
         <h4>Order Information</h4>
-        <p><strong>Order ID:</strong> ${order.orderId}</p>
-        <p><strong>Date:</strong> ${new Date(order.date).toLocaleString()}</p>
+        <p><strong>Order ID:</strong> ${order.id}</p>
+        <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
         <p><strong>Status:</strong> ${order.status}</p>
-        <p><strong>Payment Method:</strong> ${order.paymentMethod || 'Card'}</p>
+        <p><strong>Payment Method:</strong> ${order.payment_method || 'Card'}</p>
         <p><strong>Total:</strong> ${order.total.toFixed(2)} €</p>
       </div>
       
@@ -840,11 +729,14 @@ function loadEmails() {
   `).join('');
 }
 
-function loadProducts() {
-  const products = ProductCatalog.getAll();
+async function loadProducts() {
+  const { data: products, error } = await window.supabase
+    .from('products')
+    .select('*');
+  
   const tbody = document.getElementById('productsTableBody');
   
-  if (products.length === 0) {
+  if (error || !products || products.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No products available.</td></tr>';
     return;
   }
@@ -865,8 +757,16 @@ function loadProducts() {
   `).join('');
 }
 
-function showLowStockAlerts() {
-  const products = ProductCatalog.getAll();
+async function showLowStockAlerts() {
+  const { data: products, error } = await window.supabase
+    .from('products')
+    .select('*');
+  
+  if (error || !products) {
+    alert('Error loading products');
+    return;
+  }
+  
   const lowStockProducts = products.filter(p => p.stock < 5);
   
   if (lowStockProducts.length === 0) {
@@ -911,11 +811,14 @@ function closeLowStockModal() {
   }
 }
 
-function updateStock(productId) {
-  const products = ProductCatalog.getAll();
-  const product = products.find(p => p.id === productId);
+async function updateStock(productId) {
+  const { data: product, error } = await window.supabase
+    .from('products')
+    .select('*')
+    .eq('id', productId)
+    .single();
   
-  if (!product) {
+  if (error || !product) {
     alert('Product not found');
     return;
   }
@@ -930,16 +833,37 @@ function updateStock(productId) {
     return;
   }
   
-  product.stock = stockNum;
-  ProductCatalog.saveToStorage();
-  loadProducts();
-  alert('Stock updated successfully');
+  const { error: updateError } = await window.supabase
+    .from('products')
+    .update({ stock: stockNum })
+    .eq('id', productId);
+  
+  if (updateError) {
+    alert('Error updating stock: ' + updateError.message);
+  } else {
+    await loadProducts();
+    alert('Stock updated successfully');
+  }
 }
 
-function loadAnalytics() {
-  const orders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
-  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
+async function loadAnalytics() {
+  const { data: orders, error: ordersError } = await window.supabase
+    .from('orders')
+    .select('*');
+  
+  const { count: usersCount } = await window.supabase
+    .from('profiles')
+    .select('*', { count: 'exact', head: true });
+  
   const period = document.getElementById('analyticsPeriod').value;
+  
+  if (ordersError || !orders) {
+    document.getElementById('totalRevenue').textContent = '0.00 €';
+    document.getElementById('totalOrders').textContent = '0';
+    document.getElementById('avgOrderValue').textContent = '0.00 €';
+    document.getElementById('conversionRate').textContent = '0%';
+    return;
+  }
   
   // Filter orders by period
   let filteredOrders = orders;
@@ -947,14 +871,14 @@ function loadAnalytics() {
     const days = parseInt(period);
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
-    filteredOrders = orders.filter(order => new Date(order.date) >= cutoffDate);
+    filteredOrders = orders.filter(order => new Date(order.created_at) >= cutoffDate);
   }
   
   // Calculate metrics
-  const totalRevenue = filteredOrders.reduce((sum, order) => sum + order.total, 0);
+  const totalRevenue = filteredOrders.reduce((sum, order) => sum + (order.total || 0), 0);
   const totalOrders = filteredOrders.length;
   const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-  const conversionRate = users.length > 0 ? (totalOrders / users.length) * 100 : 0;
+  const conversionRate = usersCount > 0 ? (totalOrders / usersCount) * 100 : 0;
   
   // Update UI
   document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2) + ' €';
@@ -962,32 +886,35 @@ function loadAnalytics() {
   document.getElementById('avgOrderValue').textContent = avgOrderValue.toFixed(2) + ' €';
   document.getElementById('conversionRate').textContent = conversionRate.toFixed(1) + '%';
   
-  // Calculate top selling products
-  const productSales = {};
-  filteredOrders.forEach(order => {
-    if (order.items) {
-      order.items.forEach(item => {
-        if (!productSales[item.id]) {
-          productSales[item.id] = { name: item.name, quantity: 0, revenue: 0 };
-        }
-        productSales[item.id].quantity += item.quantity;
-        productSales[item.id].revenue += item.price * item.quantity;
-      });
+  // Calculate top selling products from order_items
+  const { data: orderItems, error: itemsError } = await window.supabase
+    .from('order_items')
+    .select('*, products(name)');
+  
+  if (!itemsError && orderItems) {
+    const productSales = {};
+    orderItems.forEach(item => {
+      const productName = item.products ? item.products.name : 'Unknown';
+      if (!productSales[productName]) {
+        productSales[productName] = { name: productName, quantity: 0, revenue: 0 };
+      }
+      productSales[productName].quantity += item.quantity;
+      productSales[productName].revenue += item.price * item.quantity;
+    });
+    
+    const sortedProducts = Object.values(productSales).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+    const topProductsDiv = document.getElementById('topProducts');
+    
+    if (sortedProducts.length === 0) {
+      topProductsDiv.innerHTML = '<p class="empty-state">No sales data available.</p>';
+    } else {
+      topProductsDiv.innerHTML = sortedProducts.map(product => `
+        <div class="top-product-item">
+          <strong>${product.name}</strong>
+          <span>${product.quantity} sold - ${product.revenue.toFixed(2)} €</span>
+        </div>
+      `).join('');
     }
-  });
-  
-  const sortedProducts = Object.values(productSales).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
-  const topProductsDiv = document.getElementById('topProducts');
-  
-  if (sortedProducts.length === 0) {
-    topProductsDiv.innerHTML = '<p class="empty-state">No sales data available.</p>';
-  } else {
-    topProductsDiv.innerHTML = sortedProducts.map(product => `
-      <div class="top-product-item">
-        <strong>${product.name}</strong>
-        <span>${product.quantity} sold - ${product.revenue.toFixed(2)} €</span>
-      </div>
-    `).join('');
   }
   
   // Generate sales trend chart
@@ -1005,11 +932,11 @@ function generateSalesChart(orders) {
   // Group orders by date
   const salesByDate = {};
   orders.forEach(order => {
-    const date = new Date(order.date).toLocaleDateString();
+    const date = new Date(order.created_at).toLocaleDateString();
     if (!salesByDate[date]) {
       salesByDate[date] = 0;
     }
-    salesByDate[date] += order.total;
+    salesByDate[date] += order.total || 0;
   });
   
   // Get last 7 days of data
@@ -1041,29 +968,13 @@ function generateSalesChart(orders) {
 }
 
 function loadShippingMethods() {
-  const shippingMethods = JSON.parse(localStorage.getItem('fl_shippingMethods')) || [];
+  // Shipping methods not migrated to Supabase yet - showing placeholder
   const tbody = document.getElementById('shippingMethodsBody');
-  
-  if (shippingMethods.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No shipping methods configured.</td></tr>';
-    return;
-  }
-  
-  tbody.innerHTML = shippingMethods.map(method => `
-    <tr>
-      <td>${method.name}</td>
-      <td>${method.description}</td>
-      <td>${method.price.toFixed(2)} €</td>
-      <td>${method.deliveryTime}</td>
-      <td>
-        <button class="secondary-btn" onclick="deleteShippingMethod('${method.id}')">Delete</button>
-      </td>
-    </tr>
-  `).join('');
+  tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Shipping methods not yet migrated to Supabase.</td></tr>';
 }
 
 function showAddShippingForm() {
-  document.getElementById('addShippingForm').style.display = 'block';
+  alert('Shipping methods not yet migrated to Supabase');
 }
 
 function hideAddShippingForm() {
@@ -1072,83 +983,21 @@ function hideAddShippingForm() {
 
 function addShippingMethod(e) {
   e.preventDefault();
-  
-  const newMethod = {
-    id: 'shipping_' + Date.now(),
-    name: e.target.name.value,
-    description: e.target.description.value,
-    price: parseFloat(e.target.price.value),
-    deliveryTime: e.target.deliveryTime.value
-  };
-  
-  const shippingMethods = JSON.parse(localStorage.getItem('fl_shippingMethods')) || [];
-  shippingMethods.push(newMethod);
-  localStorage.setItem('fl_shippingMethods', JSON.stringify(shippingMethods));
-  
-  hideAddShippingForm();
-  loadShippingMethods();
-  e.target.reset();
-  alert('Shipping method added successfully');
+  alert('Shipping methods not yet migrated to Supabase');
 }
 
 function deleteShippingMethod(methodId) {
-  if (!confirm('Are you sure you want to delete this shipping method?')) return;
-  
-  const shippingMethods = JSON.parse(localStorage.getItem('fl_shippingMethods')) || [];
-  const updatedMethods = shippingMethods.filter(m => m.id !== methodId);
-  localStorage.setItem('fl_shippingMethods', JSON.stringify(updatedMethods));
-  
-  loadShippingMethods();
-  alert('Shipping method deleted');
+  alert('Shipping methods not yet migrated to Supabase');
 }
 
 function loadMessages() {
-  const messages = JSON.parse(localStorage.getItem('fl_messages')) || [];
+  // Messages not migrated to Supabase yet - showing placeholder
   const tbody = document.getElementById('messagesTableBody');
-  
-  if (messages.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No messages yet.</td></tr>';
-    return;
-  }
-  
-  tbody.innerHTML = messages.map(message => `
-    <tr>
-      <td>${message.name}</td>
-      <td>${message.email}</td>
-      <td>${message.subject}</td>
-      <td>${new Date(message.createdAt).toLocaleDateString()}</td>
-      <td><span class="status-${message.status.toLowerCase()}">${message.status}</span></td>
-      <td>
-        <button class="secondary-btn" onclick="viewMessage('${message.id}')">View</button>
-        <button class="secondary-btn" onclick="deleteMessage('${message.id}')">Delete</button>
-      </td>
-    </tr>
-  `).join('');
+  tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Messages not yet migrated to Supabase.</td></tr>';
 }
 
 function viewMessage(messageId) {
-  const messages = JSON.parse(localStorage.getItem('fl_messages')) || [];
-  const message = messages.find(m => m.id === messageId);
-  
-  if (!message) {
-    alert('Message not found');
-    return;
-  }
-  
-  const detailContent = document.getElementById('messageDetailContent');
-  detailContent.innerHTML = `
-    <p><strong>From:</strong> ${message.name}</p>
-    <p><strong>Email:</strong> ${message.email}</p>
-    <p><strong>Subject:</strong> ${message.subject}</p>
-    <p><strong>Date:</strong> ${new Date(message.createdAt).toLocaleString()}</p>
-    <p><strong>Status:</strong> ${message.status}</p>
-    <div style="margin-top: 16px; padding: 16px; background: var(--paper); border: 1px solid var(--line);">
-      <p>${message.message}</p>
-    </div>
-  `;
-  
-  document.getElementById('messageDetailModal').style.display = 'block';
-  document.getElementById('messageDetailModal').dataset.messageId = messageId;
+  alert('Messages not yet migrated to Supabase');
 }
 
 function closeMessageDetail() {
@@ -1157,50 +1006,11 @@ function closeMessageDetail() {
 }
 
 function sendReply() {
-  const messageId = document.getElementById('messageDetailModal').dataset.messageId;
-  const replyText = document.getElementById('replyMessage').value.trim();
-  
-  if (!replyText) {
-    alert('Please enter a reply message');
-    return;
-  }
-  
-  const messages = JSON.parse(localStorage.getItem('fl_messages')) || [];
-  const messageIndex = messages.findIndex(m => m.id === messageId);
-  
-  if (messageIndex !== -1) {
-    messages[messageIndex].status = 'Replied';
-    messages[messageIndex].repliedAt = new Date().toISOString();
-    messages[messageIndex].reply = replyText;
-    
-    localStorage.setItem('fl_messages', JSON.stringify(messages));
-    
-    // Log email sent
-    const emailLog = JSON.parse(localStorage.getItem('fl_emailLog')) || [];
-    emailLog.push({
-      type: 'reply',
-      to: messages[messageIndex].email,
-      sentAt: new Date().toISOString(),
-      status: 'sent',
-      orderId: null
-    });
-    localStorage.setItem('fl_emailLog', JSON.stringify(emailLog));
-    
-    loadMessages();
-    closeMessageDetail();
-    alert('Reply sent successfully');
-  }
+  alert('Messages not yet migrated to Supabase');
 }
 
 function deleteMessage(messageId) {
-  if (!confirm('Are you sure you want to delete this message?')) return;
-  
-  const messages = JSON.parse(localStorage.getItem('fl_messages')) || [];
-  const updatedMessages = messages.filter(m => m.id !== messageId);
-  localStorage.setItem('fl_messages', JSON.stringify(updatedMessages));
-  
-  loadMessages();
-  alert('Message deleted');
+  alert('Messages not yet migrated to Supabase');
 }
 
 function showAddProductForm() {
@@ -1211,7 +1021,7 @@ function hideAddProductForm() {
   document.getElementById('addProductForm').style.display = 'none';
 }
 
-function addProduct(e) {
+async function addProduct(e) {
   e.preventDefault();
   const formData = new FormData(e.target);
   
@@ -1229,79 +1039,51 @@ function addProduct(e) {
     available: true
   };
   
-  ProductCatalog.addProduct(newProduct);
-  hideAddProductForm();
-  e.target.reset();
-  loadProducts();
-  alert('Product added successfully!');
-}
-
-function deleteProduct(productId) {
-  if (confirm('Are you sure you want to delete this product?')) {
-    ProductCatalog.deleteProduct(productId);
-    loadProducts();
-    alert('Product deleted successfully!');
+  const { error } = await window.supabase
+    .from('products')
+    .insert(newProduct);
+  
+  if (error) {
+    alert('Error adding product: ' + error.message);
+  } else {
+    hideAddProductForm();
+    e.target.reset();
+    await loadProducts();
+    alert('Product added successfully!');
   }
 }
 
-function editProduct(productId) {
-  const product = ProductCatalog.getById(productId);
-  if (!product) return;
+async function deleteProduct(productId) {
+  if (confirm('Are you sure you want to delete this product?')) {
+    const { error } = await window.supabase
+      .from('products')
+      .delete()
+      .eq('id', productId);
+    
+    if (error) {
+      alert('Error deleting product: ' + error.message);
+    } else {
+      await loadProducts();
+      alert('Product deleted successfully!');
+    }
+  }
+}
+
+async function editProduct(productId) {
+  const { data: product, error } = await window.supabase
+    .from('products')
+    .select('*')
+    .eq('id', productId)
+    .single();
+  
+  if (error || !product) {
+    alert('Product not found');
+    return;
+  }
   
   alert(`Edit functionality for product ${productId} would open here.\n\nCurrent product: ${product.name}\nPrice: ${product.price} €\nStock: ${product.stock}`);
 }
 
-// Check admin password
-function checkAdminPassword(event) {
-  event.preventDefault();
-  
-  const password = document.getElementById('adminPassword').value;
-  const loginError = document.getElementById('loginError');
-  
-  // Simple password check (in production, use server-side authentication)
-  const ADMIN_PASSWORD = 'fl_admin_2024';
-  
-  if (password === ADMIN_PASSWORD) {
-    // Store authentication in session
-    sessionStorage.setItem('adminAuthenticated', 'true');
-    
-    // Show dashboard
-    document.getElementById('adminLoginForm').style.display = 'none';
-    document.getElementById('adminDashboard').style.display = 'block';
-    
-    // Initialize dashboard
-    loadOverview();
-    loadProducts();
-    loadUsers();
-    loadOrders();
-    loadEmails();
-  } else {
-    loginError.style.display = 'block';
-    document.getElementById('adminPassword').value = '';
-  }
-}
-
-// Check if already authenticated
-function checkAdminSession() {
-  const isAuthenticated = sessionStorage.getItem('adminAuthenticated');
-  
-  if (isAuthenticated === 'true') {
-    document.getElementById('adminLoginForm').style.display = 'none';
-    document.getElementById('adminDashboard').style.display = 'block';
-    
-    // Initialize dashboard
-    loadOverview();
-    loadProducts();
-    loadUsers();
-    loadOrders();
-    loadEmails();
-  }
-}
-
-// Initialize admin dashboard
-document.addEventListener('DOMContentLoaded', () => {
-  checkAdminSession();
-});
 </script>
 </body>
 </html>
