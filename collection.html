@@ -240,8 +240,14 @@
 </script>
 <script>
 // Load products dynamically from ProductCatalog
-function loadProducts(productsToLoad = null) {
+async function loadProducts(productsToLoad = null) {
   const productGrid = document.getElementById('productGrid');
+  
+  // First load products from Supabase if not provided
+  if (!productsToLoad) {
+    await ProductCatalog.getAll();
+  }
+  
   const products = productsToLoad || ProductCatalog.getAvailable();
   
   if (products.length === 0) {
@@ -463,8 +469,8 @@ function clearSearch() {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-  loadProducts();
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadProducts();
 });
 </script>
 
