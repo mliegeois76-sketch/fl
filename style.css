@@ -284,13 +284,13 @@ nav.menu-nav a.active {
 header{position:fixed;top:0;left:0;right:0;z-index:100000;display:flex !important;justify-content:space-between;align-items:center;padding:20px 5vw;background:rgba(25,24,23,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);visibility:visible !important;opacity:1 !important;}
 header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;font-weight:300;color:var(--white);text-decoration:none;}
 #mainNav{display:flex;gap:40px;}
-#mainNav a{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--stone);transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);position:relative;}
-#mainNav a:hover{color:var(--white);}
+#mainNav a{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white);transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);position:relative;}
+#mainNav a:hover{color:var(--bronze);}
 #mainNav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--ink);transition:width 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
 #mainNav a:hover::after{width:100%;}
 #mainNav a.active{color:var(--ink);font-weight:500;}
 .header-actions{display:flex !important;align-items:center;gap:16px;visibility:visible !important;opacity:1 !important;}
-.nav-toggle{display:none;background:none;border:none;color:var(--ink);font-size:14px;cursor:pointer;}
+.nav-toggle{display:none;background:none;border:none;color:var(--white);font-size:14px;cursor:pointer;}
 @media (max-width:1024px){
   nav{gap:20px;}
   .header-actions{gap:8px;}
