@@ -21,7 +21,7 @@
   <div id="result" class="result"></div>
 
 <script>
-  const supabase = supabase.createClient('https://yytxrapemcsloyuqewhf.supabase.co', 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl');
+  const testSupabase = supabase.createClient('https://yytxrapemcsloyuqewhf.supabase.co', 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl');
 
   // Auto-run test on page load
   document.addEventListener('DOMContentLoaded', async () => {
@@ -32,7 +32,7 @@
     
     try {
       console.log('Testing Supabase connection...');
-      const { data, error } = await supabase
+      const { data, error } = await testSupabase
         .from('products')
         .select('*');
       
