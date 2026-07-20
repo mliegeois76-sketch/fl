@@ -25,28 +25,30 @@
 
   // Auto-run test on page load
   document.addEventListener('DOMContentLoaded', async () => {
-    await testProducts();
-  });
-
-  async function testProducts() {
+    console.log('DOM loaded, starting test...');
     const resultDiv = document.getElementById('result');
     resultDiv.className = 'result info';
-    resultDiv.textContent = 'Chargement...';
-
+    resultDiv.textContent = 'Test en cours...';
+    
     try {
+      console.log('Testing Supabase connection...');
       const { data, error } = await supabase
         .from('products')
         .select('*');
+      
+      console.log('Response:', { data, error });
 
       if (error) {
         resultDiv.className = 'result error';
-        resultDiv.textContent = 'Erreur: ' + error.message;
+        resultDiv.textContent = 'Erreur Supabase: ' + error.message;
+        console.error('Supabase error:', error);
         return;
       }
 
       if (!data || data.length === 0) {
         resultDiv.className = 'result error';
-        resultDiv.textContent = 'Aucun produit trouvé dans la base de données';
+        resultDiv.textContent = 'Aucun produit trouvé dans la base de données. As-tu exécuté la migration SQL ?';
+        console.warn('No products found');
         return;
       }
 
@@ -55,10 +57,17 @@
         <strong>${data.length} produits trouvés:</strong><br>
         ${data.map(p => `${p.name} - ${p.price}€ - ${p.image_url}`).join('<br>')}
       `;
+      console.log('Products loaded successfully:', data);
     } catch (e) {
       resultDiv.className = 'result error';
-      resultDiv.textContent = 'Erreur: ' + e.message;
+      resultDiv.textContent = 'Erreur JavaScript: ' + e.message;
+      console.error('JavaScript error:', e);
     }
+  });
+
+  async function testProducts() {
+    // Reload page to trigger auto-test
+    location.reload();
   }
 </script>
 </body>
