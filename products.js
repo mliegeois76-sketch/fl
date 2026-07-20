@@ -19,7 +19,7 @@ const ProductCatalog = {
 
   // Get product by ID
   getById(id) {
-    return this.products.find(p => p.id === parseInt(id));
+    return this.products.find(p => p.id === id);
   },
 
   // Get products by category
@@ -108,7 +108,7 @@ const ProductCatalog = {
       return false;
     }
     
-    const index = this.products.findIndex(p => p.id === parseInt(id));
+    const index = this.products.findIndex(p => p.id === id);
     if (index !== -1) {
       this.products[index] = { ...this.products[index], ...updates };
       this.products[index].available = this.products[index].stock > 0;
@@ -129,7 +129,7 @@ const ProductCatalog = {
       return false;
     }
     
-    const index = this.products.findIndex(p => p.id === parseInt(id));
+    const index = this.products.findIndex(p => p.id === id);
     if (index !== -1) {
       this.products.splice(index, 1);
       return true;

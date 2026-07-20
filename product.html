@@ -215,7 +215,10 @@
 </script>
 <script>
 // Load product details from URL parameter
-function loadProductDetails() {
+async function loadProductDetails() {
+  // Wait for products to be loaded from Supabase
+  await ProductCatalog.getAll();
+  
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get('id');
   
@@ -276,8 +279,8 @@ function loadProductDetails() {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-  loadProductDetails();
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadProductDetails();
   
   // Initialize SEO for product page
   if (typeof SEOService !== 'undefined') {

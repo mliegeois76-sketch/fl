@@ -225,6 +225,11 @@
 
 <footer id="site-footer"></footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  window.supabase = supabase.createClient('https://yytxrapemcsloyuqewhf.supabase.co', 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl');
+</script>
+<script src="cursor.js"></script>
 <script src="cart.js"></script>
 <script src="auth.js"></script>
 <script src="wishlist.js"></script>
@@ -232,6 +237,11 @@
 <script src="scroll-animations.js"></script>
 <script src="page-transitions.js"></script>
 <script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script>
+  const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  (function raf(time) { lenis.raf(time); requestAnimationFrame(raf); })();
+</script>
 <script>
 function showAccountSection(section) {
   document.querySelectorAll('.account-section').forEach(s => s.style.display = 'none');
@@ -626,22 +636,6 @@ async function unsubscribeFromAll() {
     alert('You have been unsubscribed from all emails');
   }
 }
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  window.supabase = supabase.createClient('https://yytxrapemcsloyuqewhf.supabase.co', 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl');
-</script>
-<script src="cursor.js"></script>
-<script src="cart.js"></script>
-<script src="auth.js"></script>
-<script src="i18n.js"></script>
-<script src="main.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
-<script>
-  const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
-  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-  requestAnimationFrame(raf);
 </script>
 </body>
 </html>

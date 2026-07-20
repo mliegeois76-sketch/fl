@@ -214,16 +214,13 @@ class ShoppingCart {
       throw new Error('User not authenticated');
     }
 
-    // Insert order
+    // Insert order (only columns that exist in schema)
     const { data: order, error: orderError } = await window.supabase
       .from('orders')
       .insert({
         user_id: user.id,
         total: this.getCartTotal(),
         status: 'pending',
-        shipping_address: orderData.shippingAddress,
-        billing_address: orderData.billingAddress,
-        payment_method: orderData.paymentMethod,
         created_at: new Date().toISOString()
       })
       .select()
@@ -238,7 +235,7 @@ class ShoppingCart {
       order_id: order.id,
       product_id: item.id,
       quantity: item.quantity,
-      price: item.price
+      price_at_purchase: item.price
     }));
 
     const { error: itemsError } = await window.supabase
@@ -251,10 +248,18 @@ class ShoppingCart {
 
     // Decrease product stock
     for (const item of this.cart) {
-      await window.supabase
+      const { data: product } = await window.supabase
         .from('products')
-        .update({ stock: window.supabase.rpc('decrement_stock', { product_id: item.id, qty: item.quantity }) })
-        .eq('id', item.id);
+        .select('stock')
+        .eq('id', item.id)
+        .single();
+      
+      if (product) {
+        await window.supabase
+          .from('products')
+          .update({ stock: product.stock - item.quantity })
+          .eq('id', item.id);
+      }
     }
 
     // Clear cart after successful order
