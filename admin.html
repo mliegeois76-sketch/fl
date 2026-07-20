@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.emailjs.com https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://yytxrapemcsloyuqewhf.supabase.co https://api.emailjs.com;">
 <title>Admin Dashboard — FL Sculptures</title>
 <meta name="description" content="Admin dashboard for FL Sculptures">
 <meta name="robots" content="noindex, nofollow">
@@ -11,23 +12,6 @@
 <body>
 
 <div class="page-transition"></div>
-
-<!-- Admin Login Form -->
-<div id="adminLoginForm" style="display: flex;">
-  <div class="admin-login-container">
-    <h2>Admin Access</h2>
-    <p>Enter password to access the dashboard</p>
-    <form id="adminPasswordForm" onsubmit="checkAdminPassword(event)">
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="adminPassword" required>
-      </div>
-      <button type="submit" class="checkout-btn">Access Dashboard</button>
-      <button type="button" class="secondary-btn" onclick="window.location.href='index.html'">Cancel</button>
-    </form>
-    <p id="loginError" style="color: #E74C3C; margin-top: 16px; display: none;">Incorrect password</p>
-  </div>
-</div>
 
 <!-- Admin Dashboard -->
 <div id="adminDashboard" style="display: none;">
@@ -449,6 +433,14 @@
 <script src="main.js"></script>
 <script src="data-export.js"></script>
 <script>
+// HTML escape function to prevent XSS
+function escapeHtml(text) {
+  if (text === null || text === undefined) return '';
+  const div = document.createElement('div');
+  div.textContent = String(text);
+  return div.innerHTML;
+}
+
 // Admin authentication check - Supabase auth + RLS
 document.addEventListener('DOMContentLoaded', async () => {
   await checkAdminAccess();
@@ -463,12 +455,22 @@ async function checkAdminAccess() {
     return false;
   }
   
-  // User is authenticated, show dashboard
-  // RLS policies will handle admin access on server-side
-  const loginForm = document.getElementById('adminLoginForm');
+  // Check if user is admin
+  const { data: profile, error: profileError } = await window.supabase
+    .from('profiles')
+    .select('is_admin')
+    .eq('id', user.id)
+    .single();
+  
+  if (profileError || !profile || !profile.is_admin) {
+    // Not admin, redirect to home
+    window.location.href = 'index.html';
+    return false;
+  }
+  
+  // User is admin, show dashboard
   const adminDashboardDiv = document.getElementById('adminDashboard');
   
-  if (loginForm) loginForm.style.display = 'none';
   if (adminDashboardDiv) adminDashboardDiv.style.display = 'block';
   
   // Load initial data
@@ -585,9 +587,9 @@ async function loadUsers() {
   
   tbody.innerHTML = profiles.map(profile => `
     <tr>
-      <td><code>${profile.id}</code></td>
-      <td>${profile.first_name || ''} ${profile.last_name || ''}</td>
-      <td>${profile.email || ''}</td>
+      <td><code>${escapeHtml(profile.id)}</code></td>
+      <td>${escapeHtml(profile.first_name || '')} ${escapeHtml(profile.last_name || '')}</td>
+      <td>${escapeHtml(profile.email || '')}</td>
       <td>${new Date(profile.created_at).toLocaleDateString()}</td>
       <td>-</td>
       <td>
@@ -611,12 +613,12 @@ async function loadOrders() {
   
   tbody.innerHTML = orders.map(order => `
     <tr>
-      <td><code>${order.id}</code></td>
-      <td>${order.profiles ? order.profiles.first_name + ' ' + order.profiles.last_name : 'Unknown'}</td>
+      <td><code>${escapeHtml(order.id)}</code></td>
+      <td>${order.profiles ? escapeHtml(order.profiles.first_name) + ' ' + escapeHtml(order.profiles.last_name) : 'Unknown'}</td>
       <td>${order.total.toFixed(2)} €</td>
       <td>${new Date(order.created_at).toLocaleDateString()}</td>
       <td>
-        <select class="status-select" onchange="updateOrderStatus('${order.id}', this.value)">
+        <select class="status-select" onchange="updateOrderStatus('${escapeHtml(order.id)}', this.value)">
           <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
           <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
           <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
@@ -625,7 +627,7 @@ async function loadOrders() {
         </select>
       </td>
       <td>
-        <button class="secondary-btn" onclick="viewOrderDetails('${order.id}')">View</button>
+        <button class="secondary-btn" onclick="viewOrderDetails('${escapeHtml(order.id)}')">View</button>
       </td>
     </tr>
   `).join('');
@@ -660,7 +662,7 @@ async function viewOrderDetails(orderId) {
   
   const itemsHTML = order.order_items ? order.order_items.map(item => `
     <div class="order-detail-item">
-      <strong>${item.products ? item.products.name : 'Unknown Product'}</strong>
+      <strong>${item.products ? escapeHtml(item.products.name) : 'Unknown Product'}</strong>
       <span>Qty: ${item.quantity}</span>
       <span>${(item.price * item.quantity).toFixed(2)} €</span>
     </div>
@@ -669,8 +671,8 @@ async function viewOrderDetails(orderId) {
   const customerHTML = order.profiles ? `
     <div class="order-detail-section">
       <h4>Customer Information</h4>
-      <p><strong>Name:</strong> ${order.profiles.first_name} ${order.profiles.last_name}</p>
-      <p><strong>Email:</strong> ${order.profiles.email}</p>
+      <p><strong>Name:</strong> ${escapeHtml(order.profiles.first_name)} ${escapeHtml(order.profiles.last_name)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(order.profiles.email)}</p>
     </div>
   ` : '<div class="order-detail-section"><h4>Customer Information</h4><p>Unknown</p></div>';
   
@@ -679,14 +681,14 @@ async function viewOrderDetails(orderId) {
   orderModal.innerHTML = `
     <div class="tracking-content order-detail-modal">
       <button class="tracking-close" onclick="this.closest('.tracking-modal').remove()">×</button>
-      <h3>Order Details: ${order.id}</h3>
+      <h3>Order Details: ${escapeHtml(order.id)}</h3>
       
       <div class="order-detail-section">
         <h4>Order Information</h4>
-        <p><strong>Order ID:</strong> ${order.id}</p>
+        <p><strong>Order ID:</strong> ${escapeHtml(order.id)}</p>
         <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
-        <p><strong>Status:</strong> ${order.status}</p>
-        <p><strong>Payment Method:</strong> ${order.payment_method || 'Card'}</p>
+        <p><strong>Status:</strong> ${escapeHtml(order.status)}</p>
+        <p><strong>Payment Method:</strong> ${escapeHtml(order.payment_method || 'Card')}</p>
         <p><strong>Total:</strong> ${order.total.toFixed(2)} €</p>
       </div>
       
@@ -743,15 +745,15 @@ async function loadProducts() {
   
   tbody.innerHTML = products.map(product => `
     <tr>
-      <td><code>${product.id}</code></td>
-      <td>${product.name}</td>
-      <td>${product.category}</td>
+      <td><code>${escapeHtml(product.id)}</code></td>
+      <td>${escapeHtml(product.name)}</td>
+      <td>${escapeHtml(product.category)}</td>
       <td>${product.price.toFixed(2)} €</td>
       <td class="${product.stock < 5 ? 'stock-warning' : ''}">${product.stock}</td>
       <td>
-        <button class="secondary-btn" onclick="editProduct(${product.id})">Edit</button>
-        <button class="secondary-btn" onclick="updateStock(${product.id})">Update Stock</button>
-        <button class="secondary-btn" onclick="deleteProduct(${product.id})">Delete</button>
+        <button class="secondary-btn" onclick="editProduct('${escapeHtml(product.id)}')">Edit</button>
+        <button class="secondary-btn" onclick="updateStock('${escapeHtml(product.id)}')">Update Stock</button>
+        <button class="secondary-btn" onclick="deleteProduct('${escapeHtml(product.id)}')">Delete</button>
       </td>
     </tr>
   `).join('');
@@ -777,8 +779,8 @@ async function showLowStockAlerts() {
   const itemsHtml = lowStockProducts.map(product => `
     <div class="low-stock-item">
       <div>
-        <strong>${product.name}</strong>
-        <span>ID: ${product.id}</span>
+        <strong>${escapeHtml(product.name)}</strong>
+        <span>ID: ${escapeHtml(product.id)}</span>
       </div>
       <span class="stock-warning">${product.stock} units</span>
     </div>
@@ -910,7 +912,7 @@ async function loadAnalytics() {
     } else {
       topProductsDiv.innerHTML = sortedProducts.map(product => `
         <div class="top-product-item">
-          <strong>${product.name}</strong>
+          <strong>${escapeHtml(product.name)}</strong>
           <span>${product.quantity} sold - ${product.revenue.toFixed(2)} €</span>
         </div>
       `).join('');

@@ -35,7 +35,6 @@ class ShoppingCart {
       if (e.target.closest('.cart-toggle')) {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Cart toggle clicked');
         this.toggleCart();
       }
     });
@@ -168,12 +167,9 @@ class ShoppingCart {
   }
 
   toggleCart() {
-    console.log('toggleCart called');
     const cartSidebar = document.querySelector('.cart-sidebar');
-    console.log('Cart sidebar found:', cartSidebar);
     if (cartSidebar) {
       cartSidebar.classList.toggle('open');
-      console.log('Cart sidebar classes after toggle:', cartSidebar.className);
     }
   }
 
@@ -210,15 +206,17 @@ class ShoppingCart {
   async createOrder(orderData) {
     const { data: { user }, error: authError } = await window.supabase.auth.getUser();
     
-    if (authError || !user) {
-      throw new Error('User not authenticated');
-    }
+    // Determine if user is authenticated or guest
+    const isGuest = authError || !user;
+    const userId = isGuest ? null : user.id;
+    const guestEmail = isGuest ? orderData.shippingAddress?.email : null;
 
     // Insert order (only columns that exist in schema)
     const { data: order, error: orderError } = await window.supabase
       .from('orders')
       .insert({
-        user_id: user.id,
+        user_id: userId,
+        guest_email: guestEmail,
         total: this.getCartTotal(),
         status: 'pending',
         created_at: new Date().toISOString()

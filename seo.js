@@ -220,7 +220,6 @@ Sitemap: ${window.location.origin}/sitemap.xml`;
    */
   trackPageView(pageName) {
     // This can be extended with Google Analytics or other tracking
-    console.log('Page view tracked:', pageName);
     
     // Store page view in localStorage for analytics
     const pageViews = JSON.parse(localStorage.getItem('fl_pageViews')) || {};
@@ -239,8 +238,6 @@ Sitemap: ${window.location.origin}/sitemap.xml`;
       value,
       timestamp: new Date().toISOString()
     };
-    
-    console.log('Event tracked:', event);
     
     // Store event in localStorage for analytics
     const events = JSON.parse(localStorage.getItem('fl_events')) || [];
