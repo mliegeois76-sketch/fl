@@ -23,6 +23,11 @@ drop policy if exists "users can view own order items" on public.order_items;
 drop policy if exists "users can insert own order items" on public.order_items;
 drop policy if exists "admins can insert order items" on public.order_items;
 
+-- Drop existing products policies
+drop policy if exists "products are publicly viewable" on public.products;
+drop policy if exists "only authenticated can insert products" on public.products;
+drop policy if exists "only authenticated can update products" on public.products;
+
 -- Create simplified policies without circular dependency
 -- Orders policies
 create policy "users can view own orders"
