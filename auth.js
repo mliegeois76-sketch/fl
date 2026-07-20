@@ -101,19 +101,19 @@ class AuthSystem {
     if (mode === 'signin') {
       signinForm.style.display = 'block';
       signupForm.style.display = 'none';
-      resetForm.style.display = 'none';
+      if (resetForm) resetForm.style.display = 'none';
       signinTab?.classList.add('active');
       signupTab?.classList.remove('active');
     } else if (mode === 'signup') {
       signinForm.style.display = 'none';
       signupForm.style.display = 'block';
-      resetForm.style.display = 'none';
+      if (resetForm) resetForm.style.display = 'none';
       signinTab?.classList.remove('active');
       signupTab?.classList.add('active');
     } else if (mode === 'reset') {
       signinForm.style.display = 'none';
       signupForm.style.display = 'none';
-      resetForm.style.display = 'block';
+      if (resetForm) resetForm.style.display = 'block';
       signinTab?.classList.remove('active');
       signupTab?.classList.remove('active');
     }
