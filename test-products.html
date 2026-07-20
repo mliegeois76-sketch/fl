@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Products</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+  .result { margin: 10px 0; padding: 10px; border-radius: 3px; }
+  .success { background: #d4edda; color: #155724; }
+  .error { background: #f8d7da; color: #721c24; }
+  .info { background: #d1ecf1; color: #0c5460; }
+  button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <h1>Test Products Supabase</h1>
+  
+  <button onclick="testProducts()">Tester les produits</button>
+  <div id="result" class="result"></div>
+
+<script>
+  const supabase = supabase.createClient('https://yytxrapemcsloyuqewhf.supabase.co', 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl');
+
+  async function testProducts() {
+    const resultDiv = document.getElementById('result');
+    resultDiv.className = 'result info';
+    resultDiv.textContent = 'Chargement...';
+
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*');
+
+      if (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = 'Erreur: ' + error.message;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = 'Aucun produit trouvé dans la base de données';
+        return;
+      }
+
+      resultDiv.className = 'result success';
+      resultDiv.innerHTML = `
+        <strong>${data.length} produits trouvés:</strong><br>
+        ${data.map(p => `${p.name} - ${p.price}€ - ${p.image_url}`).join('<br>')}
+      `;
+    } catch (e) {
+      resultDiv.className = 'result error';
+      resultDiv.textContent = 'Erreur: ' + e.message;
+    }
+  }
+</script>
+</body>
+</html>
