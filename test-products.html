@@ -23,6 +23,11 @@
 <script>
   const supabase = supabase.createClient('https://yytxrapemcsloyuqewhf.supabase.co', 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl');
 
+  // Auto-run test on page load
+  document.addEventListener('DOMContentLoaded', async () => {
+    await testProducts();
+  });
+
   async function testProducts() {
     const resultDiv = document.getElementById('result');
     resultDiv.className = 'result info';
