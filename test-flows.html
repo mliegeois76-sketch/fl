@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test FL Flows</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+  .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+  .test-section h3 { margin-top: 0; }
+  .result { margin: 10px 0; padding: 10px; border-radius: 3px; }
+  .success { background: #d4edda; color: #155724; }
+  .error { background: #f8d7da; color: #721c24; }
+  .info { background: #d1ecf1; color: #0c5460; }
+  button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+  input { padding: 8px; margin: 5px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <h1>Test FL Sculptures Flows</h1>
+  
+  <div class="test-section">
+    <h3>1. Test Supabase Connection</h3>
+    <button onclick="testSupabaseConnection()">Tester connexion</button>
+    <div id="supabase-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h3>2. Test Products</h3>
+    <button onclick="testProducts()">Tester produits</button>
+    <div id="products-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h3>3. Test Auth - Sign Up</h3>
+    <input type="email" id="test-email" placeholder="email@test.com" value="test@example.com">
+    <input type="password" id="test-password" placeholder="password" value="test123456">
+    <button onclick="testSignUp()">S'inscrire</button>
+    <div id="signup-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h3>4. Test Auth - Sign In</h3>
+    <button onclick="testSignIn()">Se connecter</button>
+    <div id="signin-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h3>5. Test Guest Order Creation</h3>
+    <button onclick="testGuestOrder()">Créer commande guest</button>
+    <div id="guest-order-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h3>6. Test EmailJS</h3>
+    <button onclick="testEmailJS()">Tester EmailJS</button>
+    <div id="emailjs-result" class="result"></div>
+  </div>
+
+<script>
+  const supabase = supabase.createClient('https://yytxrapemcsloyuqewhf.supabase.co', 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl');
+
+  function showResult(elementId, message, type) {
+    const element = document.getElementById(elementId);
+    element.className = 'result ' + type;
+    element.textContent = message;
+  }
+
+  async function testSupabaseConnection() {
+    try {
+      const { data, error } = await supabase.from('products').select('count', { count: 'exact', head: true });
+      if (error) throw error;
+      showResult('supabase-result', '✅ Connexion Supabase réussie', 'success');
+    } catch (error) {
+      showResult('supabase-result', '❌ Erreur connexion: ' + error.message, 'error');
+    }
+  }
+
+  async function testProducts() {
+    try {
+      const { data, error } = await supabase.from('products').select('*').limit(5);
+      if (error) throw error;
+      showResult('products-result', `✅ ${data.length} produits trouvés. Premier: ${data[0]?.name || 'N/A'}`, 'success');
+    } catch (error) {
+      showResult('products-result', '❌ Erreur produits: ' + error.message, 'error');
+    }
+  }
+
+  async function testSignUp() {
+    const email = document.getElementById('test-email').value;
+    const password = document.getElementById('test-password').value;
+    try {
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) throw error;
+      showResult('signup-result', '✅ Inscription réussie. User ID: ' + data.user?.id, 'success');
+    } catch (error) {
+      showResult('signup-result', '❌ Erreur inscription: ' + error.message, 'error');
+    }
+  }
+
+  async function testSignIn() {
+    const email = document.getElementById('test-email').value;
+    const password = document.getElementById('test-password').value;
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      showResult('signin-result', '✅ Connexion réussie. User ID: ' + data.user?.id, 'success');
+    } catch (error) {
+      showResult('signin-result', '❌ Erreur connexion: ' + error.message, 'error');
+    }
+  }
+
+  async function testGuestOrder() {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .insert({
+          user_id: null,
+          guest_email: 'test@example.com',
+          total: 100.00,
+          status: 'pending',
+          created_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      showResult('guest-order-result', '✅ Commande guest créée. Order ID: ' + data.id, 'success');
+    } catch (error) {
+      showResult('guest-order-result', '❌ Erreur commande guest: ' + error.message, 'error');
+    }
+  }
+
+  async function testEmailJS() {
+    try {
+      if (typeof emailjs === 'undefined') {
+        showResult('emailjs-result', '❌ EmailJS non chargé', 'error');
+        return;
+      }
+      showResult('emailjs-result', 'ℹ️ EmailJS chargé. Configurez les credentials dans emailjs.js', 'info');
+    } catch (error) {
+      showResult('emailjs-result', '❌ Erreur EmailJS: ' + error.message, 'error');
+    }
+  }
+</script>
+</body>
+</html>
