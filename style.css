@@ -290,8 +290,10 @@ header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;f
 #mainNav a:hover::after{width:100%;}
 #mainNav a.active{color:var(--ink);font-weight:500;}
 .header-actions{display:flex !important;align-items:center;gap:16px;visibility:visible !important;opacity:1 !important;}
-.header-actions button{color:var(--white);background:none;border:none;cursor:pointer;padding:8px 12px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
-.header-actions button:hover{color:var(--bronze);}
+.header-actions button{color:var(--white) !important;background:none;border:none;cursor:pointer;padding:8px 12px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
+.header-actions button:hover{color:var(--bronze) !important;}
+.header-actions a{color:var(--white) !important;text-decoration:none;padding:8px 12px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
+.header-actions a:hover{color:var(--bronze) !important;}
 .nav-toggle{display:none;background:none;border:none;color:var(--white);font-size:14px;cursor:pointer;}
 @media (max-width:1024px){
   nav{gap:20px;}
