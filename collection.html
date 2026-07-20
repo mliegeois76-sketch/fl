@@ -262,20 +262,17 @@ async function loadProducts(productsToLoad = null) {
       : '';
     
     return `
-    <div class="piece ${product.size}">
+    <div class="piece ${product.size || 'medium'}">
       <div class="piece-visual">
-        <svg viewBox="0 0 200 200">
-          <path d="M60 180 C40 120 55 60 100 20 C145 60 160 120 140 180 Z" fill="#8A6E4F" opacity="0.85"/>
-        </svg>
+        <img src="${product.image_url}" alt="${product.name}" onerror="this.src='logo.jpg'">
       </div>
-      <div>
+      <div class="piece-info">
         <div class="piece-name serif">${product.name}</div>
-        <div class="piece-meta">${product.material} — ${product.dimensions} — ${product.weight}</div>
+        <div class="piece-description">${product.description || ''}</div>
+        <div class="piece-price">
+          <span>${product.price.toFixed(2)} €</span>
+        </div>
         ${ratingDisplay}
-      </div>
-      <div class="piece-price">
-        <span>${product.price.toFixed(2)} €</span>
-        <span class="stock-badge">${product.stock > 0 ? product.stock + ' in stock' : 'Out of stock'}</span>
         <div class="piece-actions">
           <button class="add-to-cart" 
                   data-product-id="${product.id}" 
@@ -283,7 +280,7 @@ async function loadProducts(productsToLoad = null) {
                   data-product-price="${product.price}" 
                   data-product-image="${product.image}"
                   ${product.stock === 0 ? 'disabled' : ''}>
-            ${product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+            ${product.stock > 0 ? 'Ajouter au panier' : 'Rupture de stock'}
           </button>
           <button class="wishlist-btn" 
                   data-product-id="${product.id}" 
