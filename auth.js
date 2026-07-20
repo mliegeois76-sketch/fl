@@ -241,7 +241,7 @@ class AuthSystem {
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
-        redirectTo: window.location.origin
+        redirectTo: window.location.href.split('#')[0]
       }
     });
 
@@ -426,7 +426,7 @@ class AuthSystem {
     }
 
     const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password.html`
+      redirectTo: window.location.href.split('#')[0].replace(/\/[^/]*$/, '/reset-password.html')
     });
 
     if (error) {
