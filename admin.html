@@ -445,52 +445,21 @@
 <script src="main.js"></script>
 <script src="data-export.js"></script>
 <script>
-// Admin authentication check
+// Admin authentication check - RLS handles protection server-side
 document.addEventListener('DOMContentLoaded', () => {
   checkAdminAccess();
 });
 
 function checkAdminAccess() {
-  const currentUser = JSON.parse(localStorage.getItem('fl_currentUser'));
+  // RLS policy handles admin protection on Supabase
+  // Just show the dashboard for authenticated users
   const adminDashboard = document.querySelector('.admin-dashboard');
-  const loginCheck = document.getElementById('adminLoginCheck');
+  const loginForm = document.getElementById('adminLoginForm');
+  const adminDashboardDiv = document.getElementById('adminDashboard');
   
-  // Check if user is logged in and is admin
-  if (!currentUser || !currentUser.isAdmin) {
-    // Hide dashboard and show login check
-    if (adminDashboard) adminDashboard.style.display = 'none';
-    if (loginCheck) loginCheck.style.display = 'block';
-    return false;
-  }
-  
-  // User is admin, show dashboard
-  if (adminDashboard) adminDashboard.style.display = 'block';
-  if (loginCheck) loginCheck.style.display = 'none';
-  
-  // Load initial data
-  loadOverview();
-  return true;
-}
-
-// Make admin user function (for testing - should be removed in production)
-function makeUserAdmin(email) {
-  const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-  const userIndex = users.findIndex(u => u.email === email);
-  
-  if (userIndex !== -1) {
-    users[userIndex].isAdmin = true;
-    localStorage.setItem('fl_users', JSON.stringify(users));
-    
-    // Update current user if it's the same user
-    const currentUser = JSON.parse(localStorage.getItem('fl_currentUser'));
-    if (currentUser && currentUser.email === email) {
-      currentUser.isAdmin = true;
-      localStorage.setItem('fl_currentUser', JSON.stringify(currentUser));
-    }
-    
-    console.log('User ' + email + ' is now admin');
-    return true;
-  }
+  // Show login form by default, dashboard will be shown after auth
+  if (loginForm) loginForm.style.display = 'flex';
+  if (adminDashboardDiv) adminDashboardDiv.style.display = 'none';
   
   return false;
 }

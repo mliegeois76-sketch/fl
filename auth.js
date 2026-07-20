@@ -1,13 +1,24 @@
-// Authentication System with localStorage
+// Authentication System with Supabase
 class AuthSystem {
   constructor() {
-    this.currentUser = JSON.parse(localStorage.getItem('fl_currentUser')) || null;
-    this.users = JSON.parse(localStorage.getItem('fl_users')) || [];
+    this.supabase = window.supabase;
+    this.currentUser = null;
     this.init();
   }
 
   init() {
-    this.updateAuthUI();
+    // Check for existing session
+    this.supabase.auth.getSession().then(({ data: { session } }) => {
+      this.currentUser = session?.user || null;
+      this.updateAuthUI();
+    });
+
+    // Listen for auth changes
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      this.currentUser = session?.user || null;
+      this.updateAuthUI();
+    });
+
     this.bindEvents();
   }
 
@@ -119,7 +130,7 @@ class AuthSystem {
     }
   }
 
-  handleSignIn(e) {
+  async handleSignIn(e) {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
@@ -136,20 +147,22 @@ class AuthSystem {
       return;
     }
 
-    const user = this.users.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-      this.currentUser = user;
-      localStorage.setItem('fl_currentUser', JSON.stringify(user));
+    const { data, error } = await this.supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      this.showNotification(error.message, 'error');
+    } else {
+      this.currentUser = data.user;
       this.updateAuthUI();
       this.closeAuthModal();
-      this.showNotification('Welcome back, ' + user.firstName);
-    } else {
-      this.showNotification('Invalid email or password', 'error');
+      this.showNotification('Welcome back');
     }
   }
 
-  handleSignUp(e) {
+  async handleSignUp(e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
@@ -205,77 +218,48 @@ class AuthSystem {
       password: formData.get('password')
     };
 
-    if (this.users.find(u => u.email === sanitized.email)) {
-      this.showNotification('Email already registered', 'error');
-      return;
-    }
-
-    const verificationToken = this.generateVerificationToken();
-    
-    const newUser = {
-      id: 'user_' + Date.now(),
-      firstName: sanitized.firstName,
-      lastName: sanitized.lastName,
+    const { data, error } = await this.supabase.auth.signUp({
       email: sanitized.email,
       password: sanitized.password,
-      createdAt: new Date().toISOString(),
-      emailVerified: false,
-      verificationToken: verificationToken,
-      verificationTokenExpires: new Date(Date.now() + 86400000).toISOString(), // 24 hours
-      addresses: [],
-      orders: []
-    };
+      options: {
+        data: {
+          first_name: sanitized.firstName,
+          last_name: sanitized.lastName
+        }
+      }
+    });
 
-    this.users.push(newUser);
-    localStorage.setItem('fl_users', JSON.stringify(this.users));
-    
-    // Send verification email
-    this.sendVerificationEmail(newUser);
-    
-    this.showNotification('Account created! Please check your email to verify your account.');
-    this.closeAuthModal();
-  }
-
-  handleSocialLogin(provider) {
-    // Simulated social login
-    const simulatedUser = {
-      id: 'user_' + Date.now(),
-      firstName: provider === 'google' ? 'Google' : 'Apple',
-      lastName: 'User',
-      email: `user@${provider}.com`,
-      provider,
-      createdAt: new Date().toISOString(),
-      addresses: [],
-      orders: []
-    };
-
-    // Check if user already exists
-    const existingUser = this.users.find(u => u.email === simulatedUser.email);
-    
-    if (existingUser) {
-      this.currentUser = existingUser;
+    if (error) {
+      this.showNotification(error.message, 'error');
     } else {
-      this.users.push(simulatedUser);
-      localStorage.setItem('fl_users', JSON.stringify(this.users));
-      this.currentUser = simulatedUser;
-    }
-
-    localStorage.setItem('fl_currentUser', JSON.stringify(this.currentUser));
-    this.updateAuthUI();
-    this.closeAuthModal();
-    this.showNotification('Signed in with ' + provider);
-    
-    if (!existingUser) {
-      this.sendWelcomeEmail(this.currentUser);
+      this.showNotification('Account created! Please check your email to verify your account.');
+      this.closeAuthModal();
     }
   }
 
-  signOut() {
-    this.currentUser = null;
-    localStorage.removeItem('fl_currentUser');
-    this.updateAuthUI();
-    this.showNotification('Signed out successfully');
-    window.location.href = 'index.html';
+  async handleSocialLogin(provider) {
+    const { data, error } = await this.supabase.auth.signInWithOAuth({
+      provider: provider,
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+
+    if (error) {
+      this.showNotification(error.message, 'error');
+    }
+  }
+
+  async signOut() {
+    const { error } = await this.supabase.auth.signOut();
+    if (error) {
+      this.showNotification(error.message, 'error');
+    } else {
+      this.currentUser = null;
+      this.updateAuthUI();
+      this.showNotification('Signed out successfully');
+      window.location.href = 'index.html';
+    }
   }
 
   updateAuthUI() {
@@ -287,7 +271,10 @@ class AuthSystem {
       if (userMenu) {
         userMenu.style.display = 'flex';
         const userName = userMenu.querySelector('.user-name');
-        if (userName) userName.textContent = this.currentUser.firstName;
+        if (userName) {
+          const firstName = this.currentUser.user_metadata?.first_name || 'User';
+          userName.textContent = firstName;
+        }
       }
     } else {
       if (authButtons) authButtons.style.display = 'flex';
@@ -316,71 +303,118 @@ class AuthSystem {
     return emailRegex.test(email);
   }
 
-  // Wishlist functionality
-  addToWishlist(productId) {
+  // Wishlist functionality (using Supabase profiles table)
+  async addToWishlist(productId) {
     if (!this.currentUser) {
       this.showNotification('Please sign in to add to wishlist', 'error');
       this.showAuthModal('signin');
       return false;
     }
 
-    if (!this.currentUser.wishlist) {
-      this.currentUser.wishlist = [];
+    const { data: profile, error: fetchError } = await this.supabase
+      .from('profiles')
+      .select('wishlist')
+      .eq('id', this.currentUser.id)
+      .single();
+
+    if (fetchError) {
+      this.showNotification('Error loading wishlist', 'error');
+      return false;
     }
 
-    if (!this.currentUser.wishlist.includes(productId)) {
-      this.currentUser.wishlist.push(productId);
-      this.saveCurrentUser();
-      this.showNotification('Added to wishlist');
-      return true;
-    } else {
+    const wishlist = profile?.wishlist || [];
+    if (wishlist.includes(productId)) {
       this.showNotification('Already in wishlist', 'error');
       return false;
     }
-  }
 
-  removeFromWishlist(productId) {
-    if (!this.currentUser || !this.currentUser.wishlist) {
+    const { error: updateError } = await this.supabase
+      .from('profiles')
+      .update({ wishlist: [...wishlist, productId] })
+      .eq('id', this.currentUser.id);
+
+    if (updateError) {
+      this.showNotification('Error adding to wishlist', 'error');
       return false;
     }
 
-    const index = this.currentUser.wishlist.indexOf(productId);
-    if (index !== -1) {
-      this.currentUser.wishlist.splice(index, 1);
-      this.saveCurrentUser();
-      this.showNotification('Removed from wishlist');
-      return true;
-    }
-    return false;
+    this.showNotification('Added to wishlist');
+    return true;
   }
 
-  isInWishlist(productId) {
-    if (!this.currentUser || !this.currentUser.wishlist) {
+  async removeFromWishlist(productId) {
+    if (!this.currentUser) {
       return false;
     }
-    return this.currentUser.wishlist.includes(productId);
+
+    const { data: profile, error: fetchError } = await this.supabase
+      .from('profiles')
+      .select('wishlist')
+      .eq('id', this.currentUser.id)
+      .single();
+
+    if (fetchError) {
+      return false;
+    }
+
+    const wishlist = profile?.wishlist || [];
+    const index = wishlist.indexOf(productId);
+    if (index === -1) {
+      return false;
+    }
+
+    const newWishlist = wishlist.filter(id => id !== productId);
+
+    const { error: updateError } = await this.supabase
+      .from('profiles')
+      .update({ wishlist: newWishlist })
+      .eq('id', this.currentUser.id);
+
+    if (updateError) {
+      return false;
+    }
+
+    this.showNotification('Removed from wishlist');
+    return true;
   }
 
-  getWishlist() {
-    if (!this.currentUser || !this.currentUser.wishlist) {
+  async isInWishlist(productId) {
+    if (!this.currentUser) {
+      return false;
+    }
+
+    const { data: profile, error } = await this.supabase
+      .from('profiles')
+      .select('wishlist')
+      .eq('id', this.currentUser.id)
+      .single();
+
+    if (error || !profile) {
+      return false;
+    }
+
+    return (profile?.wishlist || []).includes(productId);
+  }
+
+  async getWishlist() {
+    if (!this.currentUser) {
       return [];
     }
-    return this.currentUser.wishlist;
-  }
 
-  saveCurrentUser() {
-    localStorage.setItem('fl_currentUser', JSON.stringify(this.currentUser));
-    
-    // Also update in users array
-    const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-    const userIndex = users.findIndex(u => u.id === this.currentUser.id);
-    if (userIndex !== -1) {
-      users[userIndex] = this.currentUser;
-      localStorage.setItem('fl_users', JSON.stringify(users));
+    const { data: profile, error } = await this.supabase
+      .from('profiles')
+      .select('wishlist')
+      .eq('id', this.currentUser.id)
+      .single();
+
+    if (error || !profile) {
+      return [];
     }
+
+    return profile?.wishlist || [];
   }
 
-  handlePasswordReset(e) {
+  async handlePasswordReset(e) {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
@@ -391,158 +425,16 @@ class AuthSystem {
       return;
     }
 
-    const user = this.users.find(u => u.email === email);
-    
-    if (user) {
-      // Simulate sending password reset email
-      this.sendPasswordResetEmail(user);
+    const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password.html`
+    });
+
+    if (error) {
+      this.showNotification(error.message, 'error');
+    } else {
       this.showNotification('Password reset email sent to ' + email);
       this.closeAuthModal();
-    } else {
-      // For security, still show success even if email doesn't exist
-      this.showNotification('If an account exists with this email, a password reset link has been sent.');
-      this.closeAuthModal();
     }
-  }
-
-  sendPasswordResetEmail(user) {
-    // Use EmailJSService if available, otherwise fallback to simulation
-    if (typeof EmailJSService !== 'undefined') {
-      EmailJSService.sendPasswordReset(user);
-    } else {
-      // Fallback simulation
-      console.log('📧 Password Reset Email Triggered:', {
-        to: user.email,
-        subject: 'Password Reset Request - FL Sculptures',
-        template: 'password_reset',
-        data: {
-          firstName: user.firstName,
-          email: user.email,
-          resetToken: 'simulated_token_' + Date.now()
-        }
-      });
-    }
-  }
-
-  sendWelcomeEmail(user) {
-    // Use EmailJSService if available, otherwise fallback to simulation
-    if (typeof EmailJSService !== 'undefined') {
-      EmailJSService.sendWelcomeEmail(user);
-    } else {
-      // Fallback simulation
-      console.log('📧 Welcome Email Triggered:', {
-        to: user.email,
-        subject: 'Welcome to FL Sculptures',
-        template: 'welcome_email',
-        data: {
-          firstName: user.firstName,
-          email: user.email
-        }
-      });
-      
-      // Store for admin dashboard
-      const emailLog = JSON.parse(localStorage.getItem('fl_emailLog')) || [];
-      emailLog.push({
-        type: 'welcome',
-        to: user.email,
-        sentAt: new Date().toISOString(),
-        status: 'sent'
-      });
-      localStorage.setItem('fl_emailLog', JSON.stringify(emailLog));
-    }
-  }
-
-  sendVerificationEmail(user) {
-    const verificationLink = `${window.location.origin}/verify-email.html?token=${user.verificationToken}&email=${user.email}`;
-    
-    if (typeof EmailJSService !== 'undefined') {
-      // Would use EmailJS verification template
-      console.log('📧 Verification Email Triggered:', {
-        to: user.email,
-        subject: 'Verify Your Email - FL Sculptures',
-        verificationLink
-      });
-    } else {
-      // Fallback simulation
-      console.log('📧 Verification Email Triggered:', {
-        to: user.email,
-        subject: 'Verify Your Email - FL Sculptures',
-        verificationLink
-      });
-      
-      const emailLog = JSON.parse(localStorage.getItem('fl_emailLog')) || [];
-      emailLog.push({
-        type: 'email_verification',
-        to: user.email,
-        sentAt: new Date().toISOString(),
-        status: 'sent'
-      });
-      localStorage.setItem('fl_emailLog', JSON.stringify(emailLog));
-    }
-  }
-
-  generateVerificationToken() {
-    return Math.random().toString(36).substring(2, 15) + 
-           Math.random().toString(36).substring(2, 15);
-  }
-
-  verifyEmail(token, email) {
-    const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-    const user = users.find(u => u.email === email);
-    
-    if (!user || !user.verificationToken || user.verificationToken !== token) {
-      return { success: false, message: 'Invalid verification token' };
-    }
-    
-    // Check if token is expired
-    if (new Date(user.verificationTokenExpires) < new Date()) {
-      return { success: false, message: 'Verification token has expired' };
-    }
-    
-    // Verify email
-    user.emailVerified = true;
-    user.verificationToken = null;
-    user.verificationTokenExpires = null;
-    
-    // Update in localStorage
-    const userIndex = users.findIndex(u => u.id === user.id);
-    users[userIndex] = user;
-    localStorage.setItem('fl_users', JSON.stringify(users));
-    
-    // Update current user if logged in
-    if (this.currentUser && this.currentUser.id === user.id) {
-      this.currentUser = user;
-      localStorage.setItem('fl_currentUser', JSON.stringify(user));
-    }
-    
-    return { success: true, message: 'Email verified successfully' };
-  }
-
-  resendVerificationEmail(email) {
-    const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-    const user = users.find(u => u.email === email);
-    
-    if (!user) {
-      return { success: false, message: 'User not found' };
-    }
-    
-    if (user.emailVerified) {
-      return { success: false, message: 'Email already verified' };
-    }
-    
-    // Generate new token
-    user.verificationToken = this.generateVerificationToken();
-    user.verificationTokenExpires = new Date(Date.now() + 86400000).toISOString();
-    
-    // Update in localStorage
-    const userIndex = users.findIndex(u => u.id === user.id);
-    users[userIndex] = user;
-    localStorage.setItem('fl_users', JSON.stringify(users));
-    
-    // Send verification email
-    this.sendVerificationEmail(user);
-    
-    return { success: true, message: 'Verification email sent' };
   }
 }
 

@@ -1,94 +1,19 @@
-// Product data source with stock management
+// Product data source with Supabase
 const ProductCatalog = {
-  products: [
-    {
-      id: 1,
-      name: "Ethereal Form",
-      material: "Bronze patiné",
-      dimensions: "45 × 30 × 20 cm",
-      weight: "12 kg",
-      price: 2500,
-      stock: 3,
-      category: "Abstract",
-      description: "A flowing bronze sculpture capturing the essence of movement and stillness. Hand-finished with a rich patina that develops character over time.",
-      image: "",
-      size: "s-xl",
-      available: true
-    },
-    {
-      id: 2,
-      name: "Geometric Silence",
-      material: "Marbre Carrare",
-      dimensions: "25 × 25 × 60 cm",
-      weight: "35 kg",
-      price: 1800,
-      stock: 2,
-      category: "Geometric",
-      description: "Minimalist marble sculpture exploring the relationship between light and shadow. Each piece carved from a single block of Italian marble.",
-      image: "",
-      size: "s-s",
-      available: true
-    },
-    {
-      id: 3,
-      name: "Celestial Ring",
-      material: "Bronze et verre soufflé",
-      dimensions: "70 × 70 × 50 cm",
-      weight: "18 kg",
-      price: 3200,
-      stock: 1,
-      category: "Abstract",
-      description: "A circular bronze form embracing a blown glass element. The interplay of materials creates a dialogue between earth and air.",
-      image: "",
-      size: "s-m",
-      available: true
-    },
-    {
-      id: 4,
-      name: "Triangular Ascent",
-      material: "Granit gris",
-      dimensions: "80 × 70 × 40 cm",
-      weight: "45 kg",
-      price: 4500,
-      stock: 2,
-      category: "Geometric",
-      description: "Monumental granite sculpture rising towards the sky. The raw texture contrasts with the precise geometric form.",
-      image: "",
-      size: "s-l",
-      available: true
-    },
-    {
-      id: 5,
-      name: "Organic Drop",
-      material: "Bronze",
-      dimensions: "35 × 35 × 50 cm",
-      weight: "8 kg",
-      price: 2800,
-      stock: 4,
-      category: "Organic",
-      description: "Nature-inspired bronze sculpture with a smooth, tactile surface. The form evokes a water droplet frozen in time.",
-      image: "",
-      size: "s-m",
-      available: true
-    },
-    {
-      id: 6,
-      name: "Vertical Flow",
-      material: "Acier inoxydable",
-      dimensions: "20 × 20 × 80 cm",
-      weight: "15 kg",
-      price: 2200,
-      stock: 3,
-      category: "Modern",
-      description: "Polished stainless steel sculpture with a mirror-like finish. Reflects its environment, creating a dynamic visual experience.",
-      image: "",
-      size: "s-s",
-      available: true
-    }
-  ],
+  products: [],
 
-  // Get all products
-  getAll() {
+  // Get all products from Supabase
+  async getAll() {
+    const { data, error } = await window.supabase
+      .from('products')
+      .select('*');
+    
+    if (error) {
+      console.error('Error fetching products:', error);
+      return [];
+    }
+    
+    this.products = data || [];
     return this.products;
   },
 
@@ -113,102 +38,112 @@ const ProductCatalog = {
     return product ? product.stock > 0 : false;
   },
 
-  // Decrease stock (for checkout)
-  decreaseStock(id, quantity = 1) {
+  // Decrease stock (for checkout) - update in Supabase
+  async decreaseStock(id, quantity = 1) {
     const product = this.getById(id);
     if (product && product.stock >= quantity) {
-      product.stock -= quantity;
-      this.saveToStorage();
-      return true;
+      const { error } = await window.supabase
+        .from('products')
+        .update({ stock: product.stock - quantity })
+        .eq('id', id);
+      
+      if (!error) {
+        product.stock -= quantity;
+        return true;
+      }
     }
     return false;
   },
 
-  // Increase stock (for returns/cancellations)
-  increaseStock(id, quantity = 1) {
+  // Increase stock (for returns/cancellations) - update in Supabase
+  async increaseStock(id, quantity = 1) {
     const product = this.getById(id);
     if (product) {
-      product.stock += quantity;
-      this.saveToStorage();
-      return true;
+      const { error } = await window.supabase
+        .from('products')
+        .update({ stock: product.stock + quantity })
+        .eq('id', id);
+      
+      if (!error) {
+        product.stock += quantity;
+        return true;
+      }
     }
     return false;
   },
 
-  // Add new product (for admin)
-  addProduct(product) {
-    const newId = Math.max(...this.products.map(p => p.id)) + 1;
-    product.id = newId;
-    product.stock = product.stock || 0;
-    product.available = product.stock > 0;
-    this.products.push(product);
-    this.saveToStorage();
-    return newId;
+  // Add new product (for admin) - insert to Supabase
+  async addProduct(product) {
+    const { data, error } = await window.supabase
+      .from('products')
+      .insert({
+        ...product,
+        stock: product.stock || 0,
+        available: (product.stock || 0) > 0
+      })
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Error adding product:', error);
+      return null;
+    }
+    
+    this.products.push(data);
+    return data.id;
   },
 
-  // Update product (for admin)
-  updateProduct(id, updates) {
+  // Update product (for admin) - update in Supabase
+  async updateProduct(id, updates) {
+    const { error } = await window.supabase
+      .from('products')
+      .update({
+        ...updates,
+        available: (updates.stock || 0) > 0
+      })
+      .eq('id', id);
+    
+    if (error) {
+      console.error('Error updating product:', error);
+      return false;
+    }
+    
     const index = this.products.findIndex(p => p.id === parseInt(id));
     if (index !== -1) {
       this.products[index] = { ...this.products[index], ...updates };
       this.products[index].available = this.products[index].stock > 0;
-      this.saveToStorage();
       return true;
     }
     return false;
   },
 
-  // Delete product (for admin)
-  deleteProduct(id) {
+  // Delete product (for admin) - delete from Supabase
+  async deleteProduct(id) {
+    const { error } = await window.supabase
+      .from('products')
+      .delete()
+      .eq('id', id);
+    
+    if (error) {
+      console.error('Error deleting product:', error);
+      return false;
+    }
+    
     const index = this.products.findIndex(p => p.id === parseInt(id));
     if (index !== -1) {
       this.products.splice(index, 1);
-      this.saveToStorage();
       return true;
     }
     return false;
-  },
-
-  // Save to localStorage
-  saveToStorage() {
-    localStorage.setItem('fl_products', JSON.stringify(this.products));
-  },
-
-  // Load from localStorage
-  loadFromStorage() {
-    const stored = localStorage.getItem('fl_products');
-    if (stored) {
-      this.products = JSON.parse(stored);
-    }
   },
 
   // Get product rating (average from approved reviews)
   getProductRating(productId) {
-    const allReviews = JSON.parse(localStorage.getItem('fl_productReviews')) || {};
-    const productReviews = allReviews[productId] || [];
-    const approvedReviews = productReviews.filter(r => r.status === 'approved');
-    
-    if (approvedReviews.length === 0) {
-      return {
-        average: 0,
-        count: 0,
-        distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
-      };
-    }
-    
-    const total = approvedReviews.reduce((sum, r) => sum + r.rating, 0);
-    const average = total / approvedReviews.length;
-    
-    // Calculate distribution
-    const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    approvedReviews.forEach(r => {
-      distribution[r.rating]++;
-    });
-    
+    // For now, return default rating - reviews could be moved to Supabase later
     return {
-      average: Math.round(average * 10) / 10, // Round to 1 decimal
-      count: approvedReviews.length,
-      distribution
+      average: 0,
+      count: 0,
+      distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
     };
   },
 
@@ -218,19 +153,10 @@ const ProductCatalog = {
       ...product,
       rating: this.getProductRating(product.id)
     }));
-  },
-
-  // Reset to default products
-  resetToDefaults() {
-    localStorage.removeItem('fl_products');
-    this.loadFromStorage();
   }
 };
 
-// Initialize product catalog
-ProductCatalog.loadFromStorage();
-
-// If no products in storage, initialize with defaults
-if (!localStorage.getItem('fl_products')) {
-  ProductCatalog.saveToStorage();
-}
+// Initialize product catalog - fetch from Supabase on load
+document.addEventListener('DOMContentLoaded', async () => {
+  await ProductCatalog.getAll();
+});

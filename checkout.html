@@ -333,6 +333,10 @@
 
 <footer id="site-footer"></footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  window.supabase = supabase.createClient('https://yytxrapemcsloyuqewhf.supabase.co', 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl');
+</script>
 <script src="cart.js"></script>
 <script src="auth.js"></script>
 <script src="products.js"></script>
@@ -384,8 +388,8 @@ function updateOrderSummary() {
   orderTotal.textContent = `${total.toFixed(2)} €`;
 }
 
-// Handle checkout with simulated payment
-function handleCheckout(e) {
+// Handle checkout with Supabase order creation
+async function handleCheckout(e) {
   e.preventDefault();
   
   const submitBtn = document.getElementById('submitBtn');
@@ -401,14 +405,10 @@ function handleCheckout(e) {
   btnText.style.display = 'none';
   btnLoader.style.display = 'inline';
   
-  // Simulate payment processing
-  setTimeout(() => {
+  try {
     const formData = new FormData(e.target);
     const orderData = {
-      orderId: 'FL-' + Date.now(),
-      date: new Date().toISOString(),
-      status: 'Processing',
-      customer: {
+      shippingAddress: {
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
         email: formData.get('email'),
@@ -418,50 +418,44 @@ function handleCheckout(e) {
         postalCode: formData.get('postalCode'),
         country: formData.get('country')
       },
-      items: window.shoppingCart.cart,
-      total: window.shoppingCart.getCartTotal() + 150 + (window.shoppingCart.getCartTotal() * 0.20),
+      billingAddress: formData.get('sameAsShipping') ? orderData.shippingAddress : {
+        firstName: formData.get('billingFirstName'),
+        lastName: formData.get('billingLastName'),
+        address: formData.get('billingAddress'),
+        city: formData.get('billingCity'),
+        postalCode: formData.get('billingPostalCode'),
+        country: formData.get('billingCountry')
+      },
       paymentMethod: 'Card'
     };
     
+    // Create order in Supabase
+    const order = await window.shoppingCart.createOrder(orderData);
+    
     // Store order data for success page
-    localStorage.setItem('lastOrder', JSON.stringify(orderData));
+    localStorage.setItem('lastOrder', JSON.stringify({
+      orderId: order.id,
+      date: order.created_at,
+      status: order.status,
+      total: order.total,
+      items: window.shoppingCart.cart
+    }));
     
-    // Link order to user if logged in
-    if (window.authSystem && window.authSystem.currentUser) {
-      const user = window.authSystem.currentUser;
-      if (!user.orders) user.orders = [];
-      user.orders.push(orderData);
-      
-      localStorage.setItem('fl_currentUser', JSON.stringify(user));
-      
-      const users = JSON.parse(localStorage.getItem('fl_users')) || [];
-      const userIndex = users.findIndex(u => u.id === user.id);
-      if (userIndex !== -1) {
-        users[userIndex] = user;
-        localStorage.setItem('fl_users', JSON.stringify(users));
-      }
+    // Send email notifications (if EmailJSService is available)
+    if (typeof EmailJSService !== 'undefined') {
+      EmailJSService.sendOrderConfirmationEmail(order);
+      EmailJSService.sendAdminNotificationEmail(order);
     }
-    
-    // Store in global orders log for admin
-    const allOrders = JSON.parse(localStorage.getItem('fl_allOrders')) || [];
-    allOrders.push(orderData);
-    localStorage.setItem('fl_allOrders', JSON.stringify(allOrders));
-    
-    // Decrease stock for each ordered item
-    window.shoppingCart.cart.forEach(item => {
-      ProductCatalog.decreaseStock(item.id, item.quantity);
-    });
-    
-    // Send email notifications
-    sendOrderConfirmationEmail(orderData);
-    sendAdminNotificationEmail(orderData);
-    
-    // Clear cart
-    window.shoppingCart.clearCart();
     
     // Redirect to success page
     window.location.href = 'order-success.html';
-  }, 2000);
+  } catch (error) {
+    console.error('Checkout error:', error);
+    alert('Error processing order: ' + error.message);
+    submitBtn.disabled = false;
+    btnText.style.display = 'inline';
+    btnLoader.style.display = 'none';
+  }
 }
 
 // Handle Apple Pay

@@ -1,4 +1,4 @@
-// Shopping Cart System with localStorage
+// Shopping Cart System with localStorage (session) and Supabase (orders)
 class ShoppingCart {
   constructor() {
     this.cart = JSON.parse(localStorage.getItem('fl_cart')) || [];
@@ -204,6 +204,63 @@ class ShoppingCart {
     this.cart = [];
     this.saveCart();
     this.updateCartUI();
+  }
+
+  // Create order in Supabase
+  async createOrder(orderData) {
+    const { data: { user }, error: authError } = await window.supabase.auth.getUser();
+    
+    if (authError || !user) {
+      throw new Error('User not authenticated');
+    }
+
+    // Insert order
+    const { data: order, error: orderError } = await window.supabase
+      .from('orders')
+      .insert({
+        user_id: user.id,
+        total: this.getCartTotal(),
+        status: 'pending',
+        shipping_address: orderData.shippingAddress,
+        billing_address: orderData.billingAddress,
+        payment_method: orderData.paymentMethod,
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (orderError) {
+      throw new Error('Failed to create order: ' + orderError.message);
+    }
+
+    // Insert order items
+    const orderItems = this.cart.map(item => ({
+      order_id: order.id,
+      product_id: item.id,
+      quantity: item.quantity,
+      price: item.price
+    }));
+
+    const { error: itemsError } = await window.supabase
+      .from('order_items')
+      .insert(orderItems);
+
+    if (itemsError) {
+      throw new Error('Failed to create order items: ' + itemsError.message);
+    }
+
+    // Decrease product stock
+    for (const item of this.cart) {
+      await window.supabase
+        .from('products')
+        .update({ stock: window.supabase.rpc('decrement_stock', { product_id: item.id, qty: item.quantity }) })
+        .eq('id', item.id);
+    }
+
+    // Clear cart after successful order
+    this.clearCart();
+
+    return order;
   }
 }
 
