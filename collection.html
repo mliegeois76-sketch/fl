@@ -242,41 +242,26 @@ async function loadProducts(productsToLoad = null) {
   }
   
   productGrid.innerHTML = products.map(product => {
-    const rating = ProductCatalog.getProductRating(product.id);
-    const ratingDisplay = rating.count > 0 
-      ? `<div class="product-rating">${'★'.repeat(Math.round(rating.average))}${'☆'.repeat(5 - Math.round(rating.average))} (${rating.count})</div>`
-      : '';
-    
     return `
-    <div class="piece ${product.size || 'medium'}">
+    <div class="piece">
       <div class="piece-visual">
-        <img src="${product.image_url}" alt="${product.name}" onerror="this.src='logo.jpg'">
+        <img src="${product.image_url}" alt="${product.name}" loading="lazy">
       </div>
       <div class="piece-info">
+        <div class="piece-category">${product.category || 'Sculpture'}</div>
         <div class="piece-name serif">${product.name}</div>
         <div class="piece-description">${product.description || ''}</div>
         <div class="piece-price">
-          <span>${product.price.toFixed(2)} €</span>
+          <span>${new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(product.price)}</span>
         </div>
-        ${ratingDisplay}
-        <div class="piece-actions">
-          <button class="add-to-cart" 
-                  data-product-id="${product.id}" 
-                  data-product-name="${product.name}" 
-                  data-product-price="${product.price}" 
-                  data-product-image="${product.image}"
-                  ${product.stock === 0 ? 'disabled' : ''}>
-            ${product.stock > 0 ? 'Ajouter au panier' : 'Rupture de stock'}
-          </button>
-          <button class="wishlist-btn" 
-                  data-product-id="${product.id}" 
-                  data-product-name="${product.name}" 
-                  data-product-price="${product.price}" 
-                  data-product-image="${product.image}"
-                  onclick="toggleWishlist(this)">
-            ♡
-          </button>
-        </div>
+        <button class="add-to-cart" 
+                data-product-id="${product.id}" 
+                data-product-name="${product.name}" 
+                data-product-price="${product.price}" 
+                data-product-image="${product.image}"
+                ${product.stock === 0 ? 'disabled' : ''}>
+          ${product.stock > 0 ? 'Ajouter au panier' : 'Rupture de stock'}
+        </button>
       </div>
     </div>
   `;
