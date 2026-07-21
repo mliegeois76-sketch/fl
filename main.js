@@ -65,7 +65,6 @@ const FOOTER_HTML = `
 <div class="footer-grid">
   <div class="footer-col">
     <div class="footer-logo">FL</div>
-    <p>Sculptures d'art contemporain minimaliste. Une démarche artistique entre tradition et contemporanéité.</p>
   </div>
   <div class="footer-col">
     <h4>Navigation</h4>
@@ -89,8 +88,6 @@ const FOOTER_HTML = `
   </div>
 </div>
 <div class="footer-bottom">
-  <span>© 2024 FL Sculptures. Tous droits réservés.</span>
-  <span>Paris, France</span>
 </div>`;
 
 // Cookie Consent Banner
