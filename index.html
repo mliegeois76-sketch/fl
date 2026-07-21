@@ -126,17 +126,20 @@
 
   .hero-title {
     font-family: 'Fraunces', serif;
-    font-size: clamp(150px, 25vw, 400px);
+    font-size: clamp(32px, 6vw, 84px);
     font-weight: 300;
     letter-spacing: 0.1em;
     color: var(--white);
     text-align: left;
     margin-bottom: 24px;
+    line-height: 1.15;
+    max-width: 90vw;
     opacity: 1;
     transform: none;
     clip-path: inset(0 100% 0 0);
     animation: revealTitle 1.4s cubic-bezier(0.65,0,0.35,1) 0.4s forwards;
     mix-blend-mode: difference;
+    text-decoration: none;
   }
   
   .hero-subtitle {
@@ -148,38 +151,6 @@
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 1.5s ease 0.9s forwards;
-  }
-  
-  .hero-cta {
-    position: absolute;
-    bottom: 60px;
-    right: 60px;
-    margin-top: 0;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.5s ease 1.1s forwards;
-  }
-  
-  .cta-button {
-    display: inline-block;
-    padding: 0;
-    border: none;
-    background: none;
-    color: rgba(255,255,255,0.7);
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-    padding-bottom: 3px;
-    transition: all 0.3s ease;
-  }
-  
-  .cta-button:hover {
-    color: var(--white);
-    border-color: var(--white);
-    background: none;
-    transform: none;
   }
   
   @keyframes fadeInUp {
@@ -534,10 +505,7 @@
   </video>
   <div class="hero-content" id="hero-content">
     <p class="hero-subtitle">Sculptures — Collection 2026</p>
-    <h1 class="hero-title">FL</h1>
-    <div class="hero-cta">
-      <a href="collection.html" class="cta-button">Découvrir la collection</a>
-    </div>
+    <a href="collection.html" class="hero-title">Découvrir la collection</a>
   </div>
 </div>
 
