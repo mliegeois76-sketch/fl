@@ -1,42 +1,32 @@
-const cursorPoint = document.createElement('div');
-cursorPoint.id = 'cursor-point';
-document.body.appendChild(cursorPoint);
+const cursor = document.createElement('img');
+cursor.src = 'cursor-arrow.png';
+cursor.id = 'custom-cursor';
+document.body.appendChild(cursor);
 
-const cursorRing = document.createElement('div');
-cursorRing.id = 'cursor-ring';
-document.body.appendChild(cursorRing);
-
-let mouseX = 0, mouseY = 0;
-let ringX = 0, ringY = 0;
-const lerpFactor = 0.15;
+const cursorLabel = document.createElement('div');
+cursorLabel.id = 'cursor-label';
+document.body.appendChild(cursorLabel);
 
 document.addEventListener('mousemove', e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  cursorPoint.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+  cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+  cursorLabel.style.transform = `translate(${e.clientX + 20}px, ${e.clientY + 20}px)`;
 });
-
-function animateRing() {
-  ringX += (mouseX - ringX) * lerpFactor;
-  ringY += (mouseY - ringY) * lerpFactor;
-  cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
-  requestAnimationFrame(animateRing);
-}
-animateRing();
 
 document.addEventListener('mouseover', e => {
   const piece = e.target.closest('.piece-visual');
   if (piece) {
-    cursorRing.classList.add('cursor-hover');
+    cursor.classList.add('cursor-hover');
     const pieceName = piece.closest('.piece')?.querySelector('.piece-name')?.textContent;
-    cursorRing.textContent = pieceName || 'Voir';
+    cursorLabel.textContent = pieceName || 'Voir';
+    cursorLabel.style.opacity = '1';
   }
 });
 
 document.addEventListener('mouseout', e => {
   const piece = e.target.closest('.piece-visual');
   if (piece) {
-    cursorRing.classList.remove('cursor-hover');
-    cursorRing.textContent = '';
+    cursor.classList.remove('cursor-hover');
+    cursorLabel.textContent = '';
+    cursorLabel.style.opacity = '0';
   }
 });

@@ -1883,47 +1883,30 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--w
 /* Custom Cursor */
 *, *::before, *::after { cursor: none !important; }
 
-#cursor-point {
+#custom-cursor {
   position: fixed;
-  top: -3px;
-  left: -3px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--bronze);
+  top: 0; left: 0;
+  width: 30px; height: auto;
   pointer-events: none;
   z-index: 100001;
-  transition: transform 0.08s linear;
+  transform: scaleX(-1);
+  transition: transform 0.1s ease;
 }
 
-#cursor-ring {
+#custom-cursor.cursor-hover { transform: scaleX(-1) scale(1.15); }
+
+#cursor-label {
   position: fixed;
-  top: -10px;
-  left: -10px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid var(--bronze);
-  background: transparent;
-  pointer-events: none;
-  z-index: 100001;
-  transition: width 0.25s cubic-bezier(0.4,0,0.2,1), height 0.25s cubic-bezier(0.4,0,0.2,1), border-color 0.25s ease, background 0.25s ease;
-}
-
-#cursor-ring.cursor-hover {
-  width: 60px;
-  height: 60px;
-  top: -30px;
-  left: -30px;
-  border: none;
-  background: var(--bronze);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
+  top: 0; left: 0;
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--bronze);
+  pointer-events: none;
+  z-index: 100001;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-weight: 300;
 }
 
 /* Grain Overlay */
