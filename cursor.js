@@ -14,17 +14,25 @@ document.addEventListener('mousemove', e => {
 
 document.addEventListener('mouseover', e => {
   const piece = e.target.closest('.piece-visual');
+  const ctaButton = e.target.closest('.cta-button');
+  
   if (piece) {
     cursor.classList.add('cursor-hover');
     const pieceName = piece.closest('.piece')?.querySelector('.piece-name')?.textContent;
     cursorLabel.textContent = pieceName || 'Voir';
+    cursorLabel.style.opacity = '1';
+  } else if (ctaButton) {
+    cursor.classList.add('cursor-hover');
+    cursorLabel.textContent = 'Découvrir';
     cursorLabel.style.opacity = '1';
   }
 });
 
 document.addEventListener('mouseout', e => {
   const piece = e.target.closest('.piece-visual');
-  if (piece) {
+  const ctaButton = e.target.closest('.cta-button');
+  
+  if (piece || ctaButton) {
     cursor.classList.remove('cursor-hover');
     cursorLabel.textContent = '';
     cursorLabel.style.opacity = '0';
