@@ -152,7 +152,54 @@ document.addEventListener('DOMContentLoaded', ()=>{
   
   // Initialize language selector
   initLanguageSelector();
+  
+  // Load homepage products if on index page
+  if (document.querySelector('.home-collection')) {
+    loadHomepageProducts();
+  }
 });
+
+// Load products for homepage collection grid
+async function loadHomepageProducts() {
+  const piecesContainer = document.getElementById('home-pieces');
+  const pieceCount = document.getElementById('piece-count');
+  
+  if (!piecesContainer) return;
+  
+  try {
+    const { data: products, error } = await window.supabase
+      .from('products')
+      .select('*')
+      .limit(3)
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    
+    if (pieceCount) {
+      pieceCount.textContent = `${String(products.length).padStart(2, '0')} pièces`;
+    }
+    
+    piecesContainer.innerHTML = products.map(product => `
+      <div class="piece-home" data-name="${product.name}">
+        <a href="product.html?id=${product.id}" class="piece-visual-home">
+          ${product.image_url ? `<img src="${product.image_url}" alt="${product.name}">` : ''}
+        </a>
+        <div class="piece-info-home">
+          <span class="name">${product.name}</span>
+          <span class="price">${product.price ? formatPrice(product.price) : ''}</span>
+        </div>
+      </div>
+    `).join('');
+    
+  } catch (error) {
+    console.error('Error loading homepage products:', error);
+    piecesContainer.innerHTML = '<p style="color:var(--stone)">Chargement des pièces...</p>';
+  }
+}
+
+function formatPrice(price) {
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
+}
 
 // Language selector
 function initLanguageSelector() {

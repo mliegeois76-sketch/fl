@@ -14,14 +14,20 @@ document.addEventListener('mousemove', e => {
 
 document.addEventListener('mouseover', e => {
   const piece = e.target.closest('.piece-visual');
-  const ctaButton = e.target.closest('.cta-button');
+  const pieceHome = e.target.closest('.piece-home');
+  const link = e.target.closest('a');
   
   if (piece) {
     cursor.classList.add('cursor-hover');
     const pieceName = piece.closest('.piece')?.querySelector('.piece-name')?.textContent;
     cursorLabel.textContent = pieceName || 'Voir';
     cursorLabel.style.opacity = '1';
-  } else if (ctaButton) {
+  } else if (pieceHome) {
+    cursor.classList.add('cursor-hover');
+    const pieceName = pieceHome.dataset.name || pieceHome.querySelector('.piece-info-home .name')?.textContent;
+    cursorLabel.textContent = pieceName || 'Voir';
+    cursorLabel.style.opacity = '1';
+  } else if (link) {
     cursor.classList.add('cursor-hover');
     cursorLabel.textContent = 'Découvrir';
     cursorLabel.style.opacity = '1';
@@ -30,9 +36,10 @@ document.addEventListener('mouseover', e => {
 
 document.addEventListener('mouseout', e => {
   const piece = e.target.closest('.piece-visual');
-  const ctaButton = e.target.closest('.cta-button');
+  const pieceHome = e.target.closest('.piece-home');
+  const link = e.target.closest('a');
   
-  if (piece || ctaButton) {
+  if (piece || pieceHome || link) {
     cursor.classList.remove('cursor-hover');
     cursorLabel.textContent = '';
     cursorLabel.style.opacity = '0';
