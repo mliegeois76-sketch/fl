@@ -69,7 +69,7 @@ const SEOService = {
       contactPoint: {
         '@type': 'ContactPoint',
         contactType: 'customer service',
-        email: 'contact@fl-sculptures.com'
+        email: 'contact@fannyliegeois.com'
       }
     });
   },

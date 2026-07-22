@@ -500,7 +500,7 @@ function sendAdminNotificationEmail(order) {
   } else {
     // Fallback simulation
     console.log('📧 Admin Notification Email Triggered:', {
-      to: 'admin@fl-art.com',
+      to: 'contact@fannyliegeois.com',
       subject: 'New Order #' + order.orderId,
       template: 'admin_notification',
       data: {
@@ -514,7 +514,7 @@ function sendAdminNotificationEmail(order) {
     const emailLog = JSON.parse(localStorage.getItem('fl_emailLog')) || [];
     emailLog.push({
       type: 'admin_notification',
-      to: 'admin@fl-art.com',
+      to: 'contact@fannyliegeois.com',
       sentAt: new Date().toISOString(),
       status: 'sent',
       orderId: order.orderId
