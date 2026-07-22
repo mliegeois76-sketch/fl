@@ -19,18 +19,10 @@ document.addEventListener('mouseover', e => {
   
   if (piece) {
     cursor.classList.add('cursor-hover');
-    const pieceName = piece.closest('.piece')?.querySelector('.piece-name')?.textContent;
-    cursorLabel.textContent = pieceName || 'Voir';
-    cursorLabel.style.opacity = '1';
   } else if (pieceHome) {
     cursor.classList.add('cursor-hover');
-    const pieceName = pieceHome.dataset.name || pieceHome.querySelector('.piece-info-home .name')?.textContent;
-    cursorLabel.textContent = pieceName || 'Voir';
-    cursorLabel.style.opacity = '1';
   } else if (link) {
     cursor.classList.add('cursor-hover');
-    cursorLabel.textContent = 'Découvrir';
-    cursorLabel.style.opacity = '1';
   }
 });
 
@@ -41,7 +33,5 @@ document.addEventListener('mouseout', e => {
   
   if (piece || pieceHome || link) {
     cursor.classList.remove('cursor-hover');
-    cursorLabel.textContent = '';
-    cursorLabel.style.opacity = '0';
   }
 });
