@@ -169,17 +169,18 @@ async function loadHomepageProducts() {
   try {
     const { data: products, error } = await window.supabase
       .from('products')
-      .select('*')
-      .limit(3)
-      .order('created_at', { ascending: false });
+      .select('*');
     
     if (error) throw error;
     
+    // Take first 3 products without sorting
+    const displayProducts = products.slice(0, 3);
+    
     if (pieceCount) {
-      pieceCount.textContent = `${String(products.length).padStart(2, '0')} pièces`;
+      pieceCount.textContent = `${String(displayProducts.length).padStart(2, '0')} pièces`;
     }
     
-    piecesContainer.innerHTML = products.map(product => `
+    piecesContainer.innerHTML = displayProducts.map(product => `
       <div class="piece-home" data-name="${product.name}">
         <a href="product.html?id=${product.id}" class="piece-visual-home">
           ${product.image_url ? `<img src="${product.image_url}" alt="${product.name}">` : ''}

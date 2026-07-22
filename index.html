@@ -538,14 +538,9 @@
 <div class="cta-row">
   <a href="collection.html" class="cta-line">Voir toute la collection</a>
 </div>
-</div>
-
-<div class="content-wrapper">
-  <main class="main-content">
-  </main>
-</div>
 
 <footer id="site-footer"></footer>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -562,18 +557,20 @@
   function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
   requestAnimationFrame(raf);
   
-  // Hero video parallax effect
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  
-  if (!prefersReducedMotion) {
-    const heroVideo = document.querySelector('.hero-video-wrap video');
-    if (heroVideo) {
-      lenis.on('scroll', ({ scroll }) => {
-        const scale = 1 + (scroll * 0.00015);
-        heroVideo.style.transform = `scale(${Math.min(scale, 1.15)})`;
-      });
+  // Hero video parallax effect - wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (!prefersReducedMotion) {
+      const heroVideo = document.querySelector('.hero-video-wrap video');
+      if (heroVideo) {
+        lenis.on('scroll', ({ scroll }) => {
+          const scale = 1 + (scroll * 0.00015);
+          heroVideo.style.transform = `scale(${Math.min(scale, 1.15)})`;
+        });
+      }
     }
-  }
+  });
 </script>
 </body>
 </html>
