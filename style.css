@@ -1175,10 +1175,10 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--i
   background:rgba(244,241,236,0.03);font-size:12px;
 }
 .email-type{font-size:11px;padding:4px 8px;border-radius:4px;}
-.email-type.welcome{background:#e3f2fd;color:#1976d2;}
-.email-type.order_confirmation{background:#e8f5e9;color:#388e3c;}
-.email-type.admin_notification{background:#fff3e0;color:#f57c00;}
-.status-sent{color:#388e3c;font-weight:500;}
+.email-type.welcome{background:rgba(25,118,210,0.2);color:#64b5f6;}
+.email-type.order_confirmation{background:rgba(56,142,60,0.2);color:#81c784;}
+.email-type.admin_notification{background:rgba(245,124,0,0.2);color:#ffb74d;}
+.status-sent{color:#81c784;font-weight:500;}
 
 @media (max-width:760px){
   .account-grid{grid-template-columns:1fr;}
