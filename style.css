@@ -514,7 +514,7 @@ section{padding:140px 5vw;position:relative;}
 .piece-visual img{width:100%;height:auto;max-height:500px;object-fit:contain;transition:transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);}
 .piece:hover .piece-visual img{transform:scale(1.03);}
 .piece-info{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 16px;}
-.piece-category{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--bronze);margin-bottom:12px;font-weight:500;}
+.piece-category{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#D4A574;margin-bottom:12px;font-weight:500;}
 .piece-name{font-family:'Fraunces',serif;font-size:32px;margin-bottom:16px;font-weight:300;color:var(--paper);letter-spacing:0.02em;line-height:1.2;}
 .piece-description{font-size:15px;color:var(--stone);margin-bottom:32px;line-height:1.7;font-weight:300;max-width:500px;}
 .piece-price{margin-bottom:32px;font-size:28px;font-family:'Fraunces',serif;letter-spacing:0.02em;font-weight:400;color:var(--paper);}
@@ -801,7 +801,7 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--i
 .blog-card:hover .blog-image img{transform:scale(1.05);}
 .blog-content{padding:24px 0;}
 .blog-meta{display:flex;gap:16px;margin-bottom:12px;font-size:11px;color:var(--stone);}
-.blog-category{color:var(--bronze);text-transform:uppercase;letter-spacing:0.1em;}
+.blog-category{color:#D4A574;text-transform:uppercase;letter-spacing:0.1em;}
 .blog-title{font-family:'Fraunces',serif;font-size:20px;margin-bottom:12px;font-weight:400;}
 .blog-excerpt{color:var(--stone);line-height:1.7;margin-bottom:16px;}
 .blog-link{color:#D4A574;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;}
