@@ -14,19 +14,24 @@ document.addEventListener('mousemove', e => {
 
 document.addEventListener('mouseover', e => {
   const piece = e.target.closest('.piece-visual');
+  const pieceHome = e.target.closest('.piece-home');
+  const link = e.target.closest('a');
+  
   if (piece) {
     cursor.classList.add('cursor-hover');
-    const pieceName = piece.closest('.piece')?.querySelector('.piece-name')?.textContent;
-    cursorLabel.textContent = pieceName || 'Voir';
-    cursorLabel.style.opacity = '1';
+  } else if (pieceHome) {
+    cursor.classList.add('cursor-hover');
+  } else if (link) {
+    cursor.classList.add('cursor-hover');
   }
 });
 
 document.addEventListener('mouseout', e => {
   const piece = e.target.closest('.piece-visual');
-  if (piece) {
+  const pieceHome = e.target.closest('.piece-home');
+  const link = e.target.closest('a');
+  
+  if (piece || pieceHome || link) {
     cursor.classList.remove('cursor-hover');
-    cursorLabel.textContent = '';
-    cursorLabel.style.opacity = '0';
   }
 });
