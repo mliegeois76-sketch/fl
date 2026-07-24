@@ -161,6 +161,9 @@ const translations = {
       error: "Erreur",
       warning: "Attention",
       info: "Information"
+    },
+    loader: {
+      loading: "CHARGEMENT"
     }
   },
   en: {
@@ -324,6 +327,9 @@ const translations = {
       error: "Error",
       warning: "Warning",
       info: "Information"
+    },
+    loader: {
+      loading: "LOADING"
     }
   }
 };

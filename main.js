@@ -135,8 +135,109 @@ function declineCookies() {
   // Ensure only essential cookies are used
 }
 
+// Global Loader Animation
+function initLoader() {
+  const loader = document.getElementById('globalLoader');
+  if (!loader) return;
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  if (prefersReducedMotion) {
+    loader.classList.add('hidden');
+    setTimeout(() => { loader.style.display = 'none'; }, 500);
+    return;
+  }
+
+  const letters = loader.querySelectorAll('.loader-letter');
+  const line = loader.querySelector('.loader-line');
+  const progress = loader.querySelector('.loader-progress');
+
+  // Track critical assets loading
+  const heroVideo = document.querySelector('.hero-video-wrap video');
+  const images = document.querySelectorAll('img');
+  let assetsLoaded = 0;
+  let totalAssets = images.length + (heroVideo ? 1 : 0);
+  let minDurationElapsed = false;
+  let allAssetsLoaded = false;
+
+  // Minimum duration to prevent flash (1s)
+  setTimeout(() => {
+    minDurationElapsed = true;
+    checkAndHideLoader();
+  }, 1000);
+
+  // Check if all assets are loaded
+  function checkAssetsLoaded() {
+    if (totalAssets === 0) {
+      allAssetsLoaded = true;
+      checkAndHideLoader();
+      return;
+    }
+
+    assetsLoaded++;
+    if (assetsLoaded >= totalAssets) {
+      allAssetsLoaded = true;
+      checkAndHideLoader();
+    }
+  }
+
+  // Check if we can hide the loader
+  function checkAndHideLoader() {
+    if (minDurationElapsed && allAssetsLoaded) {
+      hideLoader();
+    }
+  }
+
+  // Hide loader with animation
+  function hideLoader() {
+    loader.classList.add('hidden');
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 800);
+  }
+
+  // Monitor image loading
+  images.forEach(img => {
+    if (img.complete) {
+      checkAssetsLoaded();
+    } else {
+      img.addEventListener('load', checkAssetsLoaded);
+      img.addEventListener('error', checkAssetsLoaded); // Count even if error
+    }
+  });
+
+  // Monitor video loading
+  if (heroVideo) {
+    if (heroVideo.readyState >= 2) { // HAVE_CURRENT_DATA
+      checkAssetsLoaded();
+    } else {
+      heroVideo.addEventListener('loadeddata', checkAssetsLoaded);
+      heroVideo.addEventListener('error', checkAssetsLoaded);
+    }
+  }
+
+  // Start animation sequence immediately
+  requestAnimationFrame(() => {
+    // Reveal letters with staggered delay
+    letters.forEach(letter => {
+      letter.classList.add('revealed');
+    });
+
+    // Animate line after letters start revealing
+    setTimeout(() => {
+      line.classList.add('animate');
+    }, 800);
+
+    // Show progress text
+    setTimeout(() => {
+      progress.classList.add('visible');
+    }, 1000);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', ()=>{
   initGlobalMenu();
+  initLoader();
   const mount = document.getElementById('site-footer');
   if(mount){ mount.innerHTML = FOOTER_HTML; }
   

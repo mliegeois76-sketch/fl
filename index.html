@@ -406,12 +406,26 @@
 </head>
 <body>
 
+<div class="page-transition"></div>
+
+<!-- Global Loader -->
+<div class="loader" id="globalLoader">
+  <div class="loader-content">
+    <div class="loader-logo">
+      <span class="loader-letter f">F</span>
+      <span class="loader-letter l">L</span>
+    </div>
+    <div class="loader-line-container">
+      <div class="loader-line"></div>
+    </div>
+    <div class="loader-progress" data-i18n="loader.loading">CHARGEMENT</div>
+  </div>
+</div>
+
 <svg style="position:fixed;inset:0;width:0;height:0;">
   <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/></filter>
 </svg>
 <div class="grain-overlay"></div>
-
-<div class="page-transition"></div>
 
 <header>
   <button class="menu-toggle">Menu</button>
