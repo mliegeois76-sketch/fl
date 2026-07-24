@@ -324,10 +324,29 @@ header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;f
   /* Mobile optimizations */
   header{padding:16px 5vw;}
   section{padding:60px 5vw;}
-  .page-hero{padding:120px 5vw 60px;}
+  .page-hero{padding:80px 5vw 40px;}
   .home-hero{padding:0 5vw;}
+  .home-collection{padding:80px 5vw 60px;}
+  
+  /* Typography - minimum 14px for readability */
+  .cart-text, .cart-count, .lang-toggle, .menu-toggle{font-size:13px;}
+  .header-actions button, .header-actions a{font-size:13px;}
+  .form-group label{font-size:13px;letter-spacing:0.05em;}
+  .add-to-cart, .checkout-btn, .auth-submit-btn{font-size:13px;}
+  .piece-category{font-size:11px;letter-spacing:0.2em;}
+  .piece-name{font-size:24px;}
+  
+  /* Reduce letter-spacing for readability */
+  .cart-text, .cart-count, .lang-toggle, .menu-toggle{letter-spacing:0.05em;}
+  .header-actions button, .header-actions a{letter-spacing:0.05em;}
+  .add-to-cart, .checkout-btn, .auth-submit-btn{letter-spacing:0.1em;}
+  
+  /* Home collection grid */
+  .pieces{grid-template-columns:1fr;gap:24px;}
   
   /* Touch-friendly tap targets */
+  .cart-toggle, .lang-toggle, .menu-toggle{min-height:44px;}
+  .add-to-cart, .checkout-btn, .auth-submit-btn{min-height:44px;}
   button, .link-card, .piece{min-height:44px;}
 }
 
@@ -808,6 +827,10 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--i
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
+
+@media (max-width:760px){
+  .blog-grid{grid-template-columns:1fr;gap:24px;}
+}
 .blog-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;}
 .blog-card:hover .blog-image img{transform:scale(1.05);}
 .blog-content{padding:24px 0;}
@@ -816,7 +839,6 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--i
 .blog-title{font-family:'Fraunces',serif;font-size:20px;margin-bottom:12px;font-weight:400;}
 .blog-excerpt{color:var(--stone);line-height:1.7;margin-bottom:16px;}
 .blog-link{color:#D4A574;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;}
-@media (max-width:760px){.blog-grid{grid-template-columns:1fr;}}
 
 /* NEWSLETTER */
 .newsletter-section{
