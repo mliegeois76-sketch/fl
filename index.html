@@ -321,6 +321,28 @@
     color: var(--white);
   }
   
+  @media (max-width: 760px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    
+    .form-row {
+      margin-bottom: 24px;
+    }
+    
+    .form-row input,
+    .form-row textarea {
+      padding: 16px;
+      min-height: 44px;
+    }
+    
+    .submit-btn {
+      padding: 16px 32px;
+      min-height: 44px;
+    }
+  }
+  
   .form-status {
     margin-top: 16px;
     font-size: 14px;
