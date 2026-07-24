@@ -177,6 +177,11 @@ body.menu-open header {
   display: none;
 }
 
+/* Hide header-actions-mobile on desktop by default */
+.menu-overlay .header-actions-mobile{
+  display:none;
+}
+
 nav.menu-nav {
   display: flex;
   flex-direction: column;
@@ -379,7 +384,7 @@ header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;f
   #mainNav a{color:var(--paper);font-size:14px;}
   .nav-toggle{display:block;}
   
-  /* Add auth buttons and lang selector to menu overlay */
+  /* Show header-actions-mobile on mobile only */
   .menu-overlay .header-actions-mobile{
     display:flex;
     flex-direction:column;
