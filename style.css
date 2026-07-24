@@ -329,11 +329,11 @@ header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;f
   .home-collection{padding:80px 5vw 60px;}
   
   /* Typography - minimum 14px for readability */
-  .cart-text, .cart-count, .lang-toggle, .menu-toggle{font-size:13px;}
-  .header-actions button, .header-actions a{font-size:13px;}
-  .form-group label{font-size:13px;letter-spacing:0.05em;}
-  .add-to-cart, .checkout-btn, .auth-submit-btn{font-size:13px;}
-  .piece-category{font-size:11px;letter-spacing:0.2em;}
+  .cart-text, .cart-count, .lang-toggle, .menu-toggle{font-size:14px;}
+  .header-actions button, .header-actions a{font-size:14px;}
+  .form-group label{font-size:14px;letter-spacing:0.05em;}
+  .add-to-cart, .checkout-btn, .auth-submit-btn{font-size:14px;}
+  .piece-category{font-size:12px;letter-spacing:0.2em;}
   .piece-name{font-size:24px;}
   
   /* Reduce letter-spacing for readability */
