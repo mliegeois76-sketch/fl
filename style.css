@@ -309,7 +309,7 @@ header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;f
 }
 
 @media (max-width:760px){
-  .header-actions{gap:4px;}
+  .header-actions{display:none !important;}
   .menu-overlay{width:100%;padding:80px 24px;}
   .menu-close{display:block;position:absolute;top:24px;right:24px;font-size:32px;color:var(--paper);background:none;border:none;cursor:pointer;z-index:10001;}
   nav.menu-nav{gap:24px;}
@@ -318,8 +318,30 @@ header .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.25em;f
   #mainNav{position:fixed;inset:0;background:rgba(14,13,11,0.98);flex-direction:column;justify-content:center;align-items:center;gap:32px;transform:translateY(-100%);transition:transform .5s cubic-bezier(.6,0,.2,1);}
   #mainNav.open{transform:translateY(0);}
   #mainNav a{color:var(--paper);font-size:14px;}
-  .header-actions{display:none !important;}
   .nav-toggle{display:block;}
+  
+  /* Add auth buttons and lang selector to menu overlay */
+  .menu-overlay .header-actions-mobile{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin-top:32px;
+    padding-top:32px;
+    border-top:1px solid var(--line);
+  }
+  .menu-overlay .header-actions-mobile .auth-buttons{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+  }
+  .menu-overlay .header-actions-mobile .auth-buttons button{
+    padding:12px 20px;
+    font-size:14px;
+  }
+  .menu-overlay .header-actions-mobile .lang-selector{
+    display:flex;
+    justify-content:center;
+  }
   
   /* Mobile optimizations */
   header{padding:16px 5vw;}
