@@ -2256,3 +2256,30 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--i
     font-size: 24px;
   }
 }
+
+/* Related Products */
+.related-products {
+  padding: 120px 5vw;
+}
+
+.related-products .section-head {
+  margin-bottom: 48px;
+}
+
+.related-products .piece-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+@media (max-width: 900px) {
+  .related-products .piece-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .related-products .piece-grid {
+    grid-template-columns: 1fr;
+  }
+}

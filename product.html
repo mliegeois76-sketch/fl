@@ -222,6 +222,14 @@
   </div>
 </section>
 
+<section class="related-products scroll-fade-up">
+  <div class="section-head">
+    <h2>Vous aimerez aussi</h2>
+  </div>
+  <div class="piece-grid" id="relatedProductsGrid">
+  </div>
+</section>
+
 <footer id="site-footer"></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -303,6 +311,56 @@ async function loadProductDetails() {
     addToCartBtn.disabled = true;
     addToCartBtn.textContent = 'Rupture de stock';
   }
+  
+  // Load related products
+  loadRelatedProducts(product);
+}
+
+// Load related products based on category/material
+function loadRelatedProducts(currentProduct) {
+  const allProducts = ProductCatalog.getAvailable();
+  const relatedGrid = document.getElementById('relatedProductsGrid');
+  
+  // Filter products by same category or material, exclude current product
+  const relatedProducts = allProducts.filter(p => {
+    if (p.id === currentProduct.id) return false;
+    return p.category === currentProduct.category || p.material === currentProduct.material;
+  });
+  
+  // If no related products by category/material, show random products
+  const displayProducts = relatedProducts.length > 0 
+    ? relatedProducts.slice(0, 3)
+    : allProducts.filter(p => p.id !== currentProduct.id).slice(0, 3);
+  
+  if (displayProducts.length === 0) {
+    relatedGrid.innerHTML = '';
+    return;
+  }
+  
+  // Render using same .piece component as collection.html
+  relatedGrid.innerHTML = displayProducts.map(product => `
+    <div class="piece">
+      <div class="piece-visual">
+        <img src="${product.image_url}" alt="${product.name}" loading="lazy">
+      </div>
+      <div class="piece-info">
+        <div class="piece-category">${product.category || 'Sculpture'}</div>
+        <div class="piece-name serif">${product.name}</div>
+        <div class="piece-description">${product.description || ''}</div>
+        <div class="piece-price">
+          <span>${new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(product.price)}</span>
+        </div>
+        <button class="add-to-cart" 
+                data-product-id="${product.id}" 
+                data-product-name="${product.name}" 
+                data-product-price="${product.price}" 
+                data-product-image="${product.image}"
+                ${product.stock === 0 ? 'disabled' : ''}>
+          ${product.stock > 0 ? 'Ajouter au panier' : 'Rupture de stock'}
+        </button>
+      </div>
+    </div>
+  `).join('');
 }
 
 // Initialize on page load
