@@ -593,6 +593,27 @@ section{padding:140px 5vw;position:relative;}
   .form-row{margin-bottom:24px;}
   .form-row input,.form-row textarea{padding:16px;min-height:44px;}
   .submit-btn{padding:16px 32px;min-height:44px;}
+  
+  /* Disable hover effects on touch devices to prevent stuck states */
+  @media (hover: none){
+    .piece:hover{transform:none;box-shadow:none;border-color:var(--line);}
+    .piece:hover .piece-visual img{transform:none;}
+    .piece-name:hover{color:var(--paper);}
+    .add-to-cart:hover{background:var(--ink);transform:none;box-shadow:none;}
+    .add-to-cart:hover::before{left:-100%;}
+    .link-card:hover{background:rgba(244,241,236,0.03);}
+    .filter-btn:hover{border-color:var(--line);color:var(--stone);background:none;}
+    .cart-toggle:hover{border-color:var(--line);color:var(--paper);}
+    .lang-toggle:hover{border-color:var(--line);color:var(--paper);}
+    .menu-toggle:hover{border-color:var(--line);background:rgba(244,241,236,0.03);transform:none;}
+    .cta-line:hover{border-color:var(--line);color:var(--paper);}
+    .blog-card:hover{transform:none;box-shadow:none;}
+    .blog-card:hover .blog-image img{transform:none;}
+  }
+  
+  /* Optimize scroll animations for mobile - reduce duration */
+  .piece{animation-duration:0.5s;}
+  .scroll-fade-up{transition-duration:0.3s;}
 }
 
 /* LINK CARDS (homepage) */
