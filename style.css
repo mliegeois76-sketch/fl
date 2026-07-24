@@ -969,6 +969,12 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--i
 .security-badges{
   display:flex;gap:16px;margin-top:16px;font-size:11px;color:var(--stone);
 }
+
+@media (max-width:760px){
+  .checkout-grid{grid-template-columns:1fr;gap:24px;}
+  .checkout-form-container{padding:24px;}
+  .form-row{grid-template-columns:1fr;}
+}
 .terms-checkbox{
   display:flex;align-items:flex-start;gap:12px;font-size:12px;line-height:1.5;
 }
@@ -1158,6 +1164,13 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--i
 .order-card{background:rgba(244,241,236,0.03);padding:16px;margin-bottom:12px;}
 .order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
 .order-status{font-size:11px;padding:4px 8px;background:var(--bronze);color:#fff;border-radius:4px;}
+
+@media (max-width:760px){
+  .account-grid{grid-template-columns:1fr;gap:24px;}
+  .account-sidebar{padding:16px;}
+  .account-nav{flex-direction:row;overflow-x:auto;padding-bottom:8px;}
+  .account-nav a{white-space:nowrap;padding:10px 14px;font-size:12px;}
+}
 
 /* ADMIN DASHBOARD */
 .admin-dashboard{max-width:1200px;margin:0 auto;}
@@ -2287,6 +2300,25 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--i
   
   .product-price {
     font-size: 24px;
+  }
+}
+
+@media (max-width: 760px) {
+  .product-detail-grid {
+    gap: 24px;
+  }
+  
+  .gallery-main-image {
+    max-width: 100%;
+    max-height: 350px;
+  }
+  
+  .product-info .piece-name {
+    font-size: 24px;
+  }
+  
+  .product-price {
+    font-size: 20px;
   }
 }
 
