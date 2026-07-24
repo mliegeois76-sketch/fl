@@ -180,7 +180,9 @@
   </div>
 
   <div class="product-detail-grid">
-    <div class="product-info">
+    <div class="product-info scroll-fade-up">
+      <h2 id="productInfoName" class="piece-name serif">Chargement...</h2>
+      
       <div class="product-price-section">
         <span class="product-price" id="productPrice">0.00 €</span>
         <span class="stock-badge" id="productStock">Chargement...</span>
@@ -213,7 +215,7 @@
       </div>
 
       <div class="product-actions">
-        <button id="addToCartBtn" class="checkout-btn" disabled>Ajouter au panier</button>
+        <button id="addToCartBtn" class="add-to-cart" disabled>Ajouter au panier</button>
         <button class="secondary-btn" onclick="window.location.href='collection.html'">Retour à la collection</button>
       </div>
     </div>
@@ -264,6 +266,7 @@ async function loadProductDetails() {
   // Update page content
   document.getElementById('productTitle').textContent = product.name;
   document.getElementById('productCategory').textContent = product.category;
+  document.getElementById('productInfoName').textContent = product.name;
   document.getElementById('productPrice').textContent = product.price.toFixed(2) + ' €';
   document.getElementById('productStock').textContent = product.stock > 0 ? product.stock + ' in stock' : 'Out of stock';
   document.getElementById('productStock').className = 'stock-badge ' + (product.stock > 0 ? 'in-stock' : 'out-of-stock');

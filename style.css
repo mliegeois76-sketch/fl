@@ -2119,3 +2119,140 @@ footer{padding:80px 5vw 48px;border-top:1px solid var(--line);background:var(--i
   filter: url(#grain);
   opacity: 0.04;
 }
+
+/* Product Detail Grid */
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.product-info .piece-name {
+  font-size: clamp(28px, 4vw, 42px);
+  margin-bottom: 8px;
+}
+
+.product-price-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.product-price {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--paper);
+}
+
+.stock-badge {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 2px;
+}
+
+.stock-badge.in-stock {
+  background: rgba(46, 204, 113, 0.1);
+  color: #2ECC71;
+}
+
+.stock-badge.out-of-stock {
+  background: rgba(231, 76, 60, 0.1);
+  color: #E74C3C;
+}
+
+.product-description h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  letter-spacing: 0.1em;
+}
+
+.product-description p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--stone);
+  font-weight: 300;
+}
+
+.product-specs h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  letter-spacing: 0.1em;
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.spec-label {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+.spec-value {
+  font-size: 14px;
+  color: var(--paper);
+  font-weight: 300;
+}
+
+.product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.secondary-btn {
+  background: none;
+  border: 1px solid var(--line);
+  padding: 14px 28px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--stone);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 400;
+  border-radius: 2px;
+}
+
+.secondary-btn:hover {
+  border-color: var(--bronze);
+  color: #D4A574;
+  background: rgba(176, 132, 84, 0.05);
+}
+
+@media (max-width: 900px) {
+  .product-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .product-info .piece-name {
+    font-size: 28px;
+  }
+  
+  .product-price {
+    font-size: 24px;
+  }
+}
