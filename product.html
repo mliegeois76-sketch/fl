@@ -149,32 +149,8 @@
 <section class="reveal scroll-fade-up">
   <div class="product-gallery">
     <div class="gallery-main">
-      <div id="productImage" class="gallery-main-image">
-        <svg viewBox="0 0 200 200">
-          <path d="M60 180 C40 120 55 60 100 20 C145 60 160 120 140 180 Z" fill="#8A6E4F" opacity="0.85"/>
-        </svg>
-      </div>
-    </div>
-    <div class="gallery-thumbnails">
-      <div class="thumbnail active">
-        <svg viewBox="0 0 200 200">
-          <path d="M60 180 C40 120 55 60 100 20 C145 60 160 120 140 180 Z" fill="#8A6E4F" opacity="0.85"/>
-        </svg>
-      </div>
-      <div class="thumbnail">
-        <svg viewBox="0 0 200 200">
-          <path d="M60 180 C40 120 55 60 100 20 C145 60 160 120 140 180 Z" fill="#8A6E4F" opacity="0.85"/>
-        </svg>
-      </div>
-      <div class="thumbnail">
-        <svg viewBox="0 0 200 200">
-          <path d="M60 180 C40 120 55 60 100 20 C145 60 160 120 140 180 Z" fill="#8A6E4F" opacity="0.85"/>
-        </svg>
-      </div>
-      <div class="thumbnail">
-        <svg viewBox="0 0 200 200">
-          <path d="M60 180 C40 120 55 60 100 20 C145 60 160 120 140 180 Z" fill="#8A6E4F" opacity="0.85"/>
-        </svg>
+      <div id="productImage" class="gallery-main-image zoom-container">
+        <img id="productZoomImage" src="" alt="" class="zoom-image">
       </div>
     </div>
   </div>
@@ -276,6 +252,13 @@ async function loadProductDetails() {
   document.getElementById('productCategory').textContent = product.category;
   document.getElementById('productInfoName').textContent = product.name;
   document.getElementById('productPrice').textContent = product.price.toFixed(2) + ' €';
+  
+  // Update product image with zoom
+  const productZoomImage = document.getElementById('productZoomImage');
+  if (product.image_url) {
+    productZoomImage.src = product.image_url;
+    productZoomImage.alt = product.name;
+  }
   document.getElementById('productStock').textContent = product.stock > 0 ? product.stock + ' in stock' : 'Out of stock';
   document.getElementById('productStock').className = 'stock-badge ' + (product.stock > 0 ? 'in-stock' : 'out-of-stock');
   
@@ -314,6 +297,29 @@ async function loadProductDetails() {
   
   // Load related products
   loadRelatedProducts(product);
+  
+  // Initialize zoom functionality
+  initProductZoom();
+}
+
+// Initialize cursor-following zoom
+function initProductZoom() {
+  const zoomContainer = document.querySelector('.zoom-container');
+  const zoomImage = document.querySelector('.zoom-image');
+  
+  if (!zoomContainer || !zoomImage) return;
+  
+  zoomContainer.addEventListener('mousemove', (e) => {
+    const rect = zoomContainer.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    zoomImage.style.transformOrigin = `${x}% ${y}%`;
+  });
+  
+  zoomContainer.addEventListener('mouseleave', () => {
+    zoomImage.style.transformOrigin = 'center center';
+  });
 }
 
 // Load related products based on category/material
