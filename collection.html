@@ -243,12 +243,12 @@ async function loadProducts(productsToLoad = null) {
   productGrid.innerHTML = products.map(product => {
     return `
     <div class="piece">
-      <div class="piece-visual">
+      <a href="product.html?id=${product.id}" class="piece-visual">
         <img src="${product.image_url}" alt="${product.name}" loading="lazy">
-      </div>
+      </a>
       <div class="piece-info">
         <div class="piece-category">${product.category || 'Sculpture'}</div>
-        <div class="piece-name serif">${product.name}</div>
+        <a href="product.html?id=${product.id}" class="piece-name serif">${product.name}</a>
         <div class="piece-description">${product.description || ''}</div>
         <div class="piece-price">
           <span>${new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(product.price)}</span>
