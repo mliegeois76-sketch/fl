@@ -165,7 +165,7 @@
 <section class="reveal">
   <div class="checkout-grid">
     <div class="checkout-form-container">
-      <form id="checkoutForm" onsubmit="handleCheckout(event)">
+      <form id="checkoutForm" onsubmit="handleCheckout(event); return false;">
         <div class="checkout-section">
           <h3>Informations client</h3>
           <div id="loggedInUser" style="display: none;">
@@ -379,6 +379,7 @@ function updateOrderSummary() {
 // Handle checkout with Stripe Checkout (order creation via Edge Function)
 async function handleCheckout(e) {
   e.preventDefault();
+  e.stopPropagation();
   console.log('STEP 1: preventDefault called');
   
   const submitBtn = document.getElementById('submitBtn');
