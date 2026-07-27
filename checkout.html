@@ -379,6 +379,7 @@ function updateOrderSummary() {
 // Handle checkout with Stripe Checkout (order creation via Edge Function)
 async function handleCheckout(e) {
   e.preventDefault();
+  console.log('STEP 1: preventDefault called');
   
   const submitBtn = document.getElementById('submitBtn');
   const btnText = document.getElementById('btnText');
@@ -388,6 +389,7 @@ async function handleCheckout(e) {
     alert('Your cart is empty');
     return;
   }
+  console.log('STEP 2: cart ok', window.shoppingCart.cart);
   
   submitBtn.disabled = true;
   btnText.style.display = 'none';
@@ -435,6 +437,7 @@ async function handleCheckout(e) {
       }
     }
     
+    console.log('STEP 3: calling edge function', {cart_items: window.shoppingCart.cart});
     const response = await fetch(functionUrl, {
       method: 'POST',
       headers: headers,
@@ -449,6 +452,7 @@ async function handleCheckout(e) {
       })
     });
     
+    console.log('STEP 4: response status', response.status);
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || 'Failed to create checkout session');
@@ -466,6 +470,7 @@ async function handleCheckout(e) {
     // Redirect to Stripe Checkout (cart will be cleared on success page)
     window.location.href = checkout_url;
   } catch (error) {
+    console.log('STEP 5 ERROR:', error);
     console.error('Checkout error:', error);
     alert('Error processing order: ' + error.message);
     submitBtn.disabled = false;
