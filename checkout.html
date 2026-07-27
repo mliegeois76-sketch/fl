@@ -421,9 +421,11 @@ async function handleCheckout(e) {
     const supabaseUrl = 'https://yytxrapemcsloyuqewhf.supabase.co';
     const functionUrl = `${supabaseUrl}/functions/v1/create-checkout-session`;
     
-    // Build headers - only include Authorization if user is authenticated
+    // Build headers - use anon key by default, user token if authenticated
+    const anonKey = 'sb_publishable_aBDAK0o9CrBKUEcf6sQf7w_t-7DFRIl';
     const headers = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${anonKey}`
     };
     
     if (userId) {

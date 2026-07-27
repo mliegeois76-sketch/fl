@@ -12,11 +12,26 @@ const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 serve(async (req) => {
+  // CORS headers
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  };
+
+  // Handle OPTIONS preflight request
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   try {
     const signature = req.headers.get('stripe-signature');
     
     if (!signature) {
-      return new Response('No signature', { status: 400 });
+      return new Response('No signature', { 
+        status: 400,
+        headers: corsHeaders
+      });
     }
 
     const body = await req.text();
@@ -34,7 +49,10 @@ serve(async (req) => {
       const orderId = session.metadata?.order_id;
 
       if (!orderId) {
-        return new Response('No order_id in metadata', { status: 400 });
+        return new Response('No order_id in metadata', { 
+          status: 400,
+          headers: corsHeaders
+        });
       }
 
       // Update order status to 'paid'
@@ -45,7 +63,10 @@ serve(async (req) => {
 
       if (error) {
         console.error('Error updating order:', error);
-        return new Response('Error updating order', { status: 500 });
+        return new Response('Error updating order', { 
+          status: 500,
+          headers: corsHeaders
+        });
       }
 
       console.log(`Order ${orderId} marked as paid`);
@@ -53,13 +74,13 @@ serve(async (req) => {
 
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Webhook error:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });
