@@ -415,7 +415,9 @@ async function handleCheckout(e) {
     
     // Get user authentication status
     console.log('STEP 5: Getting user auth status');
-    const { data: { user }, error: authError } = await window.supabase.auth.getUser();
+    const authResult = await window.supabase.auth.getUser();
+    console.log('STEP 5.5: Raw auth result', authResult);
+    const { data: { user }, error: authError } = authResult;
     console.log('STEP 6: User auth status', { user, authError });
     const userId = authError || !user ? null : user.id;
     const guestEmail = userId ? null : shippingAddress.email;
