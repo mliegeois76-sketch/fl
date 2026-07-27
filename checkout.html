@@ -378,6 +378,7 @@ function updateOrderSummary() {
 
 // Handle checkout with Stripe Checkout (order creation via Edge Function)
 async function handleCheckout(e) {
+  console.log('CHECKOUT CLICKED - Function called');
   e.preventDefault();
   e.stopPropagation();
   console.log('STEP 1: preventDefault called');
@@ -397,7 +398,9 @@ async function handleCheckout(e) {
   btnLoader.style.display = 'inline';
   
   try {
+    console.log('STEP 2: Starting try block');
     const formData = new FormData(e.target);
+    console.log('STEP 3: FormData created', formData);
     const shippingAddress = {
       firstName: formData.get('firstName'),
       lastName: formData.get('lastName'),
@@ -408,17 +411,22 @@ async function handleCheckout(e) {
       postalCode: formData.get('postalCode'),
       country: formData.get('country')
     };
+    console.log('STEP 4: shippingAddress extracted', shippingAddress);
     
     // Get user authentication status
+    console.log('STEP 5: Getting user auth status');
     const { data: { user }, error: authError } = await window.supabase.auth.getUser();
+    console.log('STEP 6: User auth status', { user, authError });
     const userId = authError || !user ? null : user.id;
     const guestEmail = userId ? null : shippingAddress.email;
+    console.log('STEP 7: userId and guestEmail', { userId, guestEmail });
     
     // Calculate total
     const subtotal = window.shoppingCart.getCartTotal();
     const shipping = 150.00;
     const vat = subtotal * 0.20;
     const total = subtotal + shipping + vat;
+    console.log('STEP 8: Totals calculated', { subtotal, shipping, vat, total });
     
     // Call Edge Function to create order and Stripe Checkout session
     const supabaseUrl = 'https://yytxrapemcsloyuqewhf.supabase.co';
@@ -437,8 +445,9 @@ async function handleCheckout(e) {
         headers['Authorization'] = `Bearer ${session.access_token}`;
       }
     }
+    console.log('STEP 9: Headers built', headers);
     
-    console.log('STEP 3: calling edge function', {cart_items: window.shoppingCart.cart});
+    console.log('STEP 10: About to call edge function', {cart_items: window.shoppingCart.cart});
     const response = await fetch(functionUrl, {
       method: 'POST',
       headers: headers,
@@ -453,13 +462,15 @@ async function handleCheckout(e) {
       })
     });
     
-    console.log('STEP 4: response status', response.status);
+    console.log('STEP 11: Response received', response.status);
     if (!response.ok) {
       const error = await response.json();
+      console.log('STEP 12: Response error', error);
       throw new Error(error.error || 'Failed to create checkout session');
     }
     
     const { checkout_url } = await response.json();
+    console.log('STEP 13: Checkout URL received', checkout_url);
     
     // Store order data for success page
     localStorage.setItem('lastOrder', JSON.stringify({
