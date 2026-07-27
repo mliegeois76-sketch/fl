@@ -133,8 +133,8 @@ class AuthSystem {
   async handleSignIn(e) {
     e.preventDefault();
     const form = e.target;
-    const email = form.email.value;
-    const password = form.password.value;
+    const email = form.signinEmail?.value || form.email?.value;
+    const password = form.signinPassword?.value || form.password?.value;
 
     // Validation
     if (!this.validateEmail(email)) {
@@ -185,10 +185,10 @@ class AuthSystem {
       }
     } else {
       // Fallback to basic validation
-      const firstName = formData.get('firstName');
-      const lastName = formData.get('lastName');
-      const email = formData.get('email');
-      const password = formData.get('password');
+      const firstName = formData.get('signupFirstName') || formData.get('firstName');
+      const lastName = formData.get('signupLastName') || formData.get('lastName');
+      const email = formData.get('signupEmail') || formData.get('email');
+      const password = formData.get('signupPassword') || formData.get('password');
 
       if (!firstName || firstName.trim().length < 2) {
         this.showNotification('First name must be at least 2 characters', 'error');
@@ -212,10 +212,10 @@ class AuthSystem {
     }
 
     const sanitized = validationResult ? validationResult.sanitized : {
-      firstName: formData.get('firstName'),
-      lastName: formData.get('lastName'),
-      email: formData.get('email'),
-      password: formData.get('password')
+      firstName: formData.get('signupFirstName') || formData.get('firstName'),
+      lastName: formData.get('signupLastName') || formData.get('lastName'),
+      email: formData.get('signupEmail') || formData.get('email'),
+      password: formData.get('signupPassword') || formData.get('password')
     };
 
     const { data, error } = await this.supabase.auth.signUp({
@@ -306,7 +306,7 @@ class AuthSystem {
   async handlePasswordReset(e) {
     e.preventDefault();
     const form = e.target;
-    const email = form.email.value;
+    const email = form.resetEmail?.value || form.email?.value;
 
     // Validation
     if (!this.validateEmail(email)) {
