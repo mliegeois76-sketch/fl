@@ -67,6 +67,16 @@ class ShoppingCart {
         this.updateQuantity(index, -1);
       }
     });
+
+    // Checkout button - redirect to checkout.html
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.checkout-btn')) {
+        // Only redirect if cart is not empty
+        if (this.cart.length > 0) {
+          window.location.href = 'checkout.html';
+        }
+      }
+    });
   }
 
   addToCart(product) {
@@ -200,70 +210,6 @@ class ShoppingCart {
     this.cart = [];
     this.saveCart();
     this.updateCartUI();
-  }
-
-  // Create order in Supabase
-  async createOrder(orderData) {
-    const { data: { user }, error: authError } = await window.supabase.auth.getUser();
-    
-    // Determine if user is authenticated or guest
-    const isGuest = authError || !user;
-    const userId = isGuest ? null : user.id;
-    const guestEmail = isGuest ? orderData.shippingAddress?.email : null;
-
-    // Insert order (only columns that exist in schema)
-    const { data: order, error: orderError } = await window.supabase
-      .from('orders')
-      .insert({
-        user_id: userId,
-        guest_email: guestEmail,
-        total: this.getCartTotal(),
-        status: 'pending',
-        created_at: new Date().toISOString()
-      })
-      .select()
-      .single();
-
-    if (orderError) {
-      throw new Error('Failed to create order: ' + orderError.message);
-    }
-
-    // Insert order items
-    const orderItems = this.cart.map(item => ({
-      order_id: order.id,
-      product_id: item.id,
-      quantity: item.quantity,
-      price_at_purchase: item.price
-    }));
-
-    const { error: itemsError } = await window.supabase
-      .from('order_items')
-      .insert(orderItems);
-
-    if (itemsError) {
-      throw new Error('Failed to create order items: ' + itemsError.message);
-    }
-
-    // Decrease product stock
-    for (const item of this.cart) {
-      const { data: product } = await window.supabase
-        .from('products')
-        .select('stock')
-        .eq('id', item.id)
-        .single();
-      
-      if (product) {
-        await window.supabase
-          .from('products')
-          .update({ stock: product.stock - item.quantity })
-          .eq('id', item.id);
-      }
-    }
-
-    // Clear cart after successful order
-    this.clearCart();
-
-    return order;
   }
 }
 

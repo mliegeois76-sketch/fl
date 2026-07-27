@@ -254,31 +254,11 @@
 
         <div class="checkout-section">
           <h3>Paiement sécurisé</h3>
-
-          <div class="checkout-form">
-            <div class="form-group">
-              <label>Numéro de carte *</label>
-              <input type="text" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Date d'expiration *</label>
-                <input type="text" name="cardExpiry" placeholder="MM/AA" maxlength="5" required>
-              </div>
-              <div class="form-group">
-                <label>CVC *</label>
-                <input type="text" name="cardCvc" placeholder="123" maxlength="3" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Nom sur la carte *</label>
-              <input type="text" name="cardName" required>
-            </div>
-          </div>
+          <p class="payment-info">Vous serez redirigé vers Stripe Checkout pour un paiement sécurisé. Stripe gère toutes les données de carte bancaire conformément à PCI-DSS.</p>
           <div class="security-badges">
             <span>🔒 Chiffré SSL</span>
-            <span>🛡️ 3D Secure</span>
-            <span>💳 Conforme PCI</span>
+            <span>🛡️ Stripe Checkout</span>
+            <span>💳 Conforme PCI-DSS</span>
           </div>
         </div>
 
@@ -396,7 +376,7 @@ function updateOrderSummary() {
   orderTotal.textContent = `${total.toFixed(2)} €`;
 }
 
-// Handle checkout with Supabase order creation
+// Handle checkout with Stripe Checkout (order creation via Edge Function)
 async function handleCheckout(e) {
   e.preventDefault();
   
@@ -415,59 +395,74 @@ async function handleCheckout(e) {
   
   try {
     const formData = new FormData(e.target);
-    const orderData = {
-      shippingAddress: {
-        firstName: formData.get('firstName'),
-        lastName: formData.get('lastName'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        address: formData.get('address'),
-        city: formData.get('city'),
-        postalCode: formData.get('postalCode'),
-        country: formData.get('country')
-      },
-      billingAddress: formData.get('sameAsShipping') ? orderData.shippingAddress : {
-        firstName: formData.get('billingFirstName'),
-        lastName: formData.get('billingLastName'),
-        address: formData.get('billingAddress'),
-        city: formData.get('billingCity'),
-        postalCode: formData.get('billingPostalCode'),
-        country: formData.get('billingCountry')
-      },
-      paymentMethod: 'Card'
+    const shippingAddress = {
+      firstName: formData.get('firstName'),
+      lastName: formData.get('lastName'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+      address: formData.get('address'),
+      city: formData.get('city'),
+      postalCode: formData.get('postalCode'),
+      country: formData.get('country')
     };
     
-    // Create order in Supabase
-    const order = await window.shoppingCart.createOrder(orderData);
+    // Get user authentication status
+    const { data: { user }, error: authError } = await window.supabase.auth.getUser();
+    const userId = authError || !user ? null : user.id;
+    const guestEmail = userId ? null : shippingAddress.email;
+    
+    // Calculate total
+    const subtotal = window.shoppingCart.getCartTotal();
+    const shipping = 150.00;
+    const vat = subtotal * 0.20;
+    const total = subtotal + shipping + vat;
+    
+    // Call Edge Function to create order and Stripe Checkout session
+    const supabaseUrl = 'https://yytxrapemcsloyuqewhf.supabase.co';
+    const functionUrl = `${supabaseUrl}/functions/v1/create-checkout-session`;
+    
+    // Build headers - only include Authorization if user is authenticated
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    
+    if (userId) {
+      const session = window.supabase.auth.session();
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+    }
+    
+    const response = await fetch(functionUrl, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        cart_items: window.shoppingCart.cart,
+        user_id: userId,
+        guest_email: guestEmail,
+        shipping_address: shippingAddress,
+        total: total,
+        success_url: `${window.location.origin}/order-success.html?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${window.location.origin}/checkout.html`
+      })
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to create checkout session');
+    }
+    
+    const { checkout_url } = await response.json();
     
     // Store order data for success page
     localStorage.setItem('lastOrder', JSON.stringify({
-      orderId: order.id,
-      date: order.created_at,
-      status: order.status,
-      total: order.total,
-      items: window.shoppingCart.cart
+      cart: window.shoppingCart.cart,
+      shippingAddress: shippingAddress,
+      total: total
     }));
     
-    // Send email notifications (if EmailJSService is available)
-    if (typeof EmailJSService !== 'undefined') {
-      const emailOrder = {
-        orderId: order.id,
-        date: order.created_at,
-        total: order.total,
-        items: window.shoppingCart.cart,
-        customer: {
-          email: orderData.shippingAddress.email,
-          firstName: orderData.shippingAddress.firstName,
-          lastName: orderData.shippingAddress.lastName
-        }
-      };
-      EmailJSService.sendOrderConfirmation(emailOrder);
-      EmailJSService.sendAdminNotification(emailOrder);
-    }
-    
-    // Redirect to success page
-    window.location.href = 'order-success.html';
+    // Redirect to Stripe Checkout (cart will be cleared on success page)
+    window.location.href = checkout_url;
   } catch (error) {
     console.error('Checkout error:', error);
     alert('Error processing order: ' + error.message);

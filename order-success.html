@@ -141,6 +141,11 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
   
+  // Clear cart after successful payment
+  if (window.shoppingCart) {
+    window.shoppingCart.clearCart();
+  }
+  
   // Clear order data after displaying
   localStorage.removeItem('lastOrder');
 });
